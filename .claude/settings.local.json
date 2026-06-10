@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e \"const db = require\\('./tutorias-app/backend/src/config/database.js'\\); console.log\\('remove exists:', typeof db.remove\\)\")"
+      "Bash(node -e \"const db = require\\('./tutorias-app/backend/src/config/database.js'\\); console.log\\('remove exists:', typeof db.remove\\)\")",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Usuario\\\\Desktop\\\\tp2Parcial\" -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)"
     ]
   }
 }
