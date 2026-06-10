@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "turnoId": 1,
+    "usuarioId": 7,
+    "accion": "creacion",
+    "fechaHora": "2026-06-07T20:18:44.131Z",
+    "valorAnterior": null,
+    "valorNuevo": "{\"estado\":\"solicitado\"}"
+  },
+  {
+    "id": 2,
+    "turnoId": 4,
+    "usuarioId": 7,
+    "accion": "creacion",
+    "fechaHora": "2026-06-05T20:18:44.301Z",
+    "valorAnterior": null,
+    "valorNuevo": "{\"estado\":\"solicitado\"}"
+  },
+  {
+    "id": 3,
+    "turnoId": 4,
+    "usuarioId": 3,
+    "accion": "confirmacion",
+    "fechaHora": "2026-06-06T20:18:44.376Z",
+    "valorAnterior": "{\"estado\":\"solicitado\"}",
+    "valorNuevo": "{\"estado\":\"confirmado\"}"
+  },
+  {
+    "id": 4,
+    "turnoId": 7,
+    "usuarioId": 9,
+    "accion": "creacion",
+    "fechaHora": "2026-05-31T20:18:44.508Z",
+    "valorAnterior": null,
+    "valorNuevo": "{\"estado\":\"solicitado\"}"
+  },
+  {
+    "id": 5,
+    "turnoId": 7,
+    "usuarioId": 2,
+    "accion": "confirmacion",
+    "fechaHora": "2026-06-01T20:18:44.510Z",
+    "valorAnterior": "{\"estado\":\"solicitado\"}",
+    "valorNuevo": "{\"estado\":\"confirmado\"}"
+  },
+  {
+    "id": 6,
+    "turnoId": 7,
+    "usuarioId": 2,
+    "accion": "realizacion",
+    "fechaHora": "2026-06-03T20:18:44.524Z",
+    "valorAnterior": "{\"estado\":\"confirmado\"}",
+    "valorNuevo": "{\"estado\":\"realizado\"}"
+  },
+  {
+    "id": 7,
+    "turnoId": 10,
+    "usuarioId": 7,
+    "accion": "creacion",
+    "fechaHora": "2026-06-02T20:18:44.527Z",
+    "valorAnterior": null,
+    "valorNuevo": "{\"estado\":\"solicitado\"}"
+  },
+  {
+    "id": 8,
+    "turnoId": 10,
+    "usuarioId": 7,
+    "accion": "cancelacion",
+    "fechaHora": "2026-06-03T20:18:44.529Z",
+    "valorAnterior": "{\"estado\":\"solicitado\"}",
+    "valorNuevo": "{\"estado\":\"cancelado\"}"
+  }
+]

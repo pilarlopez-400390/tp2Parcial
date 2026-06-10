@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "nombre": "Admin Sistema",
+    "email": "admin@dds.com",
+    "passwordHash": "$2a$10$cw738pqVBXx.D1juQLLg3udyXC1oPbKwI9zxs0IbJtQkBzRzakmPe",
+    "rol": "admin",
+    "activo": true
+  },
+  {
+    "id": 2,
+    "nombre": "Marina López",
+    "email": "marina@dds.com",
+    "passwordHash": "$2a$10$or6HDWJG4.X726nhj6JWk.rEY3C/CEFgkYLkv2Lwy7AzJibokPpCC",
+    "rol": "tutor",
+    "activo": true
+  },
+  {
+    "id": 3,
+    "nombre": "Carlos Gómez",
+    "email": "carlos@dds.com",
+    "passwordHash": "$2a$10$BgZ1I8QGs/MSMIHbAo0Fyu5btI8HFaQ.67HDOAl5HoKkv7EICe6MO",
+    "rol": "tutor",
+    "activo": true
+  },
+  {
+    "id": 4,
+    "nombre": "Ana Martínez",
+    "email": "ana@dds.com",
+    "passwordHash": "$2a$10$R24VbL6gNNRKmFAv04XlUeOd3oTDj842ho8GoY2dqvNEBhp4w5VWu",
+    "rol": "tutor",
+    "activo": true
+  },
+  {
+    "id": 5,
+    "nombre": "Diego Fernández",
+    "email": "diego@dds.com",
+    "passwordHash": "$2a$10$6/xk1gzONUalalMXhYsYfuNoZSAfh8eKskLyD1Cs8dB2BFlXJsbhW",
+    "rol": "tutor",
+    "activo": true
+  },
+  {
+    "id": 6,
+    "nombre": "Laura Torres",
+    "email": "laura@dds.com",
+    "passwordHash": "$2a$10$XusZ7Bz8cruV09q9o8FPA.wmETXUJ9WI4OVOdY57xzR0rxIPl/JPC",
+    "rol": "tutor",
+    "activo": true
+  },
+  {
+    "id": 7,
+    "nombre": "Valen Acosta",
+    "email": "valen@dds.com",
+    "passwordHash": "$2a$10$GfuMwqnYLxoUH2nMppz3YeQwwZ3vu3XleVAsGAuwdVwV6si5D8xXy",
+    "rol": "estudiante",
+    "activo": true
+  },
+  {
+    "id": 8,
+    "nombre": "Tomás Ruiz",
+    "email": "tomas@dds.com",
+    "passwordHash": "$2a$10$AW7.tvXz8rMeU.Fyv9A5YOiIkF6Zf0cdcuoPpLZBDiIcTdaQItTQm",
+    "rol": "estudiante",
+    "activo": true
+  },
+  {
+    "id": 9,
+    "nombre": "Sofía Pérez",
+    "email": "sofia@dds.com",
+    "passwordHash": "$2a$10$j0MZj8W6sMvjl2tRQZ2SQO/AcyJ4BY.DqrSvyxXYg1AVXRdph7.Iq",
+    "rol": "estudiante",
+    "activo": true
+  }
+]

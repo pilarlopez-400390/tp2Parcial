@@ -1,0 +1,68 @@
+Clase Martes 09/06/2026
+
+APP 
+TP Entrega 13/06 23:59 (Grupal)
+Domingo: Publicado qué grupo corrige a quien en base a una rubrica -> 15/06 hasta el 16/06 23:59 (Grupal)
+Parcial Individual 16/17
+10 preguntas frontend + 2 preguntas a desarrollar sobre el TP realizado
+Simulacro Miercoles
+Repositorio Grupal Gitlab
+En Gitlab propio - subir proyecto
+
+Que le cambiarias, que propondrias, del tp propio y el corregido.
+
+LECTURA DE ENUNCIADO TP:
+
+Aplicacion full stack para gestion de tutorias.
+Registro del usuario + Login con tokens para poder acceder a la aplicacion.
+ABMC Tutorias
+Flujo end-to-end
+
+Quien puede confirmar o realizar un turno? El tutor asignado puede confirmar o marcar realizado sus turnos; el administrador puede intervenir sobre cualquier turno.
+Esto se hace con un middleware de autenticacion y autorizacion. Con AUTORIZAR se define quien puede hacer que accion, con AUTENTICAR se define quien es el usuario que esta haciendo la accion.
+El middleware recibe un JWT, lo valida, y luego con la informacion del JWT se puede saber quien es el usuario y que rol tiene para autorizar o no la accion.
+El JWT se genera al hacer login, y se guarda en el cliente (localStorage o cookies) para enviarlo en cada request que requiera autenticacion.
+
+TIP: En uno de los servicios, hacer un archivo JSON que cosas puede hacer cada rol. Que acciones puede hacer quien. Tambien puede estar en una tabla en la base de datos, pero para este caso se pide un archivo JSON.
+Los parametros van por query.
+
+Hacer una rama de back y una rama de front
+
+DIVISION INTERNA
+1 o 2 PARA FRONTEND
+2 o 3 PARA BACKEND - MAS TRABAJO
+DOCUMENTACION con editor del visual studio code, INTEGRACION
+
+PASO A PASO INTEGRADOR: BACKEND BASE PARA ARRANCAR. Para sacar codigo de ahi
+
+A nivel de backend:
+Tenemos todas las rutas enumeradas, generar una api con express, dejar las rutas en vacio
+
+Del lado del frontend:
+Hacer un componente de login que tenga:
+    Login
+Usuario:
+Password:
+Login - Nuevo
+
+AUTENTICACION
+Hacer JWT Fijo de prueba para que vaya y vuelva
+
+1 Responsable: Login, Alta Usuario, Middleware proteger rutas
+2 Responsable: Modelos y conexion a la base de datos: Crear conexion, 4 models, scripts de inicializacion, documentacion/README, testing: si viene un 401 que haga tal cosa, si viene un 403 que haga tal cosa, etc.
+
+2 personas back: si tiene routeadas las rutas sin codigo, crear los servicios e implementar la logica de cada ruta
+
+APP tiene que tener el ruteo
+2 personas front: dividir en los componentes que me hagan falta: el del login ya esta, el componente principal(Menu), componente de resumen, componente de administracion de turno(Consulta,Alta-Baja y modificacion, detalle) y otro componente que sea ruta no encontrada.
+
+MENU APLICACION
+TUTORIAS 1.0            DASHBOARD | TURNO  | USUARIO |
+
+dashboard: resumen de turnos, proximos turnos, turnos realizados, etc.
+turno: consulta, alta, baja, modificacion, detalle
+usuario: alta, baja, modificacion, detalle
+
+Crear repositorio en github o gitlab, con solucion base. Copiar codigo del paso a paso integrador, de los ejercicios hechos.
+
+Para subirlo se puede hacer un repo grupal o directamente subir un .zip

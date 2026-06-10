@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const db = require\\('./tutorias-app/backend/src/config/database.js'\\); console.log\\('remove exists:', typeof db.remove\\)\")"
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "usuarioId": 2,
+    "nombre": "Marina López",
+    "email": "marina@dds.com",
+    "especialidad": "backend",
+    "diasDisponibles": [
+      "lunes",
+      "miercoles",
+      "viernes"
+    ],
+    "activo": true
+  },
+  {
+    "id": 2,
+    "usuarioId": 3,
+    "nombre": "Carlos Gómez",
+    "email": "carlos@dds.com",
+    "especialidad": "frontend",
+    "diasDisponibles": [
+      "martes",
+      "jueves"
+    ],
+    "activo": true
+  },
+  {
+    "id": 3,
+    "usuarioId": 4,
+    "nombre": "Ana Martínez",
+    "email": "ana@dds.com",
+    "especialidad": "testing",
+    "diasDisponibles": [
+      "lunes",
+      "martes",
+      "miercoles"
+    ],
+    "activo": true
+  },
+  {
+    "id": 4,
+    "usuarioId": 5,
+    "nombre": "Diego Fernández",
+    "email": "diego@dds.com",
+    "especialidad": "seguridad",
+    "diasDisponibles": [
+      "jueves",
+      "viernes"
+    ],
+    "activo": true
+  },
+  {
+    "id": 5,
+    "usuarioId": 6,
+    "nombre": "Laura Torres",
+    "email": "laura@dds.com",
+    "especialidad": "backend",
+    "diasDisponibles": [
+      "miercoles",
+      "jueves",
+      "viernes"
+    ],
+    "activo": true
+  }
+]
