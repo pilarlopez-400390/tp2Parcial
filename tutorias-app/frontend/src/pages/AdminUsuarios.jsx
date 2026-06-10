@@ -285,13 +285,13 @@ export default function AdminUsuarios() {
                     <td style={{ borderBottom: '1px solid #eee', padding: '10px' }}>
                       <button
                         onClick={() => abrirEditar(usuario)}
-                        style={{ padding: '6px 12px', background: '#f39c12', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', marginRight: '8px' }}
+                        style={{ padding: '6px 12px', background: '#585858', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer', marginRight: '8px' }}
                       >
                         Editar
                       </button>
                       <button
                         onClick={() => handleEliminar(usuario)}
-                        style={{ padding: '6px 12px', background: '#e74c3c', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+                        style={{ padding: '6px 12px', background: '#c81400', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
                       >
                         Eliminar
                       </button>
