@@ -26,6 +26,37 @@ function obtenerDiaSemana(fechaStr) {
   return DIAS_SEMANA[fecha.getDay()];
 }
 
+function fechaLocalISO(date = new Date()) {
+  const anio = date.getFullYear();
+  const mes = String(date.getMonth() + 1).padStart(2, '0');
+  const dia = String(date.getDate()).padStart(2, '0');
+  return `${anio}-${mes}-${dia}`;
+}
+
+function validarFechaPermitida(fecha) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha || '')) {
+    const err = new Error('La fecha es obligatoria y debe tener formato YYYY-MM-DD');
+    err.status = 400;
+    throw err;
+  }
+
+  const anioActual = new Date().getFullYear();
+  const anioTurno = parseInt(fecha.slice(0, 4));
+
+  if (anioTurno !== anioActual) {
+    const err = new Error(`Solo se pueden sacar turnos dentro del año ${anioActual}`);
+    err.status = 400;
+    throw err;
+  }
+
+  const hoy = fechaLocalISO();
+  if (fecha < hoy) {
+    const err = new Error('No se pueden sacar turnos en fechas anteriores a la fecha actual');
+    err.status = 400;
+    throw err;
+  }
+}
+
 // Verifica si dos franjas horarias se superponen.
 // Las horas son strings 'HH:MM'. Como tienen formato fijo, la comparación
 // de strings funciona igual que comparación numérica (ej: '09:30' < '10:00' → true).
@@ -38,6 +69,73 @@ function obtenerDiaSemana(fechaStr) {
 //   09:00-09:30 vs 09:30-10:00 → '09:00'<'10:00' (true) pero '09:30'>'09:30' (false) → NO SUPERPUESTO
 function haySuperposicion(ini1, fin1, ini2, fin2) {
   return ini1 < fin2 && fin1 > ini2;
+}
+
+function validarFranjaDisponible(tutor, horaInicio, horaFin) {
+  if (!tutor.horarioDisponible) return;
+
+  const inicioDisponible = tutor.horarioDisponible.inicio;
+  const finDisponible = tutor.horarioDisponible.fin;
+
+  if (horaInicio < inicioDisponible || horaFin > finDisponible) {
+    const err = new Error(`El tutor atiende de ${inicioDisponible} a ${finDisponible}`);
+    err.status = 400;
+    throw err;
+  }
+}
+
+function obtenerTutorDelUsuario(usuarioId) {
+  const tutores = db.findAll('tutores');
+  for (let i = 0; i < tutores.length; i++) {
+    if (tutores[i].usuarioId === usuarioId) {
+      return tutores[i];
+    }
+  }
+  return null;
+}
+
+function normalizarCategoria(categoria, tutor) {
+  const categorias = {
+    backend: 'Backend',
+    frontend: 'Frontend',
+    testing: 'Testing',
+    seguridad: 'Seguridad'
+  };
+  const valor = categoria || tutor?.especialidad || 'General';
+  const clave = String(valor).trim().toLowerCase();
+  return categorias[clave] || String(valor).trim() || 'General';
+}
+
+function normalizarTemasTurno({ categoria, temas, tema }, tutor) {
+  const categoriaFinal = normalizarCategoria(categoria, tutor);
+  let temasFinales = [];
+
+  if (Array.isArray(temas)) {
+    temasFinales = temas.map(t => String(t).trim()).filter(Boolean);
+  } else if (typeof temas === 'string' && temas.trim()) {
+    temasFinales = temas.split(',').map(t => t.trim()).filter(Boolean);
+  } else if (typeof tema === 'string' && tema.trim()) {
+    temasFinales = [tema.trim()];
+  }
+
+  if (temasFinales.length === 0) {
+    const err = new Error('Selecciona al menos un tema');
+    err.status = 400;
+    throw err;
+  }
+
+  return {
+    categoria: categoriaFinal,
+    temas: temasFinales,
+    tema: temasFinales.join(', ')
+  };
+}
+
+function temasDelTurno(turno) {
+  if (Array.isArray(turno.temas) && turno.temas.length > 0) {
+    return turno.temas;
+  }
+  return turno.tema ? [turno.tema] : ['Sin tema'];
 }
 
 // Registra un cambio en el historial del turno
@@ -55,11 +153,11 @@ function registrarHistorial(turnoId, usuarioId, accion, valorAnterior, valorNuev
 // Verifica que el tutor pueda recibir un turno en esa fecha y horario.
 // turnoIdIgnorar: cuando EDITAMOS un turno, ignoramos el propio turno
 //                al chequear superposición (no puede conflictuarse consigo mismo).
-function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnorar) {
+function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnorar, estudianteId) {
 
   // 1. El tutor debe estar activo
   if (!tutor.activo) {
-    const err = new Error('El tutor no está activo y no puede recibir turnos');
+    const err = new Error('El tutor está inactivo');
     err.status = 400;
     throw err;
   }
@@ -81,25 +179,29 @@ function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnor
     throw err;
   }
 
-  // 3. No debe haber superposición con turnos activos del mismo tutor en esa fecha
+  validarFranjaDisponible(tutor, horaInicio, horaFin);
+
+  // 3. No debe haber superposición con turnos activos del mismo tutor o estudiante en esa fecha
   //    "Activos" = solicitado o confirmado (cancelado y realizado no bloquean)
   const todosLosTurnos = db.findAll('turnos');
 
   for (let i = 0; i < todosLosTurnos.length; i++) {
     const t = todosLosTurnos[i];
 
-    // Ignoramos si es de otro tutor o de otra fecha
-    if (t.tutorId !== tutor.id) continue;
     if (t.fecha   !== fecha)    continue;
     // Solo turnos solicitados o confirmados bloquean la agenda
     if (t.estado !== 'solicitado' && t.estado !== 'confirmado') continue;
     // Al editar, ignoramos el propio turno
     if (turnoIdIgnorar && t.id === turnoIdIgnorar) continue;
 
-    if (haySuperposicion(horaInicio, horaFin, t.horaInicio, t.horaFin)) {
-      const err = new Error(
-        `El tutor ya tiene un turno de ${t.horaInicio} a ${t.horaFin} en esa fecha. No se puede superponer.`
-      );
+    if (t.tutorId === tutor.id && haySuperposicion(horaInicio, horaFin, t.horaInicio, t.horaFin)) {
+      const err = new Error('El tutor ya tiene un turno superpuesto en esa fecha y horario');
+      err.status = 400;
+      throw err;
+    }
+
+    if (estudianteId && t.estudianteId === estudianteId && haySuperposicion(horaInicio, horaFin, t.horaInicio, t.horaFin)) {
+      const err = new Error('El estudiante ya tiene un turno superpuesto en esa fecha y horario');
       err.status = 400;
       throw err;
     }
@@ -178,10 +280,12 @@ function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId,
   for (let i = 0; i < turnos.length; i++) {
     let tutorNombre = 'Desconocido';
     let tutorEsp    = '';
+    let tutorUsuarioId = null;
     for (let j = 0; j < tutores.length; j++) {
       if (tutores[j].id === turnos[i].tutorId) {
         tutorNombre = tutores[j].nombre;
         tutorEsp    = tutores[j].especialidad;
+        tutorUsuarioId = tutores[j].usuarioId;
         break;
       }
     }
@@ -193,7 +297,7 @@ function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId,
       }
     }
     // Agregamos los campos extra sin modificar el original
-    turnos[i] = { ...turnos[i], tutorNombre, tutorEspecialidad: tutorEsp, estudianteNombre };
+    turnos[i] = { ...turnos[i], tutorNombre, tutorEspecialidad: tutorEsp, tutorUsuarioId, estudianteNombre };
   }
 
   // ── Ordenar ─────────────────────────────────────────────────────────────
@@ -259,10 +363,12 @@ function obtenerTurnoPorId(id, usuario) {
 
   let tutorNombre = 'Desconocido';
   let tutorEsp    = '';
+  let tutorUsuarioId = null;
   for (let i = 0; i < tutores.length; i++) {
     if (tutores[i].id === turno.tutorId) {
       tutorNombre = tutores[i].nombre;
       tutorEsp    = tutores[i].especialidad;
+      tutorUsuarioId = tutores[i].usuarioId;
       break;
     }
   }
@@ -275,12 +381,14 @@ function obtenerTurnoPorId(id, usuario) {
     }
   }
 
-  return { ...turno, tutorNombre, tutorEspecialidad: tutorEsp, estudianteNombre };
+  return { ...turno, tutorNombre, tutorEspecialidad: tutorEsp, tutorUsuarioId, estudianteNombre };
 }
 
 // ── CREAR TURNO ───────────────────────────────────────────────────────────────
 
-function crearTurno({ tutorId, estudianteId, fecha, horaInicio, horaFin, tema, modalidad, observaciones }, usuario) {
+function crearTurno({ tutorId, estudianteId, fecha, horaInicio, horaFin, categoria, temas, tema, modalidad, observaciones }, usuario) {
+
+  validarFechaPermitida(fecha);
 
   // Validación 1: horario coherente (inicio debe ser menor que fin)
   if (horaInicio >= horaFin) {
@@ -294,8 +402,7 @@ function crearTurno({ tutorId, estudianteId, fecha, horaInicio, horaFin, tema, m
   }
 
   if (usuario.rol === 'tutor') {
-    const tutores = db.findAll('tutores')
-    const tutorDelUsuario = tutores.find(t => t.usuarioId === usuario.id)
+    const tutorDelUsuario = obtenerTutorDelUsuario(usuario.id)
     if (!tutorDelUsuario) {
       const err = new Error('No se encontró el registro de tutor asociado');
       err.status = 403;
@@ -324,19 +431,26 @@ function crearTurno({ tutorId, estudianteId, fecha, horaInicio, horaFin, tema, m
     throw err;
   }
 
+  const datosTema = normalizarTemasTurno({ categoria, temas, tema }, tutor);
+
   // Validación 3: disponibilidad (activo + día + sin superposición)
-  verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, null);
+  verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, null, estudianteId);
 
   // Insertar el turno con estado inicial 'solicitado'
   const nuevoTurno = db.insert('turnos', {
     tutorId, estudianteId, fecha, horaInicio, horaFin,
-    tema, modalidad, estado: 'solicitado',
+    categoria: datosTema.categoria,
+    temas: datosTema.temas,
+    tema: datosTema.tema,
+    modalidad, estado: 'solicitado',
     observaciones: observaciones || null
   });
 
   // Registrar en el historial
   registrarHistorial(nuevoTurno.id, estudianteId, 'creacion', null, {
-    estado: 'solicitado', tutorId, fecha, horaInicio, horaFin, tema, modalidad
+    estado: 'solicitado', tutorId, fecha, horaInicio, horaFin,
+    categoria: datosTema.categoria, temas: datosTema.temas, tema: datosTema.tema,
+    modalidad, observaciones: observaciones || null
   });
 
   return obtenerTurnoPorId(nuevoTurno.id, usuario);
@@ -359,18 +473,9 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
   }
 
   if (usuarioRol === 'tutor') {
-    const tutores = db.findAll('tutores')
-    const tutorDelUsuario = tutores.find(t => t.usuarioId === usuarioId)
-    if (!tutorDelUsuario || tutorDelUsuario.id !== turno.tutorId) {
-      const err = new Error('Solo el tutor asignado puede editar este turno');
-      err.status = 403;
-      throw err;
-    }
-    if (datos.tutorId && parseInt(datos.tutorId) !== turno.tutorId) {
-      const err = new Error('Un tutor no puede cambiar el tutor asignado');
-      err.status = 403;
-      throw err;
-    }
+    const err = new Error('Los tutores no pueden editar turnos');
+    err.status = 403;
+    throw err;
   }
 
   // Los turnos cancelados no se pueden editar
@@ -388,7 +493,12 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
       err.status = 400;
       throw err;
     }
+    const observacionesPrevias = turno.observaciones;
     db.update('turnos', turnoId, { observaciones: datos.observaciones });
+    registrarHistorial(turnoId, usuarioId, 'edicion',
+      { observaciones: observacionesPrevias },
+      { observaciones: datos.observaciones }
+    );
     return obtenerTurnoPorId(turnoId, { id: usuarioId, rol: usuarioRol });
   }
 
@@ -398,8 +508,11 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
     fecha:      turno.fecha,
     horaInicio: turno.horaInicio,
     horaFin:    turno.horaFin,
+    categoria:  turno.categoria,
+    temas:      turno.temas,
     tema:       turno.tema,
-    modalidad:  turno.modalidad
+    modalidad:  turno.modalidad,
+    observaciones: turno.observaciones
   };
 
   // Usamos los nuevos valores o los actuales si no se enviaron
@@ -407,6 +520,9 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
   const nuevaFecha   = datos.fecha      || turno.fecha;
   const nuevoInicio  = datos.horaInicio || turno.horaInicio;
   const nuevoFin     = datos.horaFin    || turno.horaFin;
+  const tutorReasignado = nuevoTutorId !== turno.tutorId;
+
+  validarFechaPermitida(nuevaFecha);
 
   // Revalidar horario
   if (nuevoInicio >= nuevoFin) {
@@ -418,13 +534,19 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
   // Si cambia el tutor, verificar que exista
   const tutorFinal = db.findById('tutores', nuevoTutorId);
   if (!tutorFinal) {
-    const err = new Error('El tutor seleccionado no existe');
+    const err = new Error('El tutor no existe');
     err.status = 404;
     throw err;
   }
 
+  const datosTema = normalizarTemasTurno({
+    categoria: datos.categoria !== undefined ? datos.categoria : turno.categoria,
+    temas: datos.temas !== undefined ? datos.temas : turno.temas,
+    tema: datos.tema !== undefined ? datos.tema : turno.tema
+  }, tutorFinal);
+
   // Verificar disponibilidad, ignorando el propio turno al buscar superposiciones
-  verificarDisponibilidad(tutorFinal, nuevaFecha, nuevoInicio, nuevoFin, turnoId);
+  verificarDisponibilidad(tutorFinal, nuevaFecha, nuevoInicio, nuevoFin, turnoId, turno.estudianteId);
 
   // Actualizar
   db.update('turnos', turnoId, {
@@ -432,15 +554,19 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
     fecha:        nuevaFecha,
     horaInicio:   nuevoInicio,
     horaFin:      nuevoFin,
-    tema:         datos.tema      || turno.tema,
+    categoria:    datosTema.categoria,
+    temas:        datosTema.temas,
+    tema:         datosTema.tema,
     modalidad:    datos.modalidad || turno.modalidad,
     observaciones: datos.observaciones !== undefined ? datos.observaciones : turno.observaciones
   });
 
-  registrarHistorial(turnoId, usuarioId, 'edicion', valorAnterior, {
+  registrarHistorial(turnoId, usuarioId, tutorReasignado ? 'reasignacion' : 'edicion', valorAnterior, {
     tutorId: nuevoTutorId, fecha: nuevaFecha,
     horaInicio: nuevoInicio, horaFin: nuevoFin,
-    tema: datos.tema || turno.tema, modalidad: datos.modalidad || turno.modalidad
+    categoria: datosTema.categoria, temas: datosTema.temas, tema: datosTema.tema,
+    modalidad: datos.modalidad || turno.modalidad,
+    observaciones: datos.observaciones !== undefined ? datos.observaciones : turno.observaciones
   });
 
   return obtenerTurnoPorId(turnoId, { id: usuarioId, rol: usuarioRol });
@@ -473,13 +599,9 @@ function cancelarTurno(turnoId, usuarioId, usuarioRol) {
   }
 
   if (usuarioRol === 'tutor') {
-    const tutores = db.findAll('tutores')
-    const tutorDelUsuario = tutores.find(t => t.usuarioId === usuarioId)
-    if (!tutorDelUsuario || tutorDelUsuario.id !== turno.tutorId) {
-      const err = new Error('Solo el tutor asignado puede cancelar este turno');
-      err.status = 403;
-      throw err;
-    }
+    const err = new Error('Los tutores no pueden cancelar turnos');
+    err.status = 403;
+    throw err;
   }
 
   const estadoAnterior = turno.estado;
@@ -511,8 +633,7 @@ function confirmarTurno(turnoId, usuarioId, usuarioRol) {
   }
 
   if (usuarioRol === 'tutor') {
-    const tutores = db.findAll('tutores');
-    const tutorDelUsuario = tutores.find(t => t.usuarioId === usuarioId)
+    const tutorDelUsuario = obtenerTutorDelUsuario(usuarioId)
     if (!tutorDelUsuario || tutorDelUsuario.id !== turno.tutorId) {
       const err = new Error('Solo el tutor asignado a este turno puede confirmarlo');
       err.status = 403;
@@ -546,8 +667,7 @@ function realizarTurno(turnoId, observaciones, usuarioId, usuarioRol) {
   }
 
   if (usuarioRol === 'tutor') {
-    const tutores = db.findAll('tutores');
-    const tutorDelUsuario = tutores.find(t => t.usuarioId === usuarioId)
+    const tutorDelUsuario = obtenerTutorDelUsuario(usuarioId)
     if (!tutorDelUsuario || tutorDelUsuario.id !== turno.tutorId) {
       const err = new Error('Solo el tutor asignado a este turno puede marcarlo como realizado');
       err.status = 403;
@@ -583,8 +703,7 @@ function obtenerHistorial(turnoId, usuario) {
   }
 
   if (usuario.rol === 'tutor') {
-    const tutores = db.findAll('tutores')
-    const tutorDelUsuario = tutores.find(t => t.usuarioId === usuario.id)
+    const tutorDelUsuario = obtenerTutorDelUsuario(usuario.id)
     if (!tutorDelUsuario || tutorDelUsuario.id !== turno.tutorId) {
       const err = new Error('No tenés permiso para ver este historial');
       err.status = 403;
@@ -662,11 +781,26 @@ function obtenerResumen() {
   }
   turnosPorTutor.sort((a, b) => b.cantidad - a.cantidad);
 
-  // Temas más solicitados
+  // Temas más solicitados por categoria
   const temaMap = {};
+  const temaCategoriaMap = {};
   for (let i = 0; i < turnos.length; i++) {
-    const tema = turnos[i].tema;
-    temaMap[tema] = (temaMap[tema] || 0) + 1;
+    let categoria = turnos[i].categoria;
+    for (let j = 0; j < tutores.length; j++) {
+      if (tutores[j].id === turnos[i].tutorId) {
+        categoria = categoria || tutores[j].especialidad || 'Sin categoria';
+        break;
+      }
+    }
+    categoria = categoria || 'Sin categoria';
+
+    const temasTurno = temasDelTurno(turnos[i]);
+    for (let j = 0; j < temasTurno.length; j++) {
+      const tema = temasTurno[j];
+      temaMap[tema] = (temaMap[tema] || 0) + 1;
+      if (!temaCategoriaMap[categoria]) temaCategoriaMap[categoria] = {};
+      temaCategoriaMap[categoria][tema] = (temaCategoriaMap[categoria][tema] || 0) + 1;
+    }
   }
   const temasMasSolicitados = [];
   for (const tema in temaMap) {
@@ -675,7 +809,34 @@ function obtenerResumen() {
   temasMasSolicitados.sort((a, b) => b.cantidad - a.cantidad);
   const topTemas = temasMasSolicitados.slice(0, 5);
 
-  return { turnosHoy, turnosPendientes, turnosPorTutor, temasMasSolicitados: topTemas };
+  const temasPorCategoria = [];
+  for (const categoria in temaCategoriaMap) {
+    const temas = [];
+    for (const tema in temaCategoriaMap[categoria]) {
+      temas.push({ tema, cantidad: temaCategoriaMap[categoria][tema], categoria });
+    }
+    temas.sort((a, b) => b.cantidad - a.cantidad);
+    temasPorCategoria.push({
+      categoria,
+      total: temas.reduce((acc, item) => acc + item.cantidad, 0),
+      temas
+    });
+  }
+  temasPorCategoria.sort((a, b) => b.total - a.total || a.categoria.localeCompare(b.categoria));
+
+  return {
+    totalTurnos: turnos.length,
+    turnosHoy,
+    turnosPendientes,
+    turnosPorTutor,
+    temasMasSolicitados: topTemas,
+    temasPorCategoria,
+    temasPorEspecialidad: temasPorCategoria.map(grupo => ({
+      especialidad: grupo.categoria,
+      total: grupo.total,
+      temas: grupo.temas.map(item => ({ ...item, especialidad: grupo.categoria }))
+    }))
+  };
 }
 
 module.exports = {

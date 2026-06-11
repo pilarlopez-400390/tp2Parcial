@@ -52,23 +52,23 @@ function seed() {
 
   const tMarina = db.insert('tutores', {
     usuarioId: uMarina.id, nombre: 'Marina López',    email: 'marina@dds.com',
-    especialidad: 'backend',   diasDisponibles: ['lunes', 'miercoles', 'viernes'], activo: true
+    especialidad: 'backend',   diasDisponibles: ['lunes', 'miercoles', 'viernes'], horarioDisponible: { inicio: '09:00', fin: '12:30' }, activo: true
   });
   const tCarlos = db.insert('tutores', {
     usuarioId: uCarlos.id, nombre: 'Carlos Gómez',   email: 'carlos@dds.com',
-    especialidad: 'frontend',  diasDisponibles: ['martes', 'jueves'], activo: true
+    especialidad: 'frontend',  diasDisponibles: ['martes', 'jueves'], horarioDisponible: { inicio: '10:00', fin: '17:00' }, activo: true
   });
   const tAna = db.insert('tutores', {
     usuarioId: uAna.id, nombre: 'Ana Martínez',   email: 'ana@dds.com',
-    especialidad: 'testing',   diasDisponibles: ['lunes', 'martes', 'miercoles'], activo: true
+    especialidad: 'testing',   diasDisponibles: ['lunes', 'martes', 'miercoles'], horarioDisponible: { inicio: '08:30', fin: '13:00' }, activo: true
   });
   const tDiego = db.insert('tutores', {
     usuarioId: uDiego.id, nombre: 'Diego Fernández', email: 'diego@dds.com',
-    especialidad: 'seguridad', diasDisponibles: ['jueves', 'viernes'], activo: true
+    especialidad: 'seguridad', diasDisponibles: ['jueves', 'viernes'], horarioDisponible: { inicio: '14:00', fin: '18:30' }, activo: true
   });
   const tLaura = db.insert('tutores', {
     usuarioId: uLaura.id, nombre: 'Laura Torres',   email: 'laura@dds.com',
-    especialidad: 'backend',   diasDisponibles: ['miercoles', 'jueves', 'viernes'], activo: true
+    especialidad: 'backend',   diasDisponibles: ['miercoles', 'jueves', 'viernes'], horarioDisponible: { inicio: '09:30', fin: '16:30' }, activo: true
   });
 
   // ════════════════════════════════════════════

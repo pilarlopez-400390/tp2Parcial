@@ -17,13 +17,18 @@ export default function Register() {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+
+    const nombreNormalizado = nombre.trim().replace(/\s+/g, ' ')
+    if (nombreNormalizado.split(' ').length < 2) {
+      setError('Ingresa nombre y apellido para ordenar correctamente por apellido.')
+      return
+    }
+
     setCargando(true)
 
     try {
-      // Registramos y luego hacemos login automático
-      await authService.register(nombre, email, password)
+      await authService.register(nombreNormalizado, email, password)
 
-      // Login automático después del registro
       const data = await authService.login(email, password)
       login(data.token, data.usuario)
       navigate('/turnos')
@@ -35,61 +40,63 @@ export default function Register() {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '60px auto', padding: '24px', border: '1px solid #ddd', borderRadius: '8px' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>📝 Registrarse</h2>
+    <div style={{ maxWidth: '430px', margin: '60px auto', padding: '28px', border: '1px solid #d9e0e7', borderRadius: '8px', background: '#fff', boxShadow: '0 14px 35px rgba(15, 23, 42, 0.08)' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: '24px', color: '#1f2937' }}>Registrarse</h2>
 
       {error && (
         <div style={{ background: '#fee', border: '1px solid #fcc', padding: '12px', borderRadius: '4px', marginBottom: '16px', color: '#c00' }}>
-          ⚠️ {error}
+          {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px' }}>Nombre</label>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Nombre y apellido</label>
           <input
             type="text"
             value={nombre}
             onChange={e => setNombre(e.target.value)}
             required
-            style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
+            placeholder="Ej: Valentina Perez"
+            style={{ width: '100%', padding: '10px', border: '1px solid #cfd8e3', borderRadius: '4px', boxSizing: 'border-box' }}
           />
+          <small style={{ display: 'block', color: '#667085', marginTop: '5px' }}>Debe incluir al menos un nombre y un apellido.</small>
         </div>
 
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px' }}>Email</label>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Email</label>
           <input
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '10px', border: '1px solid #cfd8e3', borderRadius: '4px', boxSizing: 'border-box' }}
           />
         </div>
 
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px' }}>Contraseña</label>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Contrasena</label>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
             minLength={6}
-            style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '10px', border: '1px solid #cfd8e3', borderRadius: '4px', boxSizing: 'border-box' }}
           />
         </div>
 
         <button
           type="submit"
           disabled={cargando}
-          style={{ width: '100%', padding: '12px', background: '#27ae60', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '16px' }}
+          style={{ width: '100%', padding: '12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '16px', fontWeight: '700' }}
         >
           {cargando ? 'Registrando...' : 'Registrarse'}
         </button>
       </form>
 
       <p style={{ textAlign: 'center', marginTop: '16px' }}>
-        ¿Ya tenés cuenta? <Link to="/login">Iniciar sesión</Link>
+        Ya tenes cuenta? <Link to="/login">Iniciar sesion</Link>
       </p>
     </div>
   )

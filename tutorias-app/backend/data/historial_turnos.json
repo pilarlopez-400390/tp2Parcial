@@ -4,7 +4,7 @@
     "turnoId": 1,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-07T18:32:17.552Z",
+    "fechaHora": "2026-06-08T13:53:28.092Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -13,7 +13,7 @@
     "turnoId": 4,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-05T18:32:17.554Z",
+    "fechaHora": "2026-06-06T13:53:28.093Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -22,7 +22,7 @@
     "turnoId": 4,
     "usuarioId": 3,
     "accion": "confirmacion",
-    "fechaHora": "2026-06-06T18:32:17.556Z",
+    "fechaHora": "2026-06-07T13:53:28.093Z",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
@@ -31,7 +31,7 @@
     "turnoId": 7,
     "usuarioId": 9,
     "accion": "creacion",
-    "fechaHora": "2026-05-31T18:32:17.557Z",
+    "fechaHora": "2026-06-01T13:53:28.094Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -40,7 +40,7 @@
     "turnoId": 7,
     "usuarioId": 2,
     "accion": "confirmacion",
-    "fechaHora": "2026-06-01T18:32:17.559Z",
+    "fechaHora": "2026-06-02T13:53:28.095Z",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
@@ -49,7 +49,7 @@
     "turnoId": 7,
     "usuarioId": 2,
     "accion": "realizacion",
-    "fechaHora": "2026-06-03T18:32:17.564Z",
+    "fechaHora": "2026-06-04T13:53:28.095Z",
     "valorAnterior": "{\"estado\":\"confirmado\"}",
     "valorNuevo": "{\"estado\":\"realizado\"}"
   },
@@ -58,7 +58,7 @@
     "turnoId": 10,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-02T18:32:17.566Z",
+    "fechaHora": "2026-06-03T13:53:28.096Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -67,309 +67,17 @@
     "turnoId": 10,
     "usuarioId": 7,
     "accion": "cancelacion",
-    "fechaHora": "2026-06-03T18:32:17.567Z",
+    "fechaHora": "2026-06-04T13:53:28.096Z",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"cancelado\"}"
   },
   {
     "id": 9,
-    "turnoId": 3,
-    "usuarioId": {
-      "id": 11,
-      "nombre": "Lucas",
-      "email": "lucas@ppr.com",
-      "rol": "tutor",
-      "iat": 1781116467,
-      "exp": 1781202867
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:35:20.714Z",
-    "valorAnterior": "{\"tutorId\":2,\"fecha\":\"2026-06-09\",\"horaInicio\":\"14:00\",\"horaFin\":\"14:30\",\"tema\":\"React Hooks\",\"modalidad\":\"virtual\"}",
-    "valorNuevo": "{\"tutorId\":2,\"fecha\":\"2026-06-09\",\"horaInicio\":\"14:00\",\"horaFin\":\"14:30\",\"tema\":\"React Hooks\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 10,
-    "turnoId": 3,
-    "usuarioId": {
-      "id": 11,
-      "nombre": "Lucas",
-      "email": "lucas@ppr.com",
-      "rol": "tutor",
-      "iat": 1781116467,
-      "exp": 1781202867
-    },
-    "accion": "confirmacion",
-    "fechaHora": "2026-06-10T18:35:28.091Z",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"confirmado\"}"
-  },
-  {
-    "id": 11,
-    "turnoId": 3,
-    "usuarioId": {
-      "observaciones": ""
-    },
-    "accion": "realizacion",
-    "fechaHora": "2026-06-10T18:35:30.910Z",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\"}"
-  },
-  {
-    "id": 12,
-    "turnoId": 1,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:35:57.197Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"virtual\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 13,
-    "turnoId": 1,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:36:02.387Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"virtual\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 14,
-    "turnoId": 1,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:36:15.822Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"virtual\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 15,
-    "turnoId": 1,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:36:22.753Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"presencial\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 16,
-    "turnoId": 1,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:37:04.041Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"09:00\",\"horaFin\":\"09:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"presencial\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"19:00\",\"horaFin\":\"20:30\",\"tema\":\"JWT y middlewares\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 17,
-    "turnoId": 2,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:37:38.973Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"10:00\",\"horaFin\":\"10:30\",\"tema\":\"Express Router\",\"modalidad\":\"presencial\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"10:00\",\"horaFin\":\"10:01\",\"tema\":\"Express Router\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 18,
-    "turnoId": 2,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-10T18:37:47.341Z",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\"}"
-  },
-  {
-    "id": 19,
     "turnoId": 13,
-    "accion": "creacion",
-    "fechaHora": "2026-06-10T18:39:23.659Z",
-    "valorAnterior": null,
-    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"15:40\",\"horaFin\":\"18:40\",\"tema\":\"Rest APIs\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 20,
-    "turnoId": 13,
-    "usuarioId": {
-      "id": 10,
-      "nombre": "Pablo",
-      "email": "pablo@dds.com",
-      "rol": "estudiante",
-      "iat": 1781116545,
-      "exp": 1781202945
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:39:30.372Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"15:40\",\"horaFin\":\"18:40\",\"tema\":\"Rest APIs\",\"modalidad\":\"virtual\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"15:40\",\"horaFin\":\"18:40\",\"tema\":\"Rest APIs\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 21,
-    "turnoId": 5,
-    "usuarioId": {
-      "id": 1,
-      "nombre": "Admin Sistema",
-      "email": "admin@dds.com",
-      "rol": "admin",
-      "iat": 1781116930,
-      "exp": 1781203330
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:43:10.540Z",
-    "valorAnterior": "{\"tutorId\":3,\"fecha\":\"2026-06-10\",\"horaInicio\":\"15:00\",\"horaFin\":\"15:30\",\"tema\":\"Jest y Supertest\",\"modalidad\":\"presencial\"}",
-    "valorNuevo": "{\"tutorId\":3,\"fecha\":\"2026-06-10\",\"horaInicio\":\"15:00\",\"horaFin\":\"15:30\",\"tema\":\"Jest y Supertest\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 22,
-    "turnoId": 5,
-    "usuarioId": {
-      "id": 1,
-      "nombre": "Admin Sistema",
-      "email": "admin@dds.com",
-      "rol": "admin",
-      "iat": 1781116930,
-      "exp": 1781203330
-    },
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T18:43:34.083Z",
-    "valorAnterior": "{\"tutorId\":3,\"fecha\":\"2026-06-10\",\"horaInicio\":\"15:00\",\"horaFin\":\"15:30\",\"tema\":\"Jest y Supertest\",\"modalidad\":\"presencial\"}",
-    "valorNuevo": "{\"tutorId\":4,\"fecha\":\"2026-06-11\",\"horaInicio\":\"15:00\",\"horaFin\":\"15:30\",\"tema\":\"Jest y Supertest\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 23,
-    "turnoId": 14,
     "usuarioId": 10,
     "accion": "creacion",
-    "fechaHora": "2026-06-10T20:07:39.908Z",
+    "fechaHora": "2026-06-11T14:33:43.930Z",
     "valorAnterior": null,
-    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"10:00\",\"horaFin\":\"11:00\",\"tema\":\"Testing\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 24,
-    "turnoId": 15,
-    "usuarioId": 10,
-    "accion": "creacion",
-    "fechaHora": "2026-06-10T20:08:13.216Z",
-    "valorAnterior": null,
-    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":1,\"fecha\":\"2026-06-22\",\"horaInicio\":\"10:00\",\"horaFin\":\"11:00\",\"tema\":\"Testing\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 25,
-    "turnoId": 16,
-    "usuarioId": 10,
-    "accion": "creacion",
-    "fechaHora": "2026-06-10T20:16:20.148Z",
-    "valorAnterior": null,
-    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"20:00\",\"horaFin\":\"23:00\",\"tema\":\"Testing\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 26,
-    "turnoId": 16,
-    "usuarioId": 10,
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-10T20:22:23.319Z",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\"}"
-  },
-  {
-    "id": 27,
-    "turnoId": 17,
-    "usuarioId": 10,
-    "accion": "creacion",
-    "fechaHora": "2026-06-10T20:46:21.508Z",
-    "valorAnterior": null,
-    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":1,\"fecha\":\"2026-06-10\",\"horaInicio\":\"09:00\",\"horaFin\":\"12:00\",\"tema\":\"Testing\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 28,
-    "turnoId": 18,
-    "usuarioId": 10,
-    "accion": "creacion",
-    "fechaHora": "2026-06-10T20:56:31.059Z",
-    "valorAnterior": null,
-    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":1,\"fecha\":\"2026-06-12\",\"horaInicio\":\"09:00\",\"horaFin\":\"12:00\",\"tema\":\"Testing\",\"modalidad\":\"virtual\"}"
-  },
-  {
-    "id": 29,
-    "turnoId": 14,
-    "usuarioId": 2,
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T20:59:48.793Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"10:00\",\"horaFin\":\"11:00\",\"tema\":\"Testing\",\"modalidad\":\"presencial\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"10:00\",\"horaFin\":\"11:00\",\"tema\":\"Testing\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 30,
-    "turnoId": 14,
-    "usuarioId": 2,
-    "accion": "edicion",
-    "fechaHora": "2026-06-10T21:02:38.603Z",
-    "valorAnterior": "{\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"10:00\",\"horaFin\":\"11:00\",\"tema\":\"Testing\",\"modalidad\":\"presencial\"}",
-    "valorNuevo": "{\"tutorId\":1,\"fecha\":\"2026-06-26\",\"horaInicio\":\"10:00\",\"horaFin\":\"11:00\",\"tema\":\"Testing\",\"modalidad\":\"presencial\"}"
-  },
-  {
-    "id": 31,
-    "turnoId": 14,
-    "usuarioId": 2,
-    "accion": "confirmacion",
-    "fechaHora": "2026-06-10T21:02:59.880Z",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"confirmado\"}"
-  },
-  {
-    "id": 32,
-    "turnoId": 14,
-    "usuarioId": 2,
-    "accion": "realizacion",
-    "fechaHora": "2026-06-10T21:03:19.314Z",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\"}"
+    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":5,\"fecha\":\"2026-06-19\",\"horaInicio\":\"10:00\",\"horaFin\":\"11:00\",\"tema\":\"test\",\"modalidad\":\"presencial\"}"
   }
 ]

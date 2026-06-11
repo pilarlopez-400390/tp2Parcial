@@ -52,12 +52,20 @@ describe('Usuarios API - admin JWT', () => {
         password: 'tutorPrueba123',
         rol: 'tutor',
         especialidad: 'bases de datos',
-        diasDisponibles: 'lunes,martes'
+        diasDisponibles: 'lunes,martes',
+        horarioDisponible: { inicio: '13:00', fin: '18:00' }
       });
 
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('id');
     expect(res.body.rol).toBe('tutor');
+
+    const tutorCreado = db.findAll('tutores').find(t => t.usuarioId === res.body.id);
+    expect(tutorCreado).toBeDefined();
+    expect(tutorCreado.especialidad).toBe('bases de datos');
+    expect(tutorCreado.diasDisponibles).toEqual(['lunes', 'martes']);
+    expect(tutorCreado.horarioDisponible).toEqual({ inicio: '13:00', fin: '18:00' });
+
     createdUsuarioId = res.body.id;
   });
 

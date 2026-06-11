@@ -69,9 +69,16 @@ function obtenerUsuarioPorId(id) {
   return sanitizarUsuario(usuario)
 }
 
-function crearUsuario({ nombre, email, password, rol, especialidad, diasDisponibles }) {
+function crearUsuario({ nombre, email, password, rol, especialidad, diasDisponibles, horarioDisponible }) {
   if (!nombre || !email || !password || !rol) {
     const err = new Error('Nombre, email, contraseña y rol son obligatorios')
+    err.status = 400
+    throw err
+  }
+
+  const nombreNormalizado = nombre.trim().replace(/\s+/g, ' ')
+  if (nombreNormalizado.split(' ').length < 2) {
+    const err = new Error('Ingresa nombre y apellido')
     err.status = 400
     throw err
   }
@@ -87,7 +94,7 @@ function crearUsuario({ nombre, email, password, rol, especialidad, diasDisponib
   const passwordHash = bcrypt.hashSync(password, 10)
 
   const usuario = db.insert('usuarios', {
-    nombre,
+    nombre: nombreNormalizado,
     email,
     passwordHash,
     rol,
@@ -96,17 +103,28 @@ function crearUsuario({ nombre, email, password, rol, especialidad, diasDisponib
 
   if (rol === 'tutor') {
     const dias = parseDiasDisponibles(diasDisponibles)
-    if (!especialidad || dias.length === 0) {
-      const err = new Error('Los tutores requieren especialidad y días disponibles')
+    const horario = horarioDisponible || {}
+    const inicio = horario.inicio
+    const fin = horario.fin
+
+    if (!especialidad || dias.length === 0 || !inicio || !fin) {
+      const err = new Error('Los tutores requieren especialidad, días disponibles y horario disponible')
+      err.status = 400
+      throw err
+    }
+
+    if (inicio >= fin) {
+      const err = new Error('El horario de inicio debe ser anterior al horario de fin')
       err.status = 400
       throw err
     }
 
     db.insert('tutores', {
       usuarioId: usuario.id,
-      nombre,
+      nombre: nombreNormalizado,
       email,
       especialidad,
+      horarioDisponible: { inicio, fin },
       diasDisponibles: dias,
       activo: true
     })

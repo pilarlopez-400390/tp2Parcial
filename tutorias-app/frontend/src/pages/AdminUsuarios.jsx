@@ -12,7 +12,8 @@ export default function AdminUsuarios() {
 
   const [nuevo, setNuevo] = useState({
     nombre: '', email: '', password: '', rol: 'estudiante',
-    especialidad: 'backend', diasDisponibles: []
+    especialidad: 'backend', diasDisponibles: [],
+    horarioDisponible: { inicio: '09:00', fin: '17:00' }
   })
 
   const [modalEditar, setModalEditar] = useState(null)
@@ -40,9 +41,13 @@ export default function AdminUsuarios() {
     e.preventDefault()
     setError('')
     setExito('')
+    if (nuevo.nombre.trim().replace(/\s+/g, ' ').split(' ').length < 2) {
+      setError('Ingresá nombre y apellido.')
+      return
+    }
     try {
       await usuariosService.crear(nuevo)
-      setNuevo({ nombre: '', email: '', password: '', rol: 'estudiante', especialidad: 'backend', diasDisponibles: [] })
+      setNuevo({ nombre: '', email: '', password: '', rol: 'estudiante', especialidad: 'backend', diasDisponibles: [], horarioDisponible: { inicio: '09:00', fin: '17:00' } })
       setExito('Usuario creado correctamente.')
     } catch (err) {
       setError(err.response?.data?.error || 'Error al crear usuario')
@@ -143,7 +148,7 @@ export default function AdminUsuarios() {
             <input
               value={nuevo.nombre}
               onChange={e => setNuevo(prev => ({ ...prev, nombre: e.target.value }))}
-              placeholder="Nombre"
+              placeholder="Nombre y apellido"
               required
               style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
             />
@@ -201,6 +206,36 @@ export default function AdminUsuarios() {
                       /> {d}
                     </label>
                   ))}
+                </div>
+
+                <label style={{ fontWeight: 'bold', marginTop: '4px' }}>Horario disponible</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '4px', color: '#555' }}>Inicio</label>
+                    <input
+                      type="time"
+                      value={nuevo.horarioDisponible.inicio}
+                      onChange={e => setNuevo(prev => ({
+                        ...prev,
+                        horarioDisponible: { ...prev.horarioDisponible, inicio: e.target.value }
+                      }))}
+                      required
+                      style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '4px', color: '#555' }}>Fin</label>
+                    <input
+                      type="time"
+                      value={nuevo.horarioDisponible.fin}
+                      onChange={e => setNuevo(prev => ({
+                        ...prev,
+                        horarioDisponible: { ...prev.horarioDisponible, fin: e.target.value }
+                      }))}
+                      required
+                      style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+                    />
+                  </div>
                 </div>
               </>
             )}
