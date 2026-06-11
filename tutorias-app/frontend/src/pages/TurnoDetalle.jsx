@@ -20,6 +20,7 @@ export default function TurnoDetalle() {
   const [accionCargando, setAccionCargando] = useState(false)
   const [observaciones, setObservaciones] = useState('')
   const [mostrarHistorial, setMostrarHistorial] = useState(false)
+  const [historialError, setHistorialError] = useState('')
 
   // Cargamos el turno cuando el componente se monta (o cuando cambia el id)
   useEffect(() => {
@@ -40,11 +41,13 @@ export default function TurnoDetalle() {
 
   async function cargarHistorial() {
     try {
+      setHistorialError('')
       const data = await turnosService.historial(parseInt(id))
       setHistorial(data)
       setMostrarHistorial(true)
     } catch (err) {
-      setError('Error al cargar el historial')
+      setHistorialError(err.response?.data?.error || 'Error al cargar el historial')
+      setMostrarHistorial(true)
     }
   }
 
@@ -72,27 +75,24 @@ export default function TurnoDetalle() {
   function puedeConfirmar() {
     if (turno?.estado !== 'solicitado') return false
     if (usuario?.rol === 'admin') return true
-    // El tutor solo puede confirmar su propio turno
-    if (usuario?.rol === 'tutor') {
-      // Necesitamos comparar tutorId con el id del usuario actual
-      // Pero tutorId es el id del tutor (tabla tutores) no del usuario
-      // Por simplicidad, el admin puede confirmar — el frontend no bloquea
-      return true
-    }
-    return false
+    return usuario?.rol === 'tutor' && turno?.tutorUsuarioId === usuario?.id
   }
 
   function puedeRealizar() {
-    return turno?.estado === 'confirmado' && (usuario?.rol === 'admin' || usuario?.rol === 'tutor')
+    if (turno?.estado !== 'confirmado') return false
+    if (usuario?.rol === 'admin') return true
+    return usuario?.rol === 'tutor' && turno?.tutorUsuarioId === usuario?.id
   }
 
   function puedeCancelar() {
-    return (turno?.estado === 'solicitado' || turno?.estado === 'confirmado') && turno?.estado !== 'cancelado'
+    if (turno?.estado !== 'solicitado' && turno?.estado !== 'confirmado') return false
+    if (usuario?.rol === 'admin') return true
+    return usuario?.rol === 'estudiante' && turno?.estudianteId === usuario?.id
   }
 
   // Determinamos si el usuario puede editar
   function puedeEditar() {
-    return turno?.estado !== 'realizado' && turno?.estado !== 'cancelado'
+    return usuario?.rol === 'admin' && turno?.estado !== 'realizado' && turno?.estado !== 'cancelado'
   }
 
   const COLORES = {
@@ -105,6 +105,11 @@ export default function TurnoDetalle() {
   if (cargando) return <div style={{ textAlign: 'center', padding: '60px' }}>Cargando...</div>
   if (error) return <div style={{ textAlign: 'center', padding: '60px', color: '#c00' }}>⚠️ {error}</div>
   if (!turno) return null
+
+  const temasTurno = Array.isArray(turno.temas) && turno.temas.length > 0
+    ? turno.temas
+    : (turno.tema ? [turno.tema] : [])
+  const categoriaTurno = turno.categoria || turno.tutorEspecialidad || 'Sin categoria'
 
   return (
     <div style={{ maxWidth: '700px', margin: '24px auto', padding: '0 16px' }}>
@@ -132,23 +137,31 @@ export default function TurnoDetalle() {
             <p style={{ margin: '4px 0' }}>{turno.horaInicio} - {turno.horaFin}</p>
           </div>
           <div>
-            <strong>Tutor ID</strong>
-            <p style={{ margin: '4px 0' }}>{turno.tutorId}</p>
+            <strong>Tutor</strong>
+            <p style={{ margin: '4px 0' }}>{turno.tutorNombre || `Tutor ${turno.tutorId}`}</p>
           </div>
           <div>
-            <strong>Tema</strong>
-            <p style={{ margin: '4px 0' }}>{turno.tema}</p>
+            <strong>Especialidad del tutor</strong>
+            <p style={{ margin: '4px 0' }}>{turno.tutorEspecialidad || 'Sin especialidad'}</p>
+          </div>
+          <div>
+            <strong>Categoria</strong>
+            <p style={{ margin: '4px 0' }}>{categoriaTurno}</p>
+          </div>
+          <div style={{ gridColumn: '1 / -1' }}>
+            <strong>Tema/temas seleccionados</strong>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
+              {temasTurno.map(tema => (
+                <span key={tema} style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '999px', padding: '5px 10px', fontSize: '13px', fontWeight: '700', color: '#334155' }}>
+                  {tema}
+                </span>
+              ))}
+            </div>
           </div>
           <div>
             <strong>Modalidad</strong>
             <p style={{ margin: '4px 0' }}>{turno.modalidad}</p>
           </div>
-          {turno.especialidad && (
-            <div>
-              <strong>Especialidad</strong>
-              <p style={{ margin: '4px 0' }}>{turno.especialidad}</p>
-            </div>
-          )}
           {turno.observaciones && (
             <div style={{ gridColumn: '1 / -1' }}>
               <strong>Observaciones</strong>
@@ -232,11 +245,17 @@ export default function TurnoDetalle() {
           {mostrarHistorial ? '▲ Ocultar historial' : '▼ Ver historial de cambios'}
         </button>
 
-        {mostrarHistorial && historial.length === 0 && (
+        {mostrarHistorial && !historialError && historial.length === 0 && (
           <p style={{ color: '#888', fontSize: '14px' }}>Sin registros en el historial.</p>
         )}
 
-        {mostrarHistorial && historial.length > 0 && (
+        {mostrarHistorial && historialError && (
+          <p style={{ color: '#c00', fontSize: '14px', background: '#fee', border: '1px solid #fcc', borderRadius: '4px', padding: '10px' }}>
+            {historialError}
+          </p>
+        )}
+
+        {mostrarHistorial && !historialError && historial.length > 0 && (
           <div style={{ border: '1px solid #ddd', borderRadius: '6px', overflow: 'hidden' }}>
             {historial.map((entrada, idx) => {
               let anterior = null
@@ -247,6 +266,7 @@ export default function TurnoDetalle() {
               const etiquetas = {
                 creacion: 'Creación',
                 edicion: 'Edición',
+                reasignacion: 'Reasignación',
                 confirmacion: 'Confirmación',
                 cancelacion: 'Cancelación',
                 realizacion: 'Realización'

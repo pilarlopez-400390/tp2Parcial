@@ -18,6 +18,8 @@ process.env.NODE_ENV = 'test'; // Hace que database.js use data-test/
 require('dotenv').config();     // Carga .env para JWT_SECRET
 
 const request = require('supertest');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const app = require('../app');
 const seed = require('../src/seed/seed');
 const db = require('../src/config/database');
@@ -27,9 +29,8 @@ let tokenAdmin;
 let tokenEstudiante;
 let tokenTutor;
 
-// beforeAll: se ejecuta UNA vez antes de todos los tests
-// Cargamos los datos semilla en data-test/ para tener datos predecibles
-beforeAll(async () => {
+// beforeEach: deja cada test con datos limpios y predecibles
+beforeEach(async () => {
   // Reseteamos los datos de test y cargamos la semilla
   // db.clear y seed son SÍNCRONOS (usan fs.readFileSync/writeFileSync)
   db.clear('usuarios');
@@ -69,6 +70,34 @@ afterAll(async () => {
 // ============================================================
 describe('1. Autenticación', () => {
 
+  test('Registro crea usuario con contraseña hasheada', async () => {
+    const email = 'nuevo.estudiante@dds.com';
+    const password = 'claveSegura123';
+
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ nombre: 'Nuevo Estudiante', email, password });
+
+    expect(res.status).toBe(201);
+    expect(res.body.usuario).toMatchObject({ nombre: 'Nuevo Estudiante', email, rol: 'estudiante' });
+    expect(res.body.usuario.passwordHash).toBeUndefined();
+
+    const usuarioGuardado = db.findAll('usuarios').find(u => u.email === email);
+    expect(usuarioGuardado).toBeDefined();
+    expect(usuarioGuardado.passwordHash).toBeDefined();
+    expect(usuarioGuardado.passwordHash).not.toBe(password);
+    expect(bcrypt.compareSync(password, usuarioGuardado.passwordHash)).toBe(true);
+  });
+
+  test('Registro sin apellido devuelve 400', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ nombre: 'Lucia', email: 'lucia@test.com', password: 'claveSegura123' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBeDefined();
+  });
+
   // test() o it() definen un caso de prueba individual
   test('Login correcto devuelve 200 y token', async () => {
     const res = await request(app)
@@ -80,6 +109,21 @@ describe('1. Autenticación', () => {
     // expect(valor).toBeDefined() verifica que no sea undefined
     expect(res.body.token).toBeDefined();
     expect(res.body.usuario.rol).toBe('admin');
+    expect(res.body.usuario.email).toBeUndefined();
+
+    const decoded = jwt.verify(res.body.token, process.env.JWT_SECRET);
+    expect(decoded).toMatchObject({ id: 1, nombre: 'Admin Sistema', rol: 'admin' });
+    expect(decoded.email).toBeUndefined();
+    expect(decoded.passwordHash).toBeUndefined();
+  });
+
+  test('Login sin campos requeridos devuelve 400', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'admin@dds.com' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBeDefined();
   });
 
   test('Login con contraseña incorrecta devuelve 401', async () => {
@@ -98,6 +142,7 @@ describe('1. Autenticación', () => {
       .send({ email: 'noexiste@test.com', password: '123456' });
 
     expect(res.status).toBe(401);
+    expect(res.body.error).toBeDefined();
   });
 });
 
@@ -128,6 +173,35 @@ describe('2. Listado de turnos', () => {
     // Todos los turnos devueltos deben tener estado confirmado
     for (let i = 0; i < res.body.data.length; i++) {
       expect(res.body.data[i].estado).toBe('confirmado');
+    }
+  });
+
+  test('Lista turnos filtrados por fecha, tutor y especialidad', async () => {
+    const res = await request(app)
+      .get('/api/turnos?fecha=2026-06-10&tutorId=1&especialidad=backend')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toBeInstanceOf(Array);
+    for (let i = 0; i < res.body.data.length; i++) {
+      expect(res.body.data[i].fecha).toBe('2026-06-10');
+      expect(res.body.data[i].tutorId).toBe(1);
+      expect(res.body.data[i].tutorEspecialidad).toBe('backend');
+    }
+  });
+
+  test('Lista turnos con paginacion y ordenamiento', async () => {
+    const res = await request(app)
+      .get('/api/turnos?page=2&limit=3&sortBy=horaInicio&order=desc')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toBeInstanceOf(Array);
+    expect(res.body.data.length).toBeLessThanOrEqual(3);
+    expect(res.body.pagination).toMatchObject({ page: 2, limit: 3, total: 12, totalPages: 4 });
+
+    for (let i = 1; i < res.body.data.length; i++) {
+      expect(res.body.data[i - 1].horaInicio >= res.body.data[i].horaInicio).toBe(true);
     }
   });
 });
@@ -171,8 +245,8 @@ describe('4. Creación de turno válido', () => {
       .send({
         tutorId: 3,           // Ana Martínez (testing)
         fecha: '2026-06-15',  // Lunes — Ana atiende lunes, miércoles
-        horaInicio: '14:00',
-        horaFin: '14:30',
+        horaInicio: '12:00',
+        horaFin: '12:30',
         tema: 'Test de API con Supertest',
         modalidad: 'virtual'
       });
@@ -180,6 +254,38 @@ describe('4. Creación de turno válido', () => {
     expect(res.status).toBe(201);
     expect(res.body.estado).toBe('solicitado');
     expect(res.body.tutorId).toBe(3);
+
+    const historial = await request(app)
+      .get(`/api/turnos/${res.body.id}/historial`)
+      .set('Authorization', `Bearer ${tokenEstudiante}`);
+
+    expect(historial.status).toBe(200);
+    expect(historial.body[0].accion).toBe('creacion');
+    expect(historial.body[0]).toHaveProperty('turnoId', res.body.id);
+    expect(historial.body[0]).toHaveProperty('usuarioId');
+    expect(historial.body[0]).toHaveProperty('fechaHora');
+  });
+
+  test('Estudiante crea turno con categoria, multiples temas y observaciones', async () => {
+    const res = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 1,
+        fecha: '2026-06-15',
+        horaInicio: '11:30',
+        horaFin: '12:00',
+        categoria: 'Backend',
+        temas: ['JWT', 'Middlewares'],
+        modalidad: 'virtual',
+        observaciones: 'Necesito repasar autenticacion y middleware de token'
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.categoria).toBe('Backend');
+    expect(res.body.temas).toEqual(['JWT', 'Middlewares']);
+    expect(res.body.tema).toBe('JWT, Middlewares');
+    expect(res.body.observaciones).toBe('Necesito repasar autenticacion y middleware de token');
   });
 });
 
@@ -219,6 +325,7 @@ describe('5. Creación inválida por horario inconsistente', () => {
       });
 
     expect(res.status).toBe(400);
+    expect(res.body.error).toBeDefined();
   });
 });
 
@@ -246,6 +353,54 @@ describe('6. Creación inválida por superposición', () => {
     // El mensaje de error debe mencionar superposición
     expect(res.body.error).toBeDefined();
   });
+
+  test('Turno superpuesto para el mismo estudiante devuelve 400', async () => {
+    const res = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({
+        tutorId: 5,
+        estudianteId: 7,
+        fecha: '2026-06-11',
+        horaInicio: '10:15',
+        horaFin: '10:45',
+        tema: 'Test estudiante ocupado',
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('estudiante');
+  });
+
+  test('Permite turno cuando uno termina exactamente cuando empieza el otro', async () => {
+    db.insert('turnos', {
+      tutorId: 1,
+      estudianteId: 8,
+      fecha: '2026-06-15',
+      horaInicio: '10:30',
+      horaFin: '11:00',
+      tema: 'Turno previo',
+      modalidad: 'virtual',
+      estado: 'solicitado',
+      observaciones: null
+    });
+
+    const res = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 1,
+        fecha: '2026-06-15',
+        horaInicio: '11:00',
+        horaFin: '11:30',
+        tema: 'Turno pegado sin superposicion',
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.horaInicio).toBe('11:00');
+    expect(res.body.estado).toBe('solicitado');
+  });
 });
 
 // ============================================================
@@ -268,6 +423,15 @@ describe('7. Acceso sin token', () => {
       .send({ tutorId: 1, fecha: '2026-06-15' });
 
     expect(res.status).toBe(401);
+    expect(res.body.error).toBeDefined();
+  });
+
+  test('GET /api/tutores sin token → 401', async () => {
+    const res = await request(app)
+      .get('/api/tutores');
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBeDefined();
   });
 });
 
@@ -284,6 +448,94 @@ describe('8. Acceso con rol insuficiente', () => {
 
     expect(res.status).toBe(403);
     expect(res.body.error).toBeDefined();
+  });
+
+  test('Tutor no puede cancelar turnos', async () => {
+    const res = await request(app)
+      .patch('/api/turnos/1/cancelar')
+      .set('Authorization', `Bearer ${tokenTutor}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toBeDefined();
+  });
+
+  test('Tutor no puede editar turnos', async () => {
+    const res = await request(app)
+      .put('/api/turnos/1')
+      .set('Authorization', `Bearer ${tokenTutor}`)
+      .send({
+        fecha: '2026-06-15',
+        horaInicio: '09:30',
+        horaFin: '10:00',
+        tema: 'Intento de edicion',
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toBeDefined();
+  });
+
+  test('Estudiante puede cancelar su turno solicitado', async () => {
+    const res = await request(app)
+      .patch('/api/turnos/1/cancelar')
+      .set('Authorization', `Bearer ${tokenEstudiante}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.estado).toBe('cancelado');
+  });
+
+  test('Estudiante puede cancelar su turno confirmado', async () => {
+    const res = await request(app)
+      .patch('/api/turnos/4/cancelar')
+      .set('Authorization', `Bearer ${tokenEstudiante}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.estado).toBe('cancelado');
+  });
+
+  test('Admin puede cancelar cualquier turno solicitado o confirmado', async () => {
+    const res = await request(app)
+      .patch('/api/turnos/2/cancelar')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.estado).toBe('cancelado');
+  });
+
+  test('Admin puede confirmar solicitado y realizar confirmado', async () => {
+    const confirmado = await request(app)
+      .patch('/api/turnos/1/confirmar')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(confirmado.status).toBe(200);
+    expect(confirmado.body.estado).toBe('confirmado');
+
+    const realizado = await request(app)
+      .patch('/api/turnos/1/realizar')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({ observaciones: 'Tutoria completada' });
+
+    expect(realizado.status).toBe(200);
+    expect(realizado.body.estado).toBe('realizado');
+    expect(realizado.body.observaciones).toBe('Tutoria completada');
+  });
+
+  test('No permite saltar de solicitado a realizado', async () => {
+    const res = await request(app)
+      .patch('/api/turnos/1/realizar')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('confirmado');
+  });
+
+  test('No permite confirmar un turno ya confirmado', async () => {
+    const res = await request(app)
+      .patch('/api/turnos/4/confirmar')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('solicitado');
   });
 });
 
@@ -311,6 +563,64 @@ describe('9. Edición inválida — tutor ocupado', () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toBeDefined();
   });
+
+  test('Reasignar turno1 a otro tutor genera acción de reasignación cuando la edición es válida', async () => {
+    const res = await request(app)
+      .put('/api/turnos/1')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({
+        tutorId: 3,
+        fecha: '2026-06-17',
+        horaInicio: '12:00',
+        horaFin: '12:30',
+        tema: 'Test reasignación',
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.tutorId).toBe(3);
+
+    const historial = await request(app)
+      .get('/api/turnos/1/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(historial.status).toBe(200);
+    expect(historial.body[historial.body.length - 1].accion).toBe('reasignacion');
+    expect(historial.body[historial.body.length - 1].valorAnterior).toContain('"tutorId":1');
+    expect(historial.body[historial.body.length - 1].valorNuevo).toContain('"tutorId":3');
+  });
+
+  test('Turno realizado solo permite editar observaciones', async () => {
+    const edicionInvalida = await request(app)
+      .put('/api/turnos/7')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({
+        tema: 'Cambio no permitido',
+        observaciones: 'Intento de cambio'
+      });
+
+    expect(edicionInvalida.status).toBe(400);
+    expect(edicionInvalida.body.error).toContain('observaciones');
+
+    const edicionValida = await request(app)
+      .put('/api/turnos/7')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({
+        observaciones: 'Observacion actualizada'
+      });
+
+    expect(edicionValida.status).toBe(200);
+    expect(edicionValida.body.estado).toBe('realizado');
+    expect(edicionValida.body.observaciones).toBe('Observacion actualizada');
+
+    const historial = await request(app)
+      .get('/api/turnos/7/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(historial.status).toBe(200);
+    expect(historial.body[historial.body.length - 1].accion).toBe('edicion');
+    expect(historial.body[historial.body.length - 1].valorNuevo).toContain('Observacion actualizada');
+  });
 });
 
 // ============================================================
@@ -335,5 +645,230 @@ describe('10. Día no disponible para el tutor', () => {
 
     expect(res.status).toBe(400);
     expect(res.body.error).toBeDefined();
+  });
+
+  test('Horario fuera de la disponibilidad del tutor devuelve 400', async () => {
+    const res = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 1,
+        fecha: '2026-06-15',
+        horaInicio: '13:00',
+        horaFin: '13:30',
+        tema: 'Test fuera de horario',
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('atiende de 09:00 a 12:30');
+  });
+
+  test('Tutor inactivo no puede recibir turnos', async () => {
+    db.update('tutores', 1, { activo: false });
+
+    const res = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 1,
+        fecha: '2026-06-15',
+        horaInicio: '10:00',
+        horaFin: '10:30',
+        tema: 'Test tutor inactivo',
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('inactivo');
+  });
+
+  test('No permite crear turnos en fechas anteriores a hoy', async () => {
+    const ayer = new Date();
+    ayer.setDate(ayer.getDate() - 1);
+    const fechaAyer = `${ayer.getFullYear()}-${String(ayer.getMonth() + 1).padStart(2, '0')}-${String(ayer.getDate()).padStart(2, '0')}`;
+
+    const res = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 1,
+        fecha: fechaAyer,
+        horaInicio: '10:00',
+        horaFin: '10:30',
+        tema: 'Test fecha pasada',
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('fechas anteriores');
+  });
+
+  test('No permite crear turnos en años anteriores o posteriores al actual', async () => {
+    const anioActual = new Date().getFullYear();
+
+    const resAnioAnterior = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 1,
+        fecha: `${anioActual - 1}-06-16`,
+        horaInicio: '10:00',
+        horaFin: '10:30',
+        tema: 'Test año anterior',
+        modalidad: 'virtual'
+      });
+
+    expect(resAnioAnterior.status).toBe(400);
+    expect(resAnioAnterior.body.error).toContain(`año ${anioActual}`);
+
+    const resAnioPosterior = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 1,
+        fecha: `${anioActual + 1}-06-16`,
+        horaInicio: '10:00',
+        horaFin: '10:30',
+        tema: 'Test año posterior',
+        modalidad: 'virtual'
+      });
+
+    expect(resAnioPosterior.status).toBe(400);
+    expect(resAnioPosterior.body.error).toContain(`año ${anioActual}`);
+  });
+});
+
+// ============================================================
+// TEST 11: Historial de cambios
+// ============================================================
+describe('11. Historial de cambios', () => {
+  function esperarEntradaValida(entrada, accion) {
+    expect(entrada).toHaveProperty('turnoId');
+    expect(entrada).toHaveProperty('usuarioId');
+    expect(entrada).toHaveProperty('accion', accion);
+    expect(entrada).toHaveProperty('fechaHora');
+    expect(entrada).toHaveProperty('valorAnterior');
+    expect(entrada).toHaveProperty('valorNuevo');
+  }
+
+  test('Registra creacion, edicion, confirmacion, cancelacion, realizacion y reasignacion', async () => {
+    const creado = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenEstudiante}`)
+      .send({
+        tutorId: 3,
+        fecha: '2026-06-17',
+        horaInicio: '12:00',
+        horaFin: '12:30',
+        tema: 'Historial creacion',
+        modalidad: 'virtual'
+      });
+
+    expect(creado.status).toBe(201);
+    let historial = await request(app)
+      .get(`/api/turnos/${creado.body.id}/historial`)
+      .set('Authorization', `Bearer ${tokenEstudiante}`);
+
+    expect(historial.status).toBe(200);
+    esperarEntradaValida(historial.body[historial.body.length - 1], 'creacion');
+
+    const editado = await request(app)
+      .put('/api/turnos/1')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({
+        fecha: '2026-06-15',
+        horaInicio: '11:30',
+        horaFin: '12:00',
+        tema: 'Historial edicion',
+        modalidad: 'virtual'
+      });
+
+    expect(editado.status).toBe(200);
+    historial = await request(app)
+      .get('/api/turnos/1/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+    esperarEntradaValida(historial.body[historial.body.length - 1], 'edicion');
+
+    const confirmado = await request(app)
+      .patch('/api/turnos/1/confirmar')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(confirmado.status).toBe(200);
+    historial = await request(app)
+      .get('/api/turnos/1/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+    esperarEntradaValida(historial.body[historial.body.length - 1], 'confirmacion');
+
+    const realizado = await request(app)
+      .patch('/api/turnos/1/realizar')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({ observaciones: 'Historial realizacion' });
+
+    expect(realizado.status).toBe(200);
+    historial = await request(app)
+      .get('/api/turnos/1/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+    esperarEntradaValida(historial.body[historial.body.length - 1], 'realizacion');
+
+    const cancelado = await request(app)
+      .patch('/api/turnos/2/cancelar')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(cancelado.status).toBe(200);
+    historial = await request(app)
+      .get('/api/turnos/2/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+    esperarEntradaValida(historial.body[historial.body.length - 1], 'cancelacion');
+
+    const reasignado = await request(app)
+      .put('/api/turnos/3')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({
+        tutorId: 3,
+        fecha: '2026-06-17',
+        horaInicio: '08:30',
+        horaFin: '09:00',
+        tema: 'Historial reasignacion',
+        modalidad: 'virtual'
+      });
+
+    expect(reasignado.status).toBe(200);
+    historial = await request(app)
+      .get('/api/turnos/3/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+    esperarEntradaValida(historial.body[historial.body.length - 1], 'reasignacion');
+  });
+});
+
+// ============================================================
+// TEST 12: Resumen admin bloqueado para otros roles
+// ============================================================
+describe('12. Resumen admin protegido', () => {
+  test('Estudiante no puede acceder al resumen → 403', async () => {
+    const res = await request(app)
+      .get('/api/turnos/resumen')
+      .set('Authorization', `Bearer ${tokenEstudiante}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toBeDefined();
+  });
+
+  test('Admin accede al resumen con totalTurnos', async () => {
+    const res = await request(app)
+      .get('/api/turnos/resumen')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.totalTurnos).toBeDefined();
+    expect(res.body.turnosHoy).toBeDefined();
+    expect(res.body.turnosPorTutor).toBeInstanceOf(Array);
+    expect(res.body.temasMasSolicitados).toBeInstanceOf(Array);
+    expect(res.body.temasPorCategoria).toBeInstanceOf(Array);
+    expect(res.body.temasPorCategoria[0]).toHaveProperty('categoria');
+    expect(res.body.temasPorCategoria[0]).toHaveProperty('temas');
+    expect(res.body.temasPorEspecialidad).toBeInstanceOf(Array);
+    expect(res.body.temasPorEspecialidad[0]).toHaveProperty('especialidad');
+    expect(res.body.temasPorEspecialidad[0]).toHaveProperty('temas');
   });
 });

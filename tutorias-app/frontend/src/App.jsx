@@ -74,11 +74,11 @@ export default function App() {
             }
           />
 
-          {/* Editar un turno — cualquier usuario logueado (el backend valida permisos) */}
+          {/* Editar un turno — solo admin */}
           <Route
             path="/turnos/:id/editar"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={['admin']}>
                 <TurnoForm />
               </PrivateRoute>
             }

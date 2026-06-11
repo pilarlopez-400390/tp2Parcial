@@ -29,4 +29,16 @@ async function obtener(req, res, next) {
   }
 }
 
-module.exports = { listar, obtener };
+// GET /api/tutores/:id/agenda?fecha=YYYY-MM-DD
+async function agenda(req, res, next) {
+  try {
+    const id = parseInt(req.params.id);
+    const { fecha, turnoId } = req.query;
+    const agendaTutor = await tutoresService.obtenerAgendaTutor(id, fecha, turnoId ? parseInt(turnoId) : null);
+    res.status(200).json(agendaTutor);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { listar, obtener, agenda };

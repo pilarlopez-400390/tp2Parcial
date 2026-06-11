@@ -8,6 +8,14 @@ const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 const db     = require('../config/database');
 
+function sanitizarUsuarioAuth(usuario) {
+  return {
+    id: usuario.id,
+    nombre: usuario.nombre,
+    rol: usuario.rol
+  };
+}
+
 // ── REGISTRAR ────────────────────────────────────────────────────────────────
 
 function registrar({ nombre, email, password }) {
@@ -15,6 +23,14 @@ function registrar({ nombre, email, password }) {
   // 1. Validar que los campos obligatorios llegaron
   if (!nombre || !email || !password) {
     const err = new Error('Nombre, email y contraseña son obligatorios');
+    err.status = 400;
+    throw err;
+  }
+
+  const nombreNormalizado = nombre.trim().replace(/\s+/g, ' ');
+  const partesNombre = nombreNormalizado.split(' ');
+  if (partesNombre.length < 2) {
+    const err = new Error('Ingresa nombre y apellido');
     err.status = 400;
     throw err;
   }
@@ -40,7 +56,7 @@ function registrar({ nombre, email, password }) {
 
   // 5. Insertar usuario en la base de datos
   const nuevoUsuario = db.insert('usuarios', {
-    nombre, email, passwordHash, rol, activo: true
+    nombre: nombreNormalizado, email, passwordHash, rol, activo: true
   });
 
   // Devolvemos el usuario SIN el hash de contraseña
@@ -55,6 +71,12 @@ function registrar({ nombre, email, password }) {
 // ── LOGIN ─────────────────────────────────────────────────────────────────────
 
 function login({ email, password }) {
+
+  if (!email || !password) {
+    const err = new Error('Email y contraseña son obligatorios');
+    err.status = 400;
+    throw err;
+  }
 
   // 1. Buscar el usuario por email
   const usuarios = db.findAll('usuarios');
@@ -95,10 +117,9 @@ function login({ email, password }) {
   //    El payload es lo que se codifica dentro del token.
   //    IMPORTANTE: NO incluir contraseña ni datos sensibles.
   const payload = {
-    id:     usuario.id,
+    id: usuario.id,
     nombre: usuario.nombre,
-    email:  usuario.email,
-    rol:    usuario.rol
+    rol: usuario.rol
   };
 
   // jwt.sign(payload, secret, options)
@@ -111,7 +132,7 @@ function login({ email, password }) {
     { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
   );
 
-  return { token, usuario: payload };
+  return { token, usuario: sanitizarUsuarioAuth(payload) };
 }
 
 module.exports = { registrar, login };

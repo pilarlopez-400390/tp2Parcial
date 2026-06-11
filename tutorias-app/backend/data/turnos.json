@@ -3,13 +3,13 @@
     "id": 1,
     "tutorId": 1,
     "estudianteId": 7,
-    "fecha": "2026-06-26",
-    "horaInicio": "19:00",
-    "horaFin": "20:30",
+    "fecha": "2026-06-10",
+    "horaInicio": "09:00",
+    "horaFin": "09:30",
     "tema": "JWT y middlewares",
-    "modalidad": "presencial",
+    "modalidad": "virtual",
     "estado": "solicitado",
-    "observaciones": "dar clase 2"
+    "observaciones": null
   },
   {
     "id": 2,
@@ -17,11 +17,11 @@
     "estudianteId": 8,
     "fecha": "2026-06-10",
     "horaInicio": "10:00",
-    "horaFin": "10:01",
+    "horaFin": "10:30",
     "tema": "Express Router",
     "modalidad": "presencial",
-    "estado": "cancelado",
-    "observaciones": ""
+    "estado": "solicitado",
+    "observaciones": null
   },
   {
     "id": 3,
@@ -32,8 +32,8 @@
     "horaFin": "14:30",
     "tema": "React Hooks",
     "modalidad": "virtual",
-    "estado": "realizado",
-    "observaciones": "Dar clase"
+    "estado": "solicitado",
+    "observaciones": null
   },
   {
     "id": 4,
@@ -49,15 +49,15 @@
   },
   {
     "id": 5,
-    "tutorId": 4,
+    "tutorId": 3,
     "estudianteId": 8,
-    "fecha": "2026-06-11",
+    "fecha": "2026-06-10",
     "horaInicio": "15:00",
     "horaFin": "15:30",
     "tema": "Jest y Supertest",
     "modalidad": "presencial",
     "estado": "confirmado",
-    "observaciones": ""
+    "observaciones": null
   },
   {
     "id": 6,
@@ -145,72 +145,13 @@
   },
   {
     "id": 13,
-    "tutorId": 1,
-    "fecha": "2026-06-10",
-    "horaInicio": "15:40",
-    "horaFin": "18:40",
-    "tema": "Rest APIs",
-    "modalidad": "virtual",
-    "estado": "solicitado",
-    "observaciones": ""
-  },
-  {
-    "id": 14,
-    "tutorId": 1,
+    "tutorId": 5,
     "estudianteId": 10,
-    "fecha": "2026-06-26",
+    "fecha": "2026-06-19",
     "horaInicio": "10:00",
     "horaFin": "11:00",
-    "tema": "Testing",
+    "tema": "test",
     "modalidad": "presencial",
-    "estado": "realizado",
-    "observaciones": "Testttt"
-  },
-  {
-    "id": 15,
-    "tutorId": 1,
-    "estudianteId": 10,
-    "fecha": "2026-06-22",
-    "horaInicio": "10:00",
-    "horaFin": "11:00",
-    "tema": "Testing",
-    "modalidad": "presencial",
-    "estado": "solicitado",
-    "observaciones": null
-  },
-  {
-    "id": 16,
-    "tutorId": 1,
-    "estudianteId": 10,
-    "fecha": "2026-06-10",
-    "horaInicio": "20:00",
-    "horaFin": "23:00",
-    "tema": "Testing",
-    "modalidad": "virtual",
-    "estado": "cancelado",
-    "observaciones": null
-  },
-  {
-    "id": 17,
-    "tutorId": 1,
-    "estudianteId": 10,
-    "fecha": "2026-06-10",
-    "horaInicio": "09:00",
-    "horaFin": "12:00",
-    "tema": "Testing",
-    "modalidad": "virtual",
-    "estado": "solicitado",
-    "observaciones": null
-  },
-  {
-    "id": 18,
-    "tutorId": 1,
-    "estudianteId": 10,
-    "fecha": "2026-06-12",
-    "horaInicio": "09:00",
-    "horaFin": "12:00",
-    "tema": "Testing",
-    "modalidad": "virtual",
     "estado": "solicitado",
     "observaciones": null
   }

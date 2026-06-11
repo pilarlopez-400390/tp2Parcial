@@ -5,6 +5,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import './styles.css'
 
 // StrictMode activa advertencias adicionales de React en desarrollo.
 // No afecta el comportamiento en producción.

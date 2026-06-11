@@ -1,256 +1,326 @@
-# Sistema de Gestión de Tutorías — DDS 2026
+# Sistema de Tutorias
 
-**UTN FRC · Desarrollo de Software · 3K7 · Grupo 8**
+Aplicacion full stack para gestionar turnos de tutorias con autenticacion JWT, roles, historial, disponibilidad horaria, filtros, paginacion, panel administrativo y tests automatizados.
 
-Aplicación full-stack para gestionar turnos de tutoría entre estudiantes y tutores. Permite solicitar, confirmar, cancelar y marcar como realizados los turnos, con control de acceso por roles (admin, tutor, estudiante) y registro de historial de cambios.
+## Tecnologias
 
----
+- Backend: Node.js, Express, JWT, bcryptjs, persistencia en JSON.
+- Frontend: React, React Router, Axios, Vite.
+- Testing backend: Jest + Supertest.
 
-## Tecnologías
+## Como Ejecutar
 
-| Capa | Stack |
-|------|-------|
-| Backend | Node.js · Express · bcryptjs · jsonwebtoken · dotenv |
-| Frontend | React 18 · Vite · React Router DOM · Axios |
-| Testing | Jest · Supertest |
-| Persistencia | Archivos JSON (sin base de datos externa) |
-
----
-
-## Instalación y ejecución
-
-### 1. Clonar el proyecto
-
-```bash
-git clone <url-del-repo>
-cd tutorias-app
-```
-
-### 2. Backend
+### Backend
 
 ```bash
 cd backend
 npm install
-npm run seed     # Carga los datos de prueba (usuarios, tutores y turnos)
-npm run dev      # Inicia el servidor en http://localhost:3001
+npm run seed
+npm run dev
 ```
 
-### 3. Frontend
+El backend corre en `http://localhost:3001`.
+
+### Frontend
 
 ```bash
 cd frontend
 npm install
-npm run dev      # Inicia la app en http://localhost:5173
+npm run dev
 ```
 
-> El frontend usa un proxy Vite que redirige `/api/*` al backend, por lo que no hace falta configurar CORS manualmente.
+El frontend corre en `http://localhost:5173`.
 
----
+Vite usa proxy: las llamadas a `/api` se redirigen a `http://localhost:3001/api`.
 
-## Tests
+## Credenciales de Prueba
+
+Admin:
+
+- Email: `admin@dds.com`
+- Password: `admin123`
+
+Tutor:
+
+- Email: `marina@dds.com`
+- Password: `tutor123`
+
+Estudiante:
+
+- Email: `valen@dds.com`
+- Password: `estudiante123`
+
+## Endpoints Backend
+
+Auth:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+Tutores:
+
+- `GET /api/tutores`
+- `GET /api/tutores/:id`
+- `GET /api/tutores/:id/agenda?fecha=YYYY-MM-DD`
+
+Turnos:
+
+- `GET /api/turnos`
+- `GET /api/turnos/resumen`
+- `GET /api/turnos/:id`
+- `GET /api/turnos/:id/historial`
+- `POST /api/turnos`
+- `PUT /api/turnos/:id`
+- `PATCH /api/turnos/:id/cancelar`
+- `PATCH /api/turnos/:id/confirmar`
+- `PATCH /api/turnos/:id/realizar`
+
+Usuarios admin:
+
+- `GET /api/usuarios`
+- `POST /api/usuarios`
+- `PATCH /api/usuarios/:id`
+- `DELETE /api/usuarios/:id`
+
+## Rutas Frontend
+
+- `/login`: inicio de sesion.
+- `/register`: registro de estudiante.
+- `/turnos`: listado con filtros y paginacion.
+- `/turnos/nuevo`: alta de turno.
+- `/turnos/:id`: detalle e historial.
+- `/turnos/:id/editar`: edicion de turno, solo admin.
+- `/resumen`: panel administrativo, solo admin.
+- `/admin/usuarios`: administracion de usuarios, solo admin.
+- `*`: pagina 404.
+
+## JWT
+
+El login correcto devuelve un token JWT y los datos del usuario. El frontend guarda token y usuario en `localStorage` mediante `AuthContext`.
+
+Axios agrega automaticamente:
+
+```http
+Authorization: Bearer <token>
+```
+
+Las rutas protegidas usan middleware JWT en backend y `PrivateRoute` en frontend.
+
+## Roles y Permisos
+
+Estudiante:
+
+- Puede registrarse, iniciar sesion, crear turnos, ver sus turnos, ver detalle e historial de sus turnos y cancelar turnos solicitados o confirmados propios.
+- No puede confirmar, realizar, reasignar tutor ni administrar turnos ajenos.
+
+Tutor:
+
+- Puede iniciar sesion, ver turnos asignados, ver detalle, confirmar turnos asignados y marcar realizados sus turnos.
+- No puede cancelar, editar, reasignar tutor ni administrar turnos ajenos.
+
+Admin:
+
+- Puede ver todos los turnos, ver detalles, confirmar, cancelar, marcar realizados, editar, reasignar tutor, administrar usuarios y ver panel resumen.
+
+## Reglas de Turnos
+
+Estados:
+
+```text
+solicitado -> confirmado o cancelado
+confirmado -> realizado o cancelado
+realizado -> solo permite editar observaciones
+```
+
+Crear turno valida:
+
+- Tutor existente.
+- Tutor activo.
+- Fecha no pasada y dentro del anio actual.
+- `horaInicio < horaFin`.
+- Categoria de consulta: Backend, Frontend, Testing o Seguridad.
+- Uno o mas subtemas seleccionados con checkboxes.
+- Observaciones opcionales para detallar la consulta.
+- Dia disponible del tutor.
+- Horario dentro de la disponibilidad del tutor.
+- Sin superposicion de tutor.
+- Sin superposicion de estudiante.
+
+Editar o reasignar tutor vuelve a validar disponibilidad y superposicion.
+
+## Categorias y Temas
+
+Los turnos guardan:
+
+- `categoria`: Backend, Frontend, Testing o Seguridad.
+- `temas`: lista de subtemas seleccionados.
+- `tema`: resumen de compatibilidad, por ejemplo `JWT, Middlewares`.
+- `observaciones`: texto libre opcional.
+
+Esto permite mostrar el detalle completo del turno y calcular estadisticas por categoria y subtema en el panel administrativo.
+
+## Disponibilidad
+
+Cada tutor tiene:
+
+- `diasDisponibles`: por ejemplo `['lunes', 'miercoles', 'viernes']`.
+- `horarioDisponible`: por ejemplo `{ "inicio": "09:00", "fin": "12:30" }`.
+- `activo`: si esta en `false`, no puede recibir turnos.
+
+El frontend muestra tarjetas de tutores con especialidad, dias y horarios, y limita la seleccion de fechas/horas. El backend es la fuente de verdad y vuelve a validar todo.
+
+## Superposicion
+
+Un turno bloquea disponibilidad si:
+
+- Tiene el mismo tutor o el mismo estudiante.
+- Tiene la misma fecha.
+- Esta en estado `solicitado` o `confirmado`.
+- Su horario se superpone.
+
+Si un turno termina exactamente cuando empieza otro, se permite. Ejemplo:
+
+- `10:30-11:00`
+- `11:00-11:30`
+
+No hay superposicion.
+
+## Historial
+
+Cada cambio registra:
+
+- `turnoId`
+- `usuarioId`
+- `accion`
+- `fechaHora`
+- `valorAnterior`
+- `valorNuevo`
+
+Acciones registradas:
+
+- `creacion`
+- `edicion`
+- `confirmacion`
+- `cancelacion`
+- `realizacion`
+- `reasignacion`
+
+El historial se ve en `/turnos/:id` con el boton "Ver historial de cambios".
+
+## Filtros, Paginacion y Ordenamiento
+
+`GET /api/turnos` acepta:
+
+- `fecha`
+- `estado`
+- `tutorId`
+- `especialidad`
+- `estudianteId`
+- `page`
+- `limit`
+- `sortBy`
+- `order`
+
+Ejemplo:
+
+```http
+GET /api/turnos?estado=confirmado&page=1&limit=10&sortBy=fecha&order=asc
+```
+
+## Panel Administrativo
+
+Disponible solo para admin en `/resumen`.
+
+Muestra:
+
+- Turnos del dia.
+- Turnos pendientes de confirmacion.
+- Total de turnos.
+- Turnos por tutor.
+- Temas mas solicitados por categoria.
+- Detalle interactivo de turnos.
+
+## Persistencia
+
+Se usan archivos JSON en:
+
+- `backend/data/usuarios.json`
+- `backend/data/tutores.json`
+- `backend/data/turnos.json`
+- `backend/data/historial_turnos.json`
+
+Los tests usan `backend/data-test` para no contaminar los datos reales.
+
+## Datos Semilla
+
+El seed carga como minimo:
+
+- 1 admin.
+- 5 tutores.
+- 3 estudiantes.
+- 12 turnos.
+- Historial inicial.
+
+Para regenerarlos:
+
+```bash
+cd backend
+npm run seed
+```
+
+## Testing
 
 ```bash
 cd backend
 npm test
 ```
 
-Resultado esperado: **16/16 tests pasando**
+La suite prueba:
 
-Los tests usan una carpeta `data-test/` separada de los datos de producción (`data/`), por lo que ejecutarlos no afecta los datos cargados con el seed.
+- Login correcto.
+- Login incorrecto.
+- Listado sin filtros.
+- Listado con filtros.
+- Paginacion y ordenamiento.
+- Detalle existente.
+- Detalle inexistente.
+- Crear turno valido.
+- Crear turno con horario invalido.
+- Crear turno con superposicion.
+- Crear turno en dia no disponible.
+- Acceso sin JWT.
+- Acceso con rol insuficiente.
+- Editar reasignando tutor ocupado.
+- Flujo de estados.
+- Tutor inactivo.
+- Fechas no permitidas.
+- Historial completo.
+- Panel admin protegido.
 
----
+## Limitaciones Conocidas
 
-## Credenciales de prueba
+- Persistencia en JSON: sirve para el trabajo practico, pero no es adecuada para concurrencia real en produccion.
+- El frontend usa estilos inline y CSS simple, no un sistema de componentes.
+- El proxy `/api` de Vite funciona en desarrollo; en produccion se debe configurar el servidor que sirva frontend y backend.
+- Las fechas se validan contra la fecha local del servidor.
 
-Luego de ejecutar `npm run seed`, están disponibles los siguientes usuarios:
+## Checklist Rapido
 
-| Rol | Email | Contraseña |
-|-----|-------|------------|
-| Admin | admin@dds.com | admin123 |
-| Tutor (Marina — Backend) | marina@dds.com | tutor123 |
-| Tutor (Carlos — Frontend) | carlos@dds.com | tutor123 |
-| Tutor (Ana — Testing) | ana@dds.com | tutor123 |
-| Tutor (Diego — Seguridad) | diego@dds.com | tutor123 |
-| Tutor (Laura — Backend) | laura@dds.com | tutor123 |
-| Estudiante (Valen) | valen@dds.com | estudiante123 |
-| Estudiante (Tomás) | tomas@dds.com | estudiante123 |
-| Estudiante (Sofía) | sofia@dds.com | estudiante123 |
-
----
-
-## Estructura del proyecto
-
-```
-tutorias-app/
-├── backend/
-│   ├── .env                             ← Variables: PORT=3001, JWT_SECRET
-│   ├── server.js                        ← Punto de entrada del servidor HTTP
-│   ├── app.js                           ← Configuración de Express (middlewares, rutas)
-│   ├── data/                            ← JSON de producción (usuarios, tutores, turnos, historial)
-│   ├── data-test/                       ← JSON aislado usado durante los tests
-│   ├── tests/
-│   │   └── turnos.test.js               ← 16 tests con Jest + Supertest
-│   └── src/
-│       ├── config/
-│       │   └── database.js              ← API de lectura/escritura sobre archivos JSON
-│       ├── seed/
-│       │   └── seed.js                  ← Genera usuarios, tutores y 12 turnos de prueba
-│       ├── middlewares/
-│       │   ├── auth.middleware.js        ← Verifica que el JWT sea válido
-│       │   ├── authorize.middleware.js   ← Verifica que el rol tenga permiso
-│       │   └── errorHandler.middleware.js ← Captura errores y responde con JSON
-│       ├── services/
-│       │   ├── auth.service.js           ← Registro y login (hash con bcryptjs)
-│       │   ├── tutores.service.js        ← Listado y detalle de tutores activos
-│       │   └── turnos.service.js         ← Toda la lógica: estados, disponibilidad, historial
-│       ├── controllers/
-│       │   ├── auth.controller.js        ← Maneja las rutas /api/auth/*
-│       │   ├── tutores.controller.js     ← Maneja las rutas /api/tutores/*
-│       │   └── turnos.controller.js      ← Maneja las rutas /api/turnos/*
-│       └── routes/
-│           ├── auth.routes.js
-│           ├── tutores.routes.js
-│           └── turnos.routes.js
-│
-└── frontend/
-    ├── vite.config.js                   ← Proxy /api → localhost:3001
-    └── src/
-        ├── main.jsx                     ← Punto de entrada de React
-        ├── App.jsx                      ← Router principal con rutas protegidas
-        ├── context/
-        │   └── AuthContext.jsx          ← Estado global: usuario, token, login/logout
-        ├── services/
-        │   ├── api.js                   ← Axios con interceptor JWT (y redirect al 401)
-        │   ├── authService.js           ← Llama a /api/auth/register y /api/auth/login
-        │   ├── tutoresService.js        ← Llama a /api/tutores
-        │   └── turnosService.js         ← Llama a todos los endpoints de /api/turnos
-        ├── components/
-        │   ├── Navbar.jsx               ← Barra de navegación con botón de logout
-        │   └── PrivateRoute.jsx         ← Redirige a /login si no hay sesión activa
-        └── pages/
-            ├── Login.jsx                ← Formulario de login
-            ├── Register.jsx             ← Formulario de registro
-            ├── TurnosList.jsx           ← Lista con filtros (estado, fecha) y paginación
-            ├── TurnoDetalle.jsx         ← Detalle del turno con acciones e historial
-            ├── TurnoForm.jsx            ← Formulario para crear o editar un turno
-            ├── ResumenAdmin.jsx         ← Panel de estadísticas (solo admin)
-            └── NotFound.jsx             ← Página 404
-```
-
----
-
-## API REST
-
-### Rutas públicas (sin autenticación)
-
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| POST | `/api/auth/register` | Registra un nuevo usuario |
-| POST | `/api/auth/login` | Inicia sesión, devuelve `{ token, usuario }` |
-| GET | `/api/tutores` | Lista todos los tutores activos |
-| GET | `/api/tutores/:id` | Detalle de un tutor específico |
-
-### Rutas protegidas (requieren `Authorization: Bearer <token>`)
-
-| Método | Ruta | Roles permitidos | Descripción |
-|--------|------|------------------|-------------|
-| GET | `/api/turnos` | todos | Lista turnos con filtros y paginación |
-| GET | `/api/turnos/resumen` | admin | Estadísticas generales |
-| GET | `/api/turnos/:id` | todos | Detalle de un turno |
-| GET | `/api/turnos/:id/historial` | todos | Historial de cambios del turno |
-| POST | `/api/turnos` | estudiante, admin | Crea un turno en estado `solicitado` |
-| PUT | `/api/turnos/:id` | todos | Edita datos del turno |
-| PATCH | `/api/turnos/:id/cancelar` | todos | Cancela el turno |
-| PATCH | `/api/turnos/:id/confirmar` | tutor, admin | Confirma el turno |
-| PATCH | `/api/turnos/:id/realizar` | tutor, admin | Marca el turno como realizado |
-
-#### Filtros disponibles en `GET /api/turnos`
-
-```
-GET /api/turnos?estado=confirmado&fecha=2026-06-10&tutorId=abc123&especialidad=backend&page=1&limit=10
-```
-
-Todos los filtros son opcionales y combinables.
-
----
-
-## Máquina de estados de los turnos
-
-```
-                  ┌─────────────┐
-                  │  solicitado │
-                  └──────┬──────┘
-                         │
-              ┌──────────┴──────────┐
-              ▼                     ▼
-       ┌─────────────┐       ┌─────────────┐
-       │  confirmado │       │  cancelado  │
-       └──────┬──────┘       └─────────────┘
-              │
-    ┌─────────┴─────────┐
-    ▼                   ▼
-┌──────────┐     ┌─────────────┐
-│ realizado│     │  cancelado  │
-└──────────┘     └─────────────┘
-```
-
-| Transición | Quién puede ejecutarla |
-|------------|------------------------|
-| `solicitado → confirmado` | tutor asignado o admin |
-| `solicitado → cancelado` | cualquier rol |
-| `confirmado → realizado` | tutor asignado o admin |
-| `confirmado → cancelado` | cualquier rol |
-| `realizado / cancelado` | sin transiciones posibles |
-
----
-
-## Reglas de negocio
-
-### Disponibilidad de turnos
-
-Para que un turno pueda crearse o editarse, deben cumplirse **las tres condiciones simultáneamente**:
-
-1. El tutor debe estar **activo** (campo `activo: true` en la base de datos).
-2. La fecha del turno debe caer en un **día disponible** del tutor (ej: `["lunes", "miercoles"]`).
-3. No debe existir **superposición horaria** con otro turno del mismo tutor en el mismo día que esté en estado `solicitado` o `confirmado`. Los límites exactos no se consideran superposición (fin a las 11:00 y comienzo a las 11:00 están permitidos).
-
-Adicionalmente, `horaInicio` debe ser **estrictamente menor** que `horaFin`.
-
-### Visibilidad por rol
-
-| Rol | ¿Qué turnos ve? |
-|-----|-----------------|
-| Estudiante | Solo sus propios turnos |
-| Tutor | Solo los turnos donde está asignado |
-| Admin | Todos los turnos |
-
-### Historial de auditoría
-
-Cada cambio de estado o edición de datos registra automáticamente una entrada en el historial del turno con:
-- Fecha y hora del cambio
-- ID del usuario que realizó la acción
-- Acción realizada (`creacion`, `edicion`, `confirmacion`, `cancelacion`, `realizacion`)
-- Valor anterior y nuevo (para ediciones)
-
----
-
-## Autenticación
-
-Se usa **JWT (JSON Web Token)** con expiración de 24 horas.
-
-- El token se envía en el header `Authorization: Bearer <token>`.
-- El frontend lo almacena en `localStorage` y lo inyecta automáticamente en cada petición via un interceptor de Axios.
-- Si el backend devuelve un `401`, el interceptor limpia la sesión y redirige a `/login`.
-- Las contraseñas se hashean con **bcryptjs** (10 rondas de sal) antes de guardarse.
-
----
-
-## Panel administrativo (`/resumen`)
-
-Accesible únicamente con el rol `admin`. Muestra:
-
-- Cantidad de turnos del día actual
-- Cantidad de turnos pendientes (estado `solicitado`)
-- Total de turnos en el sistema
-- Tabla de turnos agrupados por tutor
-- Top 5 de temas más solicitados
+- Registro: OK
+- Login: OK
+- JWT: OK
+- Roles: OK
+- CRUD de turnos: OK
+- Flujo de estados: OK
+- Disponibilidad: OK
+- Superposicion: OK
+- Historial: OK
+- Filtros: OK
+- Paginacion: OK
+- Ordenamiento: OK
+- Panel admin: OK
+- Datos semilla: OK
+- Backend protegido: OK
+- Frontend protegido: OK
+- Tests: OK
+- README: OK
