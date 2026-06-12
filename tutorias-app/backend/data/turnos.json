@@ -13,8 +13,8 @@
     ],
     "tema": "JWT, Middlewares",
     "modalidad": "virtual",
-    "estado": "cancelado",
-    "observaciones": "No ha sido confirmado"
+    "estado": "solicitado",
+    "observaciones": null
   },
   {
     "id": 2,
@@ -29,8 +29,8 @@
     ],
     "tema": "Express Router",
     "modalidad": "presencial",
-    "estado": "cancelado",
-    "observaciones": "No ha sido confirmado"
+    "estado": "solicitado",
+    "observaciones": null
   },
   {
     "id": 3,
@@ -47,8 +47,8 @@
     ],
     "tema": "React, useState, useEffect",
     "modalidad": "virtual",
-    "estado": "cancelado",
-    "observaciones": "No ha sido confirmado"
+    "estado": "solicitado",
+    "observaciones": null
   },
   {
     "id": 4,
@@ -63,7 +63,7 @@
     ],
     "tema": "Vite",
     "modalidad": "virtual",
-    "estado": "realizado",
+    "estado": "confirmado",
     "observaciones": null
   },
   {
@@ -80,7 +80,7 @@
     ],
     "tema": "Jest, Supertest",
     "modalidad": "presencial",
-    "estado": "realizado",
+    "estado": "confirmado",
     "observaciones": null
   },
   {
@@ -97,7 +97,7 @@
     ],
     "tema": "Protección de datos sensibles, Buenas prácticas de seguridad",
     "modalidad": "virtual",
-    "estado": "realizado",
+    "estado": "confirmado",
     "observaciones": null
   },
   {
