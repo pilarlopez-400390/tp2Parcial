@@ -75,7 +75,7 @@ export default function Register() {
         </div>
 
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Contrasena</label>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Contraseña</label>
           <input
             type="password"
             value={password}
@@ -96,7 +96,7 @@ export default function Register() {
       </form>
 
       <p style={{ textAlign: 'center', marginTop: '16px' }}>
-        Ya tenes cuenta? <Link to="/login">Iniciar sesion</Link>
+        Ya tenés cuenta? <Link to="/login">Iniciar sesión</Link>
       </p>
     </div>
   )
