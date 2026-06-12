@@ -81,7 +81,7 @@ export default function Login() {
       </form>
 
       <p style={{ textAlign: 'center', marginTop: '18px', color: '#667085' }}>
-        ¿¿No tenés cuenta?? <Link to="/register">Registrarse</Link>
+        ¿¿¿¿¿No tenés cuenta????? <Link to="/register">Registrarse</Link>
       </p>
     </div>
   )
