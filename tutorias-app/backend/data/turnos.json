@@ -199,37 +199,5 @@
     "modalidad": "virtual",
     "estado": "cancelado",
     "observaciones": null
-  },
-  {
-    "id": 13,
-    "tutorId": 5,
-    "estudianteId": 7,
-    "fecha": "2026-06-17",
-    "horaInicio": "14:00",
-    "horaFin": "16:30",
-    "categoria": "Backend",
-    "temas": [
-      "JWT"
-    ],
-    "tema": "JWT",
-    "modalidad": "presencial",
-    "estado": "solicitado",
-    "observaciones": "Quiero repasar todo"
-  },
-  {
-    "id": 14,
-    "tutorId": 3,
-    "estudianteId": 7,
-    "fecha": "2026-06-17",
-    "horaInicio": "11:00",
-    "horaFin": "13:00",
-    "categoria": "Testing",
-    "temas": [
-      "Jest"
-    ],
-    "tema": "Jest",
-    "modalidad": "virtual",
-    "estado": "solicitado",
-    "observaciones": null
   }
 ]

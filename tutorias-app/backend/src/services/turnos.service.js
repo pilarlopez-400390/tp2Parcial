@@ -33,6 +33,14 @@ function fechaLocalISO(date = new Date()) {
   return `${anio}-${mes}-${dia}`;
 }
 
+function normalizarTextoBusqueda(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 function validarFechaPermitida(fecha) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha || '')) {
     const err = new Error('La fecha es obligatoria y debe tener formato YYYY-MM-DD');
@@ -58,7 +66,9 @@ function validarFechaPermitida(fecha) {
 }
 
 function fechaHoraTurno(fecha, hora) {
-  return new Date(`${fecha}T${hora}:00`);
+  const [anio, mes, dia] = String(fecha).split('-').map(Number);
+  const [horas, minutos] = String(hora).split(':').map(Number);
+  return new Date(anio, mes - 1, dia, horas, minutos, 0, 0);
 }
 
 function aplicarTransicionesAutomaticas() {
@@ -73,7 +83,8 @@ function aplicarTransicionesAutomaticas() {
       db.update('turnos', turno.id, { estado: 'realizado' });
       registrarHistorial(turno.id, 0, 'realizacion',
         { estado: 'confirmado' },
-        { estado: 'realizado', automatico: true }
+        { estado: 'realizado', automatico: true },
+        inicio.toISOString()
       );
       continue;
     }
@@ -85,7 +96,8 @@ function aplicarTransicionesAutomaticas() {
       });
       registrarHistorial(turno.id, 0, 'cancelacion',
         { estado: 'solicitado' },
-        { estado: 'cancelado', observaciones: 'No ha sido confirmado', automatico: true }
+        { estado: 'cancelado', observaciones: 'No ha sido confirmado', automatico: true },
+        inicio.toISOString()
       );
     }
   }
@@ -173,12 +185,12 @@ function temasDelTurno(turno) {
 }
 
 // Registra un cambio en el historial del turno
-function registrarHistorial(turnoId, usuarioId, accion, valorAnterior, valorNuevo) {
+function registrarHistorial(turnoId, usuarioId, accion, valorAnterior, valorNuevo, fechaHoraManual) {
   db.insert('historial_turnos', {
     turnoId,
     usuarioId,
     accion,
-    fechaHora:     new Date().toISOString(),
+    fechaHora:     fechaHoraManual || new Date().toISOString(),
     valorAnterior: valorAnterior ? JSON.stringify(valorAnterior) : null,
     valorNuevo:    valorNuevo    ? JSON.stringify(valorNuevo)    : null
   });
@@ -252,7 +264,7 @@ function construirHistorialInferido(turno, usuarios, tutores) {
       usuarioId: tutorUsuarioId,
       usuarioNombre: usuarioNombrePorId(usuarios, tutorUsuarioId),
       accion: 'realizacion',
-      fechaHora: fechaHoraInferida(turno.fecha, turno.horaFin || turno.horaInicio || '00:00'),
+      fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
       valorAnterior: JSON.stringify({ estado: 'confirmado' }),
       valorNuevo: JSON.stringify({ estado: 'realizado', observaciones: turno.observaciones || null })
     });
@@ -335,8 +347,9 @@ function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnor
 
 // ── LISTAR TURNOS ─────────────────────────────────────────────────────────────
 
-// Parámetros de query: fecha, estado, tutorId, especialidad, estudianteId, modalidad, page, limit, sortBy, order
-function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId, modalidad,
+// Parámetros de query: fecha, fechaDesde, fechaHoy, fechaAnteriores, estado, tutorId,
+// especialidad, estudianteId, estudiante, modalidad, page, limit, sortBy, order
+function listarTurnos({ fecha, fechaDesde, fechaHoy, fechaAnteriores, estado, tutorId, especialidad, estudianteId, estudiante, modalidad,
                         page = 1, limit = 10, sortBy = 'fecha', order = 'asc' } = {}, usuario) {
   aplicarTransicionesAutomaticas();
 
@@ -369,6 +382,32 @@ function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId, moda
     turnos = filtrados;
   }
 
+  if (fechaDesde) {
+    const filtrados = [];
+    for (let i = 0; i < turnos.length; i++) {
+      if (turnos[i].fecha >= fechaDesde) filtrados.push(turnos[i]);
+    }
+    turnos = filtrados;
+  }
+
+  if (fechaHoy === 'true' || fechaHoy === true) {
+    const hoy = fechaLocalISO();
+    const filtrados = [];
+    for (let i = 0; i < turnos.length; i++) {
+      if (turnos[i].fecha === hoy) filtrados.push(turnos[i]);
+    }
+    turnos = filtrados;
+  }
+
+  if (fechaAnteriores === 'true' || fechaAnteriores === true) {
+    const hoy = fechaLocalISO();
+    const filtrados = [];
+    for (let i = 0; i < turnos.length; i++) {
+      if (turnos[i].fecha < hoy) filtrados.push(turnos[i]);
+    }
+    turnos = filtrados;
+  }
+
   if (modalidad) {
     const filtrados = [];
     for (let i = 0; i < turnos.length; i++) {
@@ -391,6 +430,28 @@ function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId, moda
     const filtrados = [];
     for (let i = 0; i < turnos.length; i++) {
       if (turnos[i].estudianteId === id) filtrados.push(turnos[i]);
+    }
+    turnos = filtrados;
+  }
+
+  if (estudiante) {
+    const busqueda = normalizarTextoBusqueda(estudiante);
+    const idsEstudiantes = [];
+
+    for (let i = 0; i < usuarios.length; i++) {
+      if (usuarios[i].rol !== 'estudiante') continue;
+      const nombreCompleto = normalizarTextoBusqueda(usuarios[i].nombre);
+      const partes = nombreCompleto.split(/\s+/);
+      const apellido = partes.length > 1 ? partes[partes.length - 1] : nombreCompleto;
+
+      if (nombreCompleto.includes(busqueda) || apellido.includes(busqueda)) {
+        idsEstudiantes.push(usuarios[i].id);
+      }
+    }
+
+    const filtrados = [];
+    for (let i = 0; i < turnos.length; i++) {
+      if (idsEstudiantes.includes(turnos[i].estudianteId)) filtrados.push(turnos[i]);
     }
     turnos = filtrados;
   }
@@ -815,7 +876,7 @@ function realizarTurno(turnoId, observaciones, usuarioId, usuarioRol) {
     throw err;
   }
 
-  const fechaHoraFin = new Date(`${turno.fecha}T${turno.horaFin}:00`);
+  const fechaHoraFin = fechaHoraTurno(turno.fecha, turno.horaFin);
   if (fechaHoraFin > new Date()) {
     const err = new Error('No se puede marcar como realizado antes del horario de finalización del turno');
     err.status = 400;
@@ -837,7 +898,8 @@ function realizarTurno(turnoId, observaciones, usuarioId, usuarioRol) {
   });
 
   registrarHistorial(turnoId, usuarioId, 'realizacion',
-    { estado: 'confirmado' }, { estado: 'realizado' }
+    { estado: 'confirmado' }, { estado: 'realizado' },
+    fechaHoraTurno(turno.fecha, turno.horaInicio).toISOString()
   );
   return obtenerTurnoPorId(turnoId, { id: usuarioId, rol: usuarioRol });
 }

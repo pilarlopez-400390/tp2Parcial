@@ -107,17 +107,41 @@ function seed() {
   //  HISTORIAL DE ALGUNOS TURNOS
   // ════════════════════════════════════════════
 
-  const now = () => new Date().toISOString();
-  const ago = (dias) => new Date(Date.now() - dias * 86400000).toISOString();
+  const fechaHora = (fecha, hora) => `${fecha}T${hora}:00-03:00`;
 
-  db.insert('historial_turnos', { turnoId: t1.id,  usuarioId: uValen.id,  accion: 'creacion',     fechaHora: ago(3), valorAnterior: null,                            valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
-  db.insert('historial_turnos', { turnoId: t4.id,  usuarioId: uValen.id,  accion: 'creacion',     fechaHora: ago(5), valorAnterior: null,                            valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
-  db.insert('historial_turnos', { turnoId: t4.id,  usuarioId: uCarlos.id, accion: 'confirmacion', fechaHora: ago(4), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
-  db.insert('historial_turnos', { turnoId: t7.id,  usuarioId: uSofia.id,  accion: 'creacion',     fechaHora: ago(10), valorAnterior: null,                           valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
-  db.insert('historial_turnos', { turnoId: t7.id,  usuarioId: uMarina.id, accion: 'confirmacion', fechaHora: ago(9),  valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
-  db.insert('historial_turnos', { turnoId: t7.id,  usuarioId: uMarina.id, accion: 'realizacion',  fechaHora: ago(7),  valorAnterior: JSON.stringify({ estado: 'confirmado' }), valorNuevo: JSON.stringify({ estado: 'realizado' }) });
-  db.insert('historial_turnos', { turnoId: t10.id, usuarioId: uValen.id,  accion: 'creacion',     fechaHora: ago(8),  valorAnterior: null,                           valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
-  db.insert('historial_turnos', { turnoId: t10.id, usuarioId: uValen.id,  accion: 'cancelacion',  fechaHora: ago(7),  valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'cancelado' }) });
+  db.insert('historial_turnos', { turnoId: t1.id,  usuarioId: uValen.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-09', '16:15'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t2.id,  usuarioId: uTomas.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-09', '17:40'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t3.id,  usuarioId: uSofia.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-08', '18:10'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+
+  db.insert('historial_turnos', { turnoId: t4.id,  usuarioId: uValen.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-09', '09:20'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t4.id,  usuarioId: uCarlos.id, accion: 'confirmacion', fechaHora: fechaHora('2026-06-10', '11:35'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
+
+  db.insert('historial_turnos', { turnoId: t5.id,  usuarioId: uTomas.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-09', '12:05'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t5.id,  usuarioId: uAna.id,    accion: 'confirmacion', fechaHora: fechaHora('2026-06-10', '08:45'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
+
+  db.insert('historial_turnos', { turnoId: t6.id,  usuarioId: uSofia.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-10', '15:25'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t6.id,  usuarioId: uDiego.id,  accion: 'confirmacion', fechaHora: fechaHora('2026-06-10', '17:50'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
+
+  db.insert('historial_turnos', { turnoId: t7.id,  usuarioId: uSofia.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-02', '18:20'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t7.id,  usuarioId: uMarina.id, accion: 'confirmacion', fechaHora: fechaHora('2026-06-03', '08:15'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
+  db.insert('historial_turnos', { turnoId: t7.id,  usuarioId: uMarina.id, accion: 'realizacion',  fechaHora: fechaHora('2026-06-03', '11:00'), valorAnterior: JSON.stringify({ estado: 'confirmado' }), valorNuevo: JSON.stringify({ estado: 'realizado' }) });
+
+  db.insert('historial_turnos', { turnoId: t8.id,  usuarioId: uValen.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-03', '14:10'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t8.id,  usuarioId: uLaura.id,  accion: 'confirmacion', fechaHora: fechaHora('2026-06-03', '16:35'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
+  db.insert('historial_turnos', { turnoId: t8.id,  usuarioId: uLaura.id,  accion: 'realizacion',  fechaHora: fechaHora('2026-06-04', '10:00'), valorAnterior: JSON.stringify({ estado: 'confirmado' }), valorNuevo: JSON.stringify({ estado: 'realizado' }) });
+
+  db.insert('historial_turnos', { turnoId: t9.id,  usuarioId: uTomas.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-01', '10:30'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t9.id,  usuarioId: uAna.id,    accion: 'confirmacion', fechaHora: fechaHora('2026-06-01', '13:15'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'confirmado' }) });
+  db.insert('historial_turnos', { turnoId: t9.id,  usuarioId: uAna.id,    accion: 'realizacion',  fechaHora: fechaHora('2026-06-02', '14:00'), valorAnterior: JSON.stringify({ estado: 'confirmado' }), valorNuevo: JSON.stringify({ estado: 'realizado' }) });
+
+  db.insert('historial_turnos', { turnoId: t10.id, usuarioId: uValen.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-01', '11:45'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t10.id, usuarioId: uValen.id,  accion: 'cancelacion',  fechaHora: fechaHora('2026-06-01', '19:05'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'cancelado' }) });
+
+  db.insert('historial_turnos', { turnoId: t11.id, usuarioId: uTomas.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-04', '09:25'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t11.id, usuarioId: admin.id,   accion: 'cancelacion',  fechaHora: fechaHora('2026-06-04', '16:00'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'cancelado', observaciones: 'Tutor no disponible' }) });
+
+  db.insert('historial_turnos', { turnoId: t12.id, usuarioId: uSofia.id,  accion: 'creacion',     fechaHora: fechaHora('2026-06-03', '17:15'), valorAnterior: null, valorNuevo: JSON.stringify({ estado: 'solicitado' }) });
+  db.insert('historial_turnos', { turnoId: t12.id, usuarioId: uSofia.id,  accion: 'cancelacion',  fechaHora: fechaHora('2026-06-04', '08:50'), valorAnterior: JSON.stringify({ estado: 'solicitado' }), valorNuevo: JSON.stringify({ estado: 'cancelado' }) });
 
   console.log('✅ Semilla cargada exitosamente!\n');
   console.log('📋 Credenciales de prueba:');

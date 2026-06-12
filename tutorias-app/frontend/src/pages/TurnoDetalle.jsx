@@ -122,6 +122,62 @@ export default function TurnoDetalle() {
     return normalizadas[texto.toLowerCase()] || texto.charAt(0).toUpperCase() + texto.slice(1)
   }
 
+  function formatearFechaHora(valor) {
+    if (!valor) return 'Sin Fecha'
+    return new Date(valor).toLocaleString('es-AR', {
+      dateStyle: 'short',
+      timeStyle: 'short'
+    })
+  }
+
+  function leerJson(valor) {
+    if (!valor) return null
+    try {
+      return typeof valor === 'string' ? JSON.parse(valor) : valor
+    } catch {
+      return null
+    }
+  }
+
+  function formatearValor(valor) {
+    if (valor === null || valor === undefined || valor === '') return 'Sin Dato'
+    if (Array.isArray(valor)) return valor.map(item => formatearEtiqueta(item)).join(', ')
+    if (typeof valor === 'boolean') return valor ? 'Sí' : 'No'
+    return formatearEtiqueta(valor)
+  }
+
+  function estadoDelHistorial(anterior, nuevo) {
+    return formatearEtiqueta(nuevo?.estado || anterior?.estado || turno.estado)
+  }
+
+  function cambiosVisibles(anterior, nuevo) {
+    const etiquetasCampos = {
+      estado: 'Estado',
+      tutorId: 'Tutor',
+      fecha: 'Fecha',
+      horaInicio: 'Hora Inicio',
+      horaFin: 'Hora Fin',
+      categoria: 'Categoría',
+      temas: 'Temas',
+      tema: 'Tema',
+      modalidad: 'Modalidad',
+      observaciones: 'Observaciones'
+    }
+    const claves = new Set([
+      ...Object.keys(anterior || {}),
+      ...Object.keys(nuevo || {})
+    ])
+
+    return Array.from(claves)
+      .filter(clave => clave !== 'automatico')
+      .map(clave => ({
+        campo: etiquetasCampos[clave] || formatearEtiqueta(clave),
+        anterior: anterior ? anterior[clave] : undefined,
+        nuevo: nuevo ? nuevo[clave] : undefined
+      }))
+      .filter(cambio => formatearValor(cambio.anterior) !== formatearValor(cambio.nuevo))
+  }
+
   if (cargando) return <div style={{ textAlign: 'center', padding: '60px' }}>Cargando...</div>
   if (error) return <div style={{ textAlign: 'center', padding: '60px', color: '#9f3a3a' }}>{error}</div>
   if (!turno) return null
@@ -251,12 +307,11 @@ export default function TurnoDetalle() {
         )}
 
         {mostrarHistorial && !historialError && historial.length > 0 && (
-          <div style={{ border: '1px solid #ddd', borderRadius: '6px', overflow: 'hidden' }}>
+          <div style={{ border: '1px solid #d9e2ec', borderRadius: '8px', overflow: 'hidden', background: '#fff' }}>
             {historial.map((entrada, idx) => {
-              let anterior = null
-              let nuevo = null
-              try { anterior = entrada.valorAnterior ? JSON.parse(entrada.valorAnterior) : null } catch {}
-              try { nuevo = entrada.valorNuevo ? JSON.parse(entrada.valorNuevo) : null } catch {}
+              const anterior = leerJson(entrada.valorAnterior)
+              const nuevo = leerJson(entrada.valorNuevo)
+              const cambios = cambiosVisibles(anterior, nuevo)
 
               const etiquetas = {
                 creacion: 'Creación',
@@ -268,38 +323,55 @@ export default function TurnoDetalle() {
               }
 
               return (
-                <div key={idx} style={{ padding: '12px 16px', borderBottom: idx < historial.length - 1 ? '1px solid #eee' : 'none', fontSize: '14px' }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
-                    <span style={{ color: '#888', fontSize: '12px', whiteSpace: 'nowrap' }}>
-                      {new Date(entrada.fechaHora).toLocaleString('es-AR')}
+                <div key={idx} style={{ padding: '14px 16px', borderBottom: idx < historial.length - 1 ? '1px solid #eef2f6' : 'none', fontSize: '14px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(130px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr)', gap: '12px', alignItems: 'center' }}>
+                    <span style={{ color: '#52606d', fontSize: '13px', whiteSpace: 'nowrap' }}>
+                      {formatearFechaHora(entrada.fechaHora)}
                     </span>
-                    <strong style={{ color: '#2c3e50' }}>
+                    <strong style={{ color: '#182230' }}>
                       {etiquetas[entrada.accion] || entrada.accion}
                     </strong>
-                    {entrada.usuarioNombre && (
-                      <span style={{ color: '#555' }}>por <em>{entrada.usuarioNombre}</em></span>
+                    <span style={{ color: '#344054' }}>
+                      Responsable: <strong>{entrada.usuarioNombre || 'Desconocido'}</strong>
+                    </span>
+                  </div>
+
+                  <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <span style={{ background: '#e8f2f6', color: '#245b73', border: '1px solid #c7dde6', borderRadius: '999px', padding: '4px 10px', fontSize: '12px', fontWeight: '800' }}>
+                      Estado: {estadoDelHistorial(anterior, nuevo)}
+                    </span>
+                    {nuevo?.automatico && (
+                      <span style={{ color: '#667085', fontSize: '12px' }}>Cambio Automático</span>
                     )}
                   </div>
 
                   {(anterior || nuevo) && (
-                    <div style={{ marginTop: '6px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                      {anterior && (
-                        <div style={{ background: '#f9eaea', border: '1px solid #efc7c7', borderRadius: '6px', padding: '4px 8px', fontSize: '12px' }}>
-                          <span style={{ color: '#9f3a3a', fontWeight: 'bold' }}>Antes: </span>
-                          {Object.entries(anterior).map(([k, v]) => (
-                            <span key={k} style={{ marginRight: '8px', color: '#555' }}>{k}: <strong>{String(v)}</strong></span>
-                          ))}
+                    <details style={{ marginTop: '10px' }}>
+                      <summary style={{ cursor: 'pointer', color: '#245b73', fontWeight: '800' }}>
+                        Ver Detalle del Historial
+                      </summary>
+                      <div style={{ marginTop: '10px', background: '#f8fafc', border: '1px solid #e4ebf1', borderRadius: '6px', padding: '12px' }}>
+                        <div style={{ marginBottom: '10px', color: '#344054', lineHeight: 1.7 }}>
+                          <strong>Información del Turno:</strong>{' '}
+                          Fecha {turno.fecha}, Horario {turno.horaInicio} - {turno.horaFin}, Tutor {turno.tutorNombre || `Tutor ${turno.tutorId}`}, Modalidad {formatearEtiqueta(turno.modalidad)}.
                         </div>
-                      )}
-                      {nuevo && (
-                        <div style={{ background: '#eafaf1', border: '1px solid #aed6f1', borderRadius: '4px', padding: '4px 8px', fontSize: '12px' }}>
-                          <span style={{ color: '#2f6f58', fontWeight: 'bold' }}>Después: </span>
-                          {Object.entries(nuevo).map(([k, v]) => (
-                            <span key={k} style={{ marginRight: '8px', color: '#555' }}>{k}: <strong>{String(v)}</strong></span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+
+                        {cambios.length > 0 ? (
+                          <div style={{ display: 'grid', gap: '8px' }}>
+                            {cambios.map(cambio => (
+                              <div key={cambio.campo} style={{ color: '#344054' }}>
+                                <strong>{cambio.campo}:</strong>{' '}
+                                <span style={{ color: '#9f3a3a' }}>{formatearValor(cambio.anterior)}</span>
+                                {' -> '}
+                                <span style={{ color: '#2f6f58' }}>{formatearValor(cambio.nuevo)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span style={{ color: '#667085' }}>No hay cambios de campos para mostrar.</span>
+                        )}
+                      </div>
+                    </details>
                   )}
                 </div>
               )
