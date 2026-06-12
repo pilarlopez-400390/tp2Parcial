@@ -4,7 +4,7 @@
     "turnoId": 1,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-09T04:48:43.385Z",
+    "fechaHora": "2026-06-09T15:46:20.409Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -13,7 +13,7 @@
     "turnoId": 4,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-07T04:48:43.386Z",
+    "fechaHora": "2026-06-07T15:46:20.410Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -22,7 +22,7 @@
     "turnoId": 4,
     "usuarioId": 3,
     "accion": "confirmacion",
-    "fechaHora": "2026-06-08T04:48:43.386Z",
+    "fechaHora": "2026-06-08T15:46:20.411Z",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
@@ -31,7 +31,7 @@
     "turnoId": 7,
     "usuarioId": 9,
     "accion": "creacion",
-    "fechaHora": "2026-06-02T04:48:43.387Z",
+    "fechaHora": "2026-06-02T15:46:20.411Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -40,7 +40,7 @@
     "turnoId": 7,
     "usuarioId": 2,
     "accion": "confirmacion",
-    "fechaHora": "2026-06-03T04:48:43.387Z",
+    "fechaHora": "2026-06-03T15:46:20.412Z",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
@@ -49,7 +49,7 @@
     "turnoId": 7,
     "usuarioId": 2,
     "accion": "realizacion",
-    "fechaHora": "2026-06-05T04:48:43.388Z",
+    "fechaHora": "2026-06-05T15:46:20.412Z",
     "valorAnterior": "{\"estado\":\"confirmado\"}",
     "valorNuevo": "{\"estado\":\"realizado\"}"
   },
@@ -58,7 +58,7 @@
     "turnoId": 10,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-04T04:48:43.388Z",
+    "fechaHora": "2026-06-04T15:46:20.413Z",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -67,7 +67,7 @@
     "turnoId": 10,
     "usuarioId": 7,
     "accion": "cancelacion",
-    "fechaHora": "2026-06-05T04:48:43.389Z",
+    "fechaHora": "2026-06-05T15:46:20.413Z",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"cancelado\"}"
   }

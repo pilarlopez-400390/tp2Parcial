@@ -60,13 +60,14 @@ export default function Login() {
         </div>
 
         <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Contrasena</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Contraseña</label>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
             style={{ width: '100%', padding: '11px 12px', border: '1px solid #d9e2ec', borderRadius: '6px', boxSizing: 'border-box' }}
+            placeholder="********"
           />
         </div>
 
@@ -80,7 +81,7 @@ export default function Login() {
       </form>
 
       <p style={{ textAlign: 'center', marginTop: '18px', color: '#667085' }}>
-        No tenes cuenta? <Link to="/register">Registrarse</Link>
+        ¿No tenes cuenta? <Link to="/register">Registrarse</Link>
       </p>
     </div>
   )
