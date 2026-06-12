@@ -1,64 +1,61 @@
 // src/components/Navbar.jsx
-// Barra de navegación — siempre visible arriba
+// Barra de navegacion siempre visible arriba.
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-// useNavigate es el hook de React Router para navegar programáticamente
-// (a diferencia de <Link> que es un enlace en el HTML)
 export default function Navbar() {
   const { usuario, logout, cargando } = useAuth()
   const navigate = useNavigate()
 
   function handleLogout() {
     logout()
-    navigate('/login')  // Redirige al login después de cerrar sesión
+    navigate('/login')
   }
 
+  const linkStyle = { color: '#d6e2e8', textDecoration: 'none', fontWeight: '600', fontSize: '14px' }
+
   if (cargando) {
-    return <nav style={{ background: '#1a1a2e', padding: '12px 24px', color: 'white' }}><div style={{ textAlign: 'center' }}>Cargando...</div></nav>
+    return <nav style={{ background: '#183746', padding: '14px 28px', color: 'white' }}><div style={{ textAlign: 'center' }}>Cargando...</div></nav>
   }
 
   return (
-    <nav style={{ background: '#1a1a2e', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
-      <Link to="/" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold', fontSize: '18px' }}>
-        📚 Tutorías DDS
+    <nav style={{ background: '#183746', padding: '14px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white', boxShadow: '0 1px 0 rgba(255,255,255,0.08)', gap: '18px', flexWrap: 'wrap' }}>
+      <Link to="/" style={{ color: 'white', textDecoration: 'none', fontWeight: '800', fontSize: '18px', letterSpacing: '0.01em' }}>
+        Tutorias DDS
       </Link>
 
-      <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-        {/* Mostramos links según si hay usuario logueado */}
+      <div style={{ display: 'flex', gap: '18px', alignItems: 'center', flexWrap: 'wrap' }}>
         {usuario ? (
           <>
-            <Link to="/turnos" style={{ color: '#ccc', textDecoration: 'none' }}>Turnos</Link>
+            <Link to="/turnos" style={linkStyle}>Turnos</Link>
 
-            {/* Solo admins ven el panel de resumen */}
             {usuario.rol === 'admin' && (
               <>
-                <Link to="/resumen" style={{ color: '#ccc', textDecoration: 'none' }}>Panel Admin</Link>
-                <Link to="/admin/usuarios" style={{ color: '#ccc', textDecoration: 'none' }}>Usuarios</Link>
+                <Link to="/resumen" style={linkStyle}>Panel Admin</Link>
+                <Link to="/admin/usuarios" style={linkStyle}>Usuarios</Link>
               </>
             )}
 
-            {/* Solo estudiantes y admins pueden crear turnos */}
             {(usuario.rol === 'estudiante' || usuario.rol === 'admin') && (
-              <Link to="/turnos/nuevo" style={{ color: '#ccc', textDecoration: 'none' }}>Nuevo Turno</Link>
+              <Link to="/turnos/nuevo" style={linkStyle}>Nuevo Turno</Link>
             )}
 
-            <span style={{ color: '#888', fontSize: '14px' }}>
+            <span style={{ color: '#aec4cf', fontSize: '14px' }}>
               {usuario.nombre} ({usuario.rol})
             </span>
 
             <button
               onClick={handleLogout}
-              style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}
+              style={{ background: '#ffffff', color: '#183746', border: '1px solid rgba(255,255,255,0.22)', padding: '7px 12px', borderRadius: '6px', cursor: 'pointer' }}
             >
-              Cerrar sesión
+              Cerrar sesion
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" style={{ color: '#ccc', textDecoration: 'none' }}>Login</Link>
-            <Link to="/register" style={{ color: '#ccc', textDecoration: 'none' }}>Registrarse</Link>
+            <Link to="/login" style={linkStyle}>Login</Link>
+            <Link to="/register" style={linkStyle}>Registrarse</Link>
           </>
         )}
       </div>

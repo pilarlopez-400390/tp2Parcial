@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom'
 import turnosService from '../services/turnosService'
 
 const ESTADOS = {
-  solicitado: { label: 'Pendiente', bg: '#fff7ed', color: '#9a3412', border: '#fed7aa' },
-  confirmado: { label: 'Confirmado', bg: '#ecfeff', color: '#155e75', border: '#a5f3fc' },
-  realizado: { label: 'Realizado', bg: '#ecfdf3', color: '#166534', border: '#bbf7d0' },
-  cancelado: { label: 'Cancelado', bg: '#fef2f2', color: '#991b1b', border: '#fecaca' }
+  solicitado: { label: 'Pendiente', bg: '#fff4df', color: '#8a5b13', border: '#efd49d' },
+  confirmado: { label: 'Confirmado', bg: '#e8f2f6', color: '#245b73', border: '#b8d4df' },
+  realizado: { label: 'Realizado', bg: '#e9f5ef', color: '#2f6f58', border: '#b8ddcd' },
+  cancelado: { label: 'Cancelado', bg: '#f9eaea', color: '#9f3a3a', border: '#efc7c7' }
 }
 
 function fechaHoyLocal() {
@@ -100,16 +100,16 @@ export default function ResumenAdmin() {
         onClick={() => cargarDetalle(tipo)}
         style={{
           background: activa ? tono.activo : '#fff',
-          border: activa ? `2px solid ${tono.borde}` : '1px solid #d9e0e7',
+          border: activa ? `2px solid ${tono.borde}` : '1px solid #d9e2ec',
           borderRadius: '8px',
           padding: '20px',
           textAlign: 'left',
           minWidth: '180px',
           cursor: 'pointer',
-          boxShadow: '0 10px 24px rgba(15, 23, 42, 0.06)'
+          boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)'
         }}
       >
-        <div style={{ fontSize: '32px', fontWeight: '800', color: '#111827', marginBottom: '6px' }}>{valor}</div>
+        <div style={{ fontSize: '32px', fontWeight: '800', color: '#182230', marginBottom: '6px' }}>{valor}</div>
         <div style={{ fontSize: '14px', color: '#475467', fontWeight: '600' }}>{titulo}</div>
       </button>
     )
@@ -121,7 +121,7 @@ export default function ResumenAdmin() {
     const categoriaTurno = categoriaDelTurno(turno)
 
     return (
-      <div key={turno.id} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '14px 16px', background: '#fff', display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'center' }}>
+      <div key={turno.id} style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '14px 16px', background: '#fff', display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'center' }}>
         <div>
           <strong style={{ color: '#111827' }}>{turno.fecha} - {turno.horaInicio} a {turno.horaFin}</strong>
           <p style={{ margin: '6px 0 0', color: '#475467' }}>{categoriaTurno}: {temasTurno.join(', ')}</p>
@@ -142,7 +142,7 @@ export default function ResumenAdmin() {
   }
 
   if (cargando) return <div style={{ textAlign: 'center', padding: '60px' }}>Cargando resumen...</div>
-  if (error) return <div style={{ textAlign: 'center', padding: '60px', color: '#c00' }}>{error}</div>
+  if (error) return <div style={{ textAlign: 'center', padding: '60px', color: '#9f3a3a' }}>{error}</div>
   if (!datos) return null
 
   const temasPorCategoria = datos.temasPorCategoria || datos.temasPorEspecialidad || []
@@ -151,17 +151,17 @@ export default function ResumenAdmin() {
 
   return (
     <div style={{ maxWidth: '1100px', margin: '24px auto', padding: '0 16px' }}>
-      <h2 style={{ marginBottom: '20px', color: '#111827' }}>Panel de administracion</h2>
+      <h2 style={{ marginBottom: '20px', color: '#182230', fontSize: '28px' }}>Panel de administracion</h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px', marginBottom: '28px' }}>
-        {tarjeta('Turnos hoy', datos.turnosHoy, 'hoy', { activo: '#fffbeb', borde: '#f59e0b' })}
-        {tarjeta('Pendientes', datos.turnosPendientes, 'pendientes', { activo: '#ecfeff', borde: '#0891b2' })}
-        {tarjeta('Total', datos.totalTurnos || 0, 'total', { activo: '#eff6ff', borde: '#2563eb' })}
+        {tarjeta('Turnos hoy', datos.turnosHoy, 'hoy', { activo: '#fff4df', borde: '#8a5b13' })}
+        {tarjeta('Pendientes', datos.turnosPendientes, 'pendientes', { activo: '#e8f2f6', borde: '#245b73' })}
+        {tarjeta('Total', datos.totalTurnos || 0, 'total', { activo: '#f6f8fb', borde: '#667085' })}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 0.9fr) minmax(320px, 1.1fr)', gap: '18px', alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-          <section style={{ border: '1px solid #d9e0e7', borderRadius: '8px', padding: '18px', background: '#fff' }}>
+          <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
             <h3 style={{ margin: '0 0 14px', color: '#111827' }}>Turnos por tutor</h3>
             {turnosPorTutor.length > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -172,7 +172,7 @@ export default function ResumenAdmin() {
                       <strong>{item.cantidad}</strong>
                     </div>
                     <div style={{ height: '8px', background: '#eef2f7', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${Math.max(8, (item.cantidad / maxTurnosTutor) * 100)}%`, background: '#0891b2' }} />
+                      <div style={{ height: '100%', width: `${Math.max(8, (item.cantidad / maxTurnosTutor) * 100)}%`, background: '#245b73' }} />
                     </div>
                   </div>
                 ))}
@@ -182,7 +182,7 @@ export default function ResumenAdmin() {
             )}
           </section>
 
-          <section style={{ border: '1px solid #d9e0e7', borderRadius: '8px', padding: '18px', background: '#fff' }}>
+          <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
             <h3 style={{ margin: '0 0 14px', color: '#111827' }}>Temas mas solicitados por categoria</h3>
             {temasPorCategoria.length > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -191,7 +191,7 @@ export default function ResumenAdmin() {
                   const maxTemaGrupo = grupo.temas[0]?.cantidad || 1
 
                   return (
-                    <div key={categoria} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '12px', background: '#fafcff' }}>
+                    <div key={categoria} style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '12px', background: '#f8fafc' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginBottom: '10px' }}>
                         <strong style={{ textTransform: 'capitalize' }}>{categoria}</strong>
                         <span style={{ color: '#667085', fontSize: '13px' }}>{grupo.total} turnos</span>
@@ -207,8 +207,8 @@ export default function ResumenAdmin() {
                               type="button"
                               onClick={() => cargarDetalle('tema', item.tema, categoria)}
                               style={{
-                                border: activo ? '2px solid #2563eb' : '1px solid #e5e7eb',
-                                background: activo ? '#eff6ff' : '#fff',
+                                border: activo ? '2px solid #245b73' : '1px solid #d9e2ec',
+                                background: activo ? '#e8f2f6' : '#fff',
                                 borderRadius: '8px',
                                 padding: '10px',
                                 textAlign: 'left',
@@ -220,7 +220,7 @@ export default function ResumenAdmin() {
                                 <strong>{item.cantidad}</strong>
                               </div>
                               <div style={{ height: '8px', background: '#eef2f7', borderRadius: '999px', overflow: 'hidden' }}>
-                                <div style={{ height: '100%', width: `${Math.max(8, (item.cantidad / maxTemaGrupo) * 100)}%`, background: '#2563eb' }} />
+                                <div style={{ height: '100%', width: `${Math.max(8, (item.cantidad / maxTemaGrupo) * 100)}%`, background: '#245b73' }} />
                               </div>
                             </button>
                           )
@@ -236,7 +236,7 @@ export default function ResumenAdmin() {
           </section>
         </div>
 
-        <section style={{ border: '1px solid #d9e0e7', borderRadius: '8px', padding: '18px', background: '#fff' }}>
+        <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
           <h3 style={{ margin: '0 0 14px', color: '#111827' }}>{tituloDetalle}</h3>
           {cargandoDetalle ? (
             <p style={{ color: '#667085' }}>Cargando turnos...</p>

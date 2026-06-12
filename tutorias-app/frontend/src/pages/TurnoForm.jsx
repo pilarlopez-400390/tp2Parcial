@@ -484,19 +484,19 @@ export default function TurnoForm() {
     <div style={{ maxWidth: '920px', margin: '24px auto', padding: '0 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '12px' }}>
         <h2 style={{ margin: 0 }}>{esEdicion ? 'Editar Turno' : 'Nuevo Turno'}</h2>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: '1px solid #ddd', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+        <button onClick={() => navigate(-1)} style={{ background: '#fff', border: '1px solid #d9e2ec', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', color: '#344054' }}>
           Volver
         </button>
       </div>
 
       {error && (
-        <div style={{ background: '#fee', border: '1px solid #fcc', padding: '12px', borderRadius: '4px', marginBottom: '16px', color: '#c00' }}>
+        <div style={{ background: '#f9eaea', border: '1px solid #efc7c7', padding: '12px 14px', borderRadius: '6px', marginBottom: '16px', color: '#9f3a3a', fontWeight: '600' }}>
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-        <section style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px', background: '#fff' }}>
+        <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 10px 24px rgba(16, 24, 40, 0.05)' }}>
           <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>Tutor</label>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(180px, 260px) 1fr', gap: '12px', marginBottom: '14px' }}>
@@ -535,8 +535,8 @@ export default function TurnoForm() {
                   onClick={() => seleccionarTutor(tutor)}
                   style={{
                     textAlign: 'left',
-                    border: seleccionado ? '2px solid #2563eb' : '1px solid #d7dce2',
-                    background: seleccionado ? '#eef4ff' : '#fff',
+                    border: seleccionado ? '2px solid #245b73' : '1px solid #d9e2ec',
+                    background: seleccionado ? '#e8f2f6' : '#fff',
                     borderRadius: '8px',
                     padding: '14px',
                     cursor: 'pointer',
@@ -545,7 +545,7 @@ export default function TurnoForm() {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
                     <strong style={{ color: '#1f2937', fontSize: '16px' }}>{tutor.nombre}</strong>
-                    <span style={{ background: '#e8f5e9', color: '#2e7d32', borderRadius: '999px', padding: '3px 8px', fontSize: '12px', whiteSpace: 'nowrap' }}>
+                    <span style={{ background: '#e9f5ef', color: '#2f6f58', borderRadius: '999px', padding: '3px 8px', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: '700' }}>
                       {tutor.especialidad}
                     </span>
                   </div>
@@ -570,11 +570,11 @@ export default function TurnoForm() {
         </section>
 
         {usuario?.rol !== 'estudiante' && (
-          <section style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px', background: '#fff' }}>
+          <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 10px 24px rgba(16, 24, 40, 0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '10px' }}>
               <label style={{ fontWeight: 'bold' }}>Estudiante</label>
               {estudianteSeleccionado && (
-                <span style={{ color: '#2563eb', fontSize: '14px' }}>
+                <span style={{ color: '#245b73', fontSize: '14px', fontWeight: '700' }}>
                   Seleccionado: {estudianteSeleccionado.nombre}
                 </span>
               )}
@@ -594,8 +594,8 @@ export default function TurnoForm() {
                 onClick={() => setOrdenApellidoEstudiante('asc')}
                 style={{
                   padding: '10px 12px',
-                  border: ordenApellidoEstudiante === 'asc' ? '2px solid #2563eb' : '1px solid #ccc',
-                  background: ordenApellidoEstudiante === 'asc' ? '#eef4ff' : '#fff',
+                  border: ordenApellidoEstudiante === 'asc' ? '2px solid #245b73' : '1px solid #d9e2ec',
+                  background: ordenApellidoEstudiante === 'asc' ? '#e8f2f6' : '#fff',
                   borderRadius: '4px',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap'
@@ -609,8 +609,8 @@ export default function TurnoForm() {
                 onClick={() => setOrdenApellidoEstudiante('desc')}
                 style={{
                   padding: '10px 12px',
-                  border: ordenApellidoEstudiante === 'desc' ? '2px solid #2563eb' : '1px solid #ccc',
-                  background: ordenApellidoEstudiante === 'desc' ? '#eef4ff' : '#fff',
+                  border: ordenApellidoEstudiante === 'desc' ? '2px solid #245b73' : '1px solid #d9e2ec',
+                  background: ordenApellidoEstudiante === 'desc' ? '#e8f2f6' : '#fff',
                   borderRadius: '4px',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap'
@@ -631,8 +631,8 @@ export default function TurnoForm() {
                     onClick={() => setForm(prev => ({ ...prev, estudianteId: estudiante.id }))}
                     style={{
                       textAlign: 'left',
-                      border: seleccionado ? '2px solid #2563eb' : '1px solid #d7dce2',
-                      background: seleccionado ? '#eef4ff' : '#fff',
+                      border: seleccionado ? '2px solid #245b73' : '1px solid #d9e2ec',
+                      background: seleccionado ? '#e8f2f6' : '#fff',
                       borderRadius: '8px',
                       padding: '14px',
                       cursor: 'pointer',
@@ -715,7 +715,7 @@ export default function TurnoForm() {
           </div>
         </div>
 
-        <section style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px', background: '#fff' }}>
+        <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 10px 24px rgba(16, 24, 40, 0.05)' }}>
           <div style={{ marginBottom: '14px' }}>
             <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>Categoria</label>
             <select
@@ -743,8 +743,8 @@ export default function TurnoForm() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px',
-                      border: checked ? '2px solid #2563eb' : '1px solid #d7dce2',
-                      background: checked ? '#eef4ff' : '#fff',
+                      border: checked ? '2px solid #245b73' : '1px solid #d9e2ec',
+                      background: checked ? '#e8f2f6' : '#fff',
                       borderRadius: '6px',
                       padding: '10px',
                       cursor: 'pointer'
@@ -793,7 +793,7 @@ export default function TurnoForm() {
         <button
           type="submit"
           disabled={cargando}
-          style={{ padding: '14px', background: '#27ae60', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold' }}
+          style={{ padding: '14px', background: '#245b73', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: '800' }}
         >
           {cargando ? 'Guardando...' : (esEdicion ? 'Guardar cambios' : 'Solicitar turno')}
         </button>

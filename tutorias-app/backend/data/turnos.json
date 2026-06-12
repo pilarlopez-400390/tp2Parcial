@@ -142,17 +142,5 @@
     "modalidad": "virtual",
     "estado": "cancelado",
     "observaciones": null
-  },
-  {
-    "id": 13,
-    "tutorId": 5,
-    "estudianteId": 10,
-    "fecha": "2026-06-19",
-    "horaInicio": "10:00",
-    "horaFin": "11:00",
-    "tema": "test",
-    "modalidad": "presencial",
-    "estado": "solicitado",
-    "observaciones": null
   }
 ]

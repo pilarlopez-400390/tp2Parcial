@@ -40,56 +40,57 @@ export default function Register() {
   }
 
   return (
-    <div style={{ maxWidth: '430px', margin: '60px auto', padding: '28px', border: '1px solid #d9e0e7', borderRadius: '8px', background: '#fff', boxShadow: '0 14px 35px rgba(15, 23, 42, 0.08)' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '24px', color: '#1f2937' }}>Registrarse</h2>
+    <div style={{ maxWidth: '430px', margin: '64px auto', padding: '32px', border: '1px solid #d9e2ec', borderRadius: '8px', background: '#fff', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.08)' }}>
+      <h2 style={{ textAlign: 'center', margin: '0 0 26px', color: '#182230', fontSize: '26px', fontWeight: '800' }}>Registrarse</h2>
 
       {error && (
-        <div style={{ background: '#fee', border: '1px solid #fcc', padding: '12px', borderRadius: '4px', marginBottom: '16px', color: '#c00' }}>
+        <div style={{ background: '#f9eaea', border: '1px solid #efc7c7', padding: '12px 14px', borderRadius: '6px', marginBottom: '18px', color: '#9f3a3a', fontWeight: '600' }}>
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Nombre y apellido</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Nombre y apellido</label>
           <input
             type="text"
             value={nombre}
             onChange={e => setNombre(e.target.value)}
             required
             placeholder="Ej: Valentina Perez"
-            style={{ width: '100%', padding: '10px', border: '1px solid #cfd8e3', borderRadius: '4px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '11px 12px', border: '1px solid #d9e2ec', borderRadius: '6px', boxSizing: 'border-box' }}
           />
           <small style={{ display: 'block', color: '#667085', marginTop: '5px' }}>Debe incluir al menos un nombre y un apellido.</small>
         </div>
 
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Email</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Email</label>
           <input
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            style={{ width: '100%', padding: '10px', border: '1px solid #cfd8e3', borderRadius: '4px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '11px 12px', border: '1px solid #d9e2ec', borderRadius: '6px', boxSizing: 'border-box' }}
           />
         </div>
 
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600' }}>Contraseña</label>
+
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Contrasena</label>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
             minLength={6}
-            style={{ width: '100%', padding: '10px', border: '1px solid #cfd8e3', borderRadius: '4px', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '11px 12px', border: '1px solid #d9e2ec', borderRadius: '6px', boxSizing: 'border-box' }}
           />
         </div>
 
         <button
           type="submit"
           disabled={cargando}
-          style={{ width: '100%', padding: '12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '16px', fontWeight: '700' }}
+          style={{ width: '100%', padding: '12px', background: '#245b73', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: '800' }}
         >
           {cargando ? 'Registrando...' : 'Registrarse'}
         </button>

@@ -97,11 +97,11 @@ export default function AdminUsuarios() {
     return true
   })
 
-  const btnBase = { padding: '12px 24px', borderRadius: '6px', cursor: 'pointer', fontSize: '15px', fontWeight: 'bold', transition: 'all 0.15s' }
+  const btnBase = { padding: '11px 20px', borderRadius: '6px', cursor: 'pointer', fontSize: '15px', fontWeight: '800', transition: 'all 0.15s' }
 
   return (
-    <div style={{ maxWidth: '980px', margin: '24px auto', padding: '0 16px' }}>
-      <h2 style={{ marginBottom: '24px' }}>👥 Gestión de Usuarios</h2>
+    <div style={{ maxWidth: '1040px', margin: '28px auto', padding: '0 18px' }}>
+      <h2 style={{ margin: '0 0 24px', color: '#182230', fontSize: '28px' }}>Gestion de Usuarios</h2>
 
       {/* Botones de navegación */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '28px' }}>
@@ -109,9 +109,9 @@ export default function AdminUsuarios() {
           onClick={() => { setVista('nuevo'); setError(''); setExito('') }}
           style={{
             ...btnBase,
-            background: vista === 'nuevo' ? '#27ae60' : '#fff',
-            color: vista === 'nuevo' ? 'white' : '#333',
-            border: vista === 'nuevo' ? '2px solid #27ae60' : '2px solid #ddd'
+            background: vista === 'nuevo' ? '#245b73' : '#fff',
+            color: vista === 'nuevo' ? 'white' : '#344054',
+            border: vista === 'nuevo' ? '2px solid #245b73' : '2px solid #d9e2ec'
           }}
         >
           Registrar Nuevo Usuario
@@ -120,9 +120,9 @@ export default function AdminUsuarios() {
           onClick={() => { setVista('lista'); setError(''); setExito('') }}
           style={{
             ...btnBase,
-            background: vista === 'lista' ? '#2980b9' : '#fff',
-            color: vista === 'lista' ? 'white' : '#333',
-            border: vista === 'lista' ? '2px solid #2980b9' : '2px solid #ddd'
+            background: vista === 'lista' ? '#245b73' : '#fff',
+            color: vista === 'lista' ? 'white' : '#344054',
+            border: vista === 'lista' ? '2px solid #245b73' : '2px solid #d9e2ec'
           }}
         >
           Usuarios Existentes
@@ -130,19 +130,19 @@ export default function AdminUsuarios() {
       </div>
 
       {error && (
-        <div style={{ marginBottom: '16px', color: '#c00', background: '#fee', padding: '12px', borderRadius: '6px', border: '1px solid #fcc' }}>
-          ⚠️ {error}
+        <div style={{ marginBottom: '16px', color: '#9f3a3a', background: '#f9eaea', padding: '12px 14px', borderRadius: '6px', border: '1px solid #efc7c7', fontWeight: '600' }}>
+          {error}
         </div>
       )}
       {exito && (
-        <div style={{ marginBottom: '16px', color: '#2e7d32', background: '#e8f5e9', padding: '12px', borderRadius: '6px', border: '1px solid #a5d6a7' }}>
-          ✅ {exito}
+        <div style={{ marginBottom: '16px', color: '#2f6f58', background: '#e9f5ef', padding: '12px 14px', borderRadius: '6px', border: '1px solid #b8ddcd', fontWeight: '600' }}>
+          {exito}
         </div>
       )}
 
       {/* ── VISTA: REGISTRAR NUEVO USUARIO ── */}
       {vista === 'nuevo' && (
-        <div style={{ maxWidth: '500px', padding: '28px', background: '#f8f9fa', borderRadius: '8px', border: '1px solid #ddd' }}>
+        <div style={{ maxWidth: '540px', padding: '28px', background: '#fff', borderRadius: '8px', border: '1px solid #d9e2ec', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
           <h3 style={{ marginBottom: '20px' }}>Nuevo usuario</h3>
           <form onSubmit={handleCrear} style={{ display: 'grid', gap: '12px' }}>
             <input
@@ -242,7 +242,7 @@ export default function AdminUsuarios() {
 
             <button
               type="submit"
-              style={{ padding: '12px', background: '#27ae60', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '4px' }}
+              style={{ padding: '12px', background: '#245b73', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '800', marginTop: '4px' }}
             >
               Crear usuario
             </button>
@@ -252,7 +252,7 @@ export default function AdminUsuarios() {
 
       {/* ── VISTA: USUARIOS EXISTENTES ── */}
       {vista === 'lista' && (
-        <div style={{ background: '#fff', borderRadius: '8px', border: '1px solid #ddd', padding: '20px' }}>
+        <div style={{ background: '#fff', borderRadius: '8px', border: '1px solid #d9e2ec', padding: '22px', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
           <h3 style={{ marginBottom: '16px' }}>Usuarios existentes</h3>
 
           {/* Tabs de rol */}
@@ -263,8 +263,8 @@ export default function AdminUsuarios() {
                 onClick={() => setTabRol(val)}
                 style={{
                   padding: '8px 20px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', border: 'none',
-                  background: tabRol === val ? '#2980b9' : '#f0f0f0',
-                  color: tabRol === val ? 'white' : '#555'
+                  background: tabRol === val ? '#245b73' : '#f6f8fb',
+                  color: tabRol === val ? 'white' : '#475467'
                 }}
               >
                 {label}
@@ -276,7 +276,7 @@ export default function AdminUsuarios() {
           <div style={{ marginBottom: '16px' }}>
             <input
               type="text"
-              placeholder="🔍 Buscar por nombre o email..."
+              placeholder="Buscar por nombre o email..."
               value={busqueda}
               onChange={e => setBusqueda(e.target.value)}
               style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
@@ -347,14 +347,14 @@ export default function AdminUsuarios() {
           zIndex: 1000
         }}>
           <div style={{ background: 'white', borderRadius: '8px', padding: '28px', width: '420px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
-            <h3 style={{ marginBottom: '20px' }}>✏️ Editar Usuario</h3>
+            <h3 style={{ margin: '0 0 20px', color: '#182230' }}>Editar Usuario</h3>
             <p style={{ color: '#888', fontSize: '13px', marginBottom: '16px' }}>
               Rol: <strong>{modalEditar.rol}</strong>
             </p>
 
             {errorModal && (
-              <div style={{ marginBottom: '12px', color: '#c00', background: '#fee', padding: '10px', borderRadius: '4px', border: '1px solid #fcc' }}>
-                ⚠️ {errorModal}
+              <div style={{ marginBottom: '12px', color: '#9f3a3a', background: '#f9eaea', padding: '10px', borderRadius: '6px', border: '1px solid #efc7c7', fontWeight: '600' }}>
+                {errorModal}
               </div>
             )}
 
@@ -392,7 +392,7 @@ export default function AdminUsuarios() {
               <div style={{ display: 'flex', gap: '12px', marginTop: '4px' }}>
                 <button
                   type="submit"
-                  style={{ flex: 1, padding: '12px', background: '#27ae60', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+                  style={{ flex: 1, padding: '12px', background: '#245b73', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '800' }}
                 >
                   Guardar cambios
                 </button>

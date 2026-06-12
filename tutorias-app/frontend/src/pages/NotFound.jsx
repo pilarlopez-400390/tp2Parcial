@@ -1,19 +1,19 @@
 // src/pages/NotFound.jsx
-// Página 404 — se muestra cuando la URL no coincide con ninguna ruta
+// Pagina 404.
 
 import { Link } from 'react-router-dom'
 
 export default function NotFound() {
   return (
-    <div style={{ textAlign: 'center', padding: '80px 24px' }}>
-      <div style={{ fontSize: '80px' }}>🔍</div>
-      <h1 style={{ fontSize: '48px', margin: '16px 0' }}>404</h1>
-      <p style={{ fontSize: '20px', color: '#666', marginBottom: '32px' }}>
-        Esta página no existe.
+    <div style={{ textAlign: 'center', padding: '96px 24px' }}>
+      <p style={{ margin: 0, color: '#667085', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Error 404</p>
+      <h1 style={{ fontSize: '46px', margin: '12px 0 10px', color: '#182230' }}>Pagina no encontrada</h1>
+      <p style={{ fontSize: '18px', color: '#667085', marginBottom: '32px' }}>
+        La direccion ingresada no coincide con ninguna ruta disponible.
       </p>
       <Link
         to="/"
-        style={{ background: '#3498db', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontSize: '16px' }}
+        style={{ background: '#245b73', color: 'white', padding: '12px 22px', borderRadius: '6px', textDecoration: 'none', fontSize: '15px', fontWeight: '800', display: 'inline-block' }}
       >
         Volver al inicio
       </Link>

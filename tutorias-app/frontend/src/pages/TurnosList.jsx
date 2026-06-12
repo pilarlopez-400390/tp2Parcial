@@ -8,10 +8,10 @@ import turnosService from '../services/turnosService'
 import tutoresService from '../services/tutoresService'
 
 const COLORES_ESTADO = {
-  solicitado: { bg: '#fff7ed', color: '#9a3412', border: '#fed7aa' },
-  confirmado: { bg: '#ecfeff', color: '#155e75', border: '#a5f3fc' },
-  realizado: { bg: '#ecfdf3', color: '#166534', border: '#bbf7d0' },
-  cancelado: { bg: '#fef2f2', color: '#991b1b', border: '#fecaca' }
+  solicitado: { bg: '#fff4df', color: '#8a5b13', border: '#efd49d' },
+  confirmado: { bg: '#e8f2f6', color: '#245b73', border: '#b8d4df' },
+  realizado: { bg: '#e9f5ef', color: '#2f6f58', border: '#b8ddcd' },
+  cancelado: { bg: '#f9eaea', color: '#9f3a3a', border: '#efc7c7' }
 }
 
 export default function TurnosList() {
@@ -90,18 +90,18 @@ export default function TurnosList() {
   return (
     <div style={{ maxWidth: '1080px', margin: '24px auto', padding: '0 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '12px', flexWrap: 'wrap' }}>
-        <h2 style={{ margin: 0, color: '#111827' }}>Mis Turnos</h2>
+        <h2 style={{ margin: 0, color: '#182230', fontSize: '28px' }}>Mis Turnos</h2>
         {(usuario?.rol === 'estudiante' || usuario?.rol === 'admin') && (
           <Link
             to="/turnos/nuevo"
-            style={{ background: '#2563eb', color: 'white', padding: '10px 18px', borderRadius: '6px', textDecoration: 'none', fontWeight: '700' }}
+            style={{ background: '#245b73', color: 'white', padding: '10px 18px', borderRadius: '6px', textDecoration: 'none', fontWeight: '800' }}
           >
             Nuevo Turno
           </Link>
         )}
       </div>
 
-      <form onSubmit={handleFiltrar} style={{ background: '#fff', padding: '16px', border: '1px solid #d9e0e7', borderRadius: '8px', marginBottom: '24px', display: 'flex', gap: '12px', alignItems: 'flex-end', flexWrap: 'wrap', boxShadow: '0 10px 24px rgba(15, 23, 42, 0.05)' }}>
+      <form onSubmit={handleFiltrar} style={{ background: '#fff', padding: '18px', border: '1px solid #d9e2ec', borderRadius: '8px', marginBottom: '24px', display: 'flex', gap: '12px', alignItems: 'flex-end', flexWrap: 'wrap', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Estado</label>
           <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px' }}>
@@ -143,15 +143,15 @@ export default function TurnosList() {
           </select>
         </div>
 
-        <button type="submit" style={{ padding: '9px 16px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '700' }}>
+        <button type="submit" style={{ padding: '9px 16px', background: '#245b73', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '800' }}>
           Filtrar
         </button>
-        <button type="button" onClick={handleLimpiar} style={{ padding: '9px 16px', background: '#64748b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '700' }}>
+        <button type="button" onClick={handleLimpiar} style={{ padding: '9px 16px', background: '#667085', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '800' }}>
           Limpiar
         </button>
       </form>
 
-      {error && <div style={{ color: '#c00', padding: '12px', background: '#fee', borderRadius: '4px', marginBottom: '16px' }}>{error}</div>}
+      {error && <div style={{ color: '#9f3a3a', padding: '12px 14px', background: '#f9eaea', border: '1px solid #efc7c7', borderRadius: '6px', marginBottom: '16px', fontWeight: '600' }}>{error}</div>}
       {cargando && <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Cargando...</div>}
 
       {!cargando && !error && (
@@ -180,7 +180,7 @@ export default function TurnosList() {
                       gridTemplateColumns: '1fr auto',
                       gap: '14px',
                       alignItems: 'center',
-                      boxShadow: '0 8px 20px rgba(15, 23, 42, 0.05)'
+                      boxShadow: '0 10px 24px rgba(16, 24, 40, 0.06)'
                     }}
                   >
                     <div>
@@ -212,7 +212,7 @@ export default function TurnosList() {
                       </span>
                       <Link
                         to={`/turnos/${turno.id}`}
-                        style={{ color: '#2563eb', textDecoration: 'none', fontSize: '14px', fontWeight: '700' }}
+                        style={{ color: '#245b73', textDecoration: 'none', fontSize: '14px', fontWeight: '800' }}
                       >
                         Ver detalle
                       </Link>
@@ -228,7 +228,7 @@ export default function TurnosList() {
               <button
                 onClick={() => setPagina(p => Math.max(1, p - 1))}
                 disabled={pagina === 1}
-                style={{ padding: '8px 16px', cursor: 'pointer', border: '1px solid #ddd', borderRadius: '4px', background: pagina === 1 ? '#f0f0f0' : 'white' }}
+                style={{ padding: '8px 16px', cursor: 'pointer', border: '1px solid #d9e2ec', borderRadius: '6px', background: pagina === 1 ? '#eef2f6' : 'white' }}
               >
                 Anterior
               </button>
@@ -238,7 +238,7 @@ export default function TurnosList() {
               <button
                 onClick={() => setPagina(p => Math.min(pagination.totalPages, p + 1))}
                 disabled={pagina === pagination.totalPages}
-                style={{ padding: '8px 16px', cursor: 'pointer', border: '1px solid #ddd', borderRadius: '4px', background: pagina === pagination.totalPages ? '#f0f0f0' : 'white' }}
+                style={{ padding: '8px 16px', cursor: 'pointer', border: '1px solid #d9e2ec', borderRadius: '6px', background: pagina === pagination.totalPages ? '#eef2f6' : 'white' }}
               >
                 Siguiente
               </button>

@@ -96,14 +96,14 @@ export default function TurnoDetalle() {
   }
 
   const COLORES = {
-    solicitado: '#fff3cd',
-    confirmado: '#d1ecf1',
-    realizado: '#d4edda',
-    cancelado: '#f8d7da'
+    solicitado: '#fff4df',
+    confirmado: '#e8f2f6',
+    realizado: '#e9f5ef',
+    cancelado: '#f9eaea'
   }
 
   if (cargando) return <div style={{ textAlign: 'center', padding: '60px' }}>Cargando...</div>
-  if (error) return <div style={{ textAlign: 'center', padding: '60px', color: '#c00' }}>⚠️ {error}</div>
+  if (error) return <div style={{ textAlign: 'center', padding: '60px', color: '#9f3a3a' }}>{error}</div>
   if (!turno) return null
 
   const temasTurno = Array.isArray(turno.temas) && turno.temas.length > 0
@@ -115,14 +115,14 @@ export default function TurnoDetalle() {
     <div style={{ maxWidth: '700px', margin: '24px auto', padding: '0 16px' }}>
       {/* Header con botón volver */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2>📋 Turno #{turno.id}</h2>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: '1px solid #ddd', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
-          ← Volver
+        <h2 style={{ margin: 0, color: '#182230' }}>Turno #{turno.id}</h2>
+        <button onClick={() => navigate(-1)} style={{ background: '#fff', border: '1px solid #d9e2ec', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', color: '#344054' }}>
+          Volver
         </button>
       </div>
 
       {/* Tarjeta principal */}
-      <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '24px', background: COLORES[turno.estado] || 'white', marginBottom: '24px' }}>
+      <div style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '24px', background: COLORES[turno.estado] || 'white', marginBottom: '24px', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           <div>
             <strong>Estado</strong>
@@ -173,9 +173,9 @@ export default function TurnoDetalle() {
 
       {/* Acciones */}
       {error && (
-        <div style={{ color: '#c00', padding: '12px', background: '#fee', borderRadius: '4px', marginBottom: '16px' }}>
-          ⚠️ {error}
-          <button onClick={() => setError('')} style={{ marginLeft: '12px', background: 'none', border: 'none', cursor: 'pointer', color: '#c00' }}>✕</button>
+        <div style={{ color: '#9f3a3a', padding: '12px', background: '#f9eaea', borderRadius: '6px', marginBottom: '16px', border: '1px solid #efc7c7' }}>
+          {error}
+          <button onClick={() => setError('')} style={{ marginLeft: '12px', background: 'none', border: 'none', cursor: 'pointer', color: '#9f3a3a' }}>Cerrar</button>
         </div>
       )}
 
@@ -183,9 +183,9 @@ export default function TurnoDetalle() {
         {puedeEditar() && (
           <Link
             to={`/turnos/${turno.id}/editar`}
-            style={{ background: '#3498db', color: 'white', padding: '10px 20px', borderRadius: '6px', textDecoration: 'none' }}
+            style={{ background: '#245b73', color: 'white', padding: '10px 20px', borderRadius: '6px', textDecoration: 'none', fontWeight: '800' }}
           >
-            ✏️ Editar
+            Editar
           </Link>
         )}
 
@@ -193,9 +193,9 @@ export default function TurnoDetalle() {
           <button
             onClick={() => ejecutarAccion('confirmar')}
             disabled={accionCargando}
-            style={{ background: '#17a2b8', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+            style={{ background: '#245b73', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
           >
-            ✅ Confirmar
+            Confirmar
           </button>
         )}
 
@@ -203,9 +203,9 @@ export default function TurnoDetalle() {
           <button
             onClick={() => ejecutarAccion('realizar')}
             disabled={accionCargando}
-            style={{ background: '#28a745', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+            style={{ background: '#2f6f58', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
           >
-            🎓 Marcar como realizado
+            Marcar como realizado
           </button>
         )}
 
@@ -213,9 +213,9 @@ export default function TurnoDetalle() {
           <button
             onClick={() => { if (confirm('¿Cancelar este turno?')) ejecutarAccion('cancelar') }}
             disabled={accionCargando}
-            style={{ background: '#dc3545', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+            style={{ background: '#9f3a3a', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
           >
-            ❌ Cancelar
+            Cancelar
           </button>
         )}
       </div>
@@ -242,7 +242,7 @@ export default function TurnoDetalle() {
           onClick={mostrarHistorial ? () => setMostrarHistorial(false) : cargarHistorial}
           style={{ background: 'none', border: '1px solid #ddd', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', marginBottom: '12px' }}
         >
-          {mostrarHistorial ? '▲ Ocultar historial' : '▼ Ver historial de cambios'}
+          {mostrarHistorial ? 'Ocultar historial' : 'Ver historial de cambios'}
         </button>
 
         {mostrarHistorial && !historialError && historial.length === 0 && (
@@ -250,7 +250,7 @@ export default function TurnoDetalle() {
         )}
 
         {mostrarHistorial && historialError && (
-          <p style={{ color: '#c00', fontSize: '14px', background: '#fee', border: '1px solid #fcc', borderRadius: '4px', padding: '10px' }}>
+          <p style={{ color: '#9f3a3a', fontSize: '14px', background: '#f9eaea', border: '1px solid #efc7c7', borderRadius: '6px', padding: '10px' }}>
             {historialError}
           </p>
         )}
@@ -289,8 +289,8 @@ export default function TurnoDetalle() {
                   {(anterior || nuevo) && (
                     <div style={{ marginTop: '6px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                       {anterior && (
-                        <div style={{ background: '#ffeef0', border: '1px solid #fcc', borderRadius: '4px', padding: '4px 8px', fontSize: '12px' }}>
-                          <span style={{ color: '#c00', fontWeight: 'bold' }}>Antes: </span>
+                        <div style={{ background: '#f9eaea', border: '1px solid #efc7c7', borderRadius: '6px', padding: '4px 8px', fontSize: '12px' }}>
+                          <span style={{ color: '#9f3a3a', fontWeight: 'bold' }}>Antes: </span>
                           {Object.entries(anterior).map(([k, v]) => (
                             <span key={k} style={{ marginRight: '8px', color: '#555' }}>{k}: <strong>{String(v)}</strong></span>
                           ))}
@@ -298,7 +298,7 @@ export default function TurnoDetalle() {
                       )}
                       {nuevo && (
                         <div style={{ background: '#eafaf1', border: '1px solid #aed6f1', borderRadius: '4px', padding: '4px 8px', fontSize: '12px' }}>
-                          <span style={{ color: '#27ae60', fontWeight: 'bold' }}>Después: </span>
+                          <span style={{ color: '#2f6f58', fontWeight: 'bold' }}>Después: </span>
                           {Object.entries(nuevo).map(([k, v]) => (
                             <span key={k} style={{ marginRight: '8px', color: '#555' }}>{k}: <strong>{String(v)}</strong></span>
                           ))}

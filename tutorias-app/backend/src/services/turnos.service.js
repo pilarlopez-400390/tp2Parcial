@@ -150,6 +150,95 @@ function registrarHistorial(turnoId, usuarioId, accion, valorAnterior, valorNuev
   });
 }
 
+function buscarUsuarioPorId(usuarios, usuarioId) {
+  for (let i = 0; i < usuarios.length; i++) {
+    if (usuarios[i].id === usuarioId) return usuarios[i];
+  }
+  return null;
+}
+
+function usuarioNombrePorId(usuarios, usuarioId) {
+  const usuario = buscarUsuarioPorId(usuarios, usuarioId);
+  return usuario ? usuario.nombre : 'Desconocido';
+}
+
+function obtenerUsuarioTutor(tutores, tutorId) {
+  for (let i = 0; i < tutores.length; i++) {
+    if (tutores[i].id === tutorId) return tutores[i].usuarioId;
+  }
+  return null;
+}
+
+function fechaHoraInferida(fecha, hora = '00:00') {
+  return `${fecha}T${hora}:00.000Z`;
+}
+
+function construirHistorialInferido(turno, usuarios, tutores) {
+  const tutorUsuarioId = obtenerUsuarioTutor(tutores, turno.tutorId);
+  const historial = [];
+  let id = 1;
+
+  historial.push({
+    id: id++,
+    turnoId: turno.id,
+    usuarioId: turno.estudianteId,
+    usuarioNombre: usuarioNombrePorId(usuarios, turno.estudianteId),
+    accion: 'creacion',
+    fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
+    valorAnterior: null,
+    valorNuevo: JSON.stringify({
+      estado: 'solicitado',
+      tutorId: turno.tutorId,
+      fecha: turno.fecha,
+      horaInicio: turno.horaInicio,
+      horaFin: turno.horaFin,
+      tema: turno.tema,
+      modalidad: turno.modalidad
+    })
+  });
+
+  if (turno.estado === 'confirmado' || turno.estado === 'realizado') {
+    historial.push({
+      id: id++,
+      turnoId: turno.id,
+      usuarioId: tutorUsuarioId,
+      usuarioNombre: usuarioNombrePorId(usuarios, tutorUsuarioId),
+      accion: 'confirmacion',
+      fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
+      valorAnterior: JSON.stringify({ estado: 'solicitado' }),
+      valorNuevo: JSON.stringify({ estado: 'confirmado' })
+    });
+  }
+
+  if (turno.estado === 'realizado') {
+    historial.push({
+      id: id++,
+      turnoId: turno.id,
+      usuarioId: tutorUsuarioId,
+      usuarioNombre: usuarioNombrePorId(usuarios, tutorUsuarioId),
+      accion: 'realizacion',
+      fechaHora: fechaHoraInferida(turno.fecha, turno.horaFin || turno.horaInicio || '00:00'),
+      valorAnterior: JSON.stringify({ estado: 'confirmado' }),
+      valorNuevo: JSON.stringify({ estado: 'realizado', observaciones: turno.observaciones || null })
+    });
+  }
+
+  if (turno.estado === 'cancelado') {
+    historial.push({
+      id: id++,
+      turnoId: turno.id,
+      usuarioId: turno.estudianteId,
+      usuarioNombre: usuarioNombrePorId(usuarios, turno.estudianteId),
+      accion: 'cancelacion',
+      fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
+      valorAnterior: JSON.stringify({ estado: 'solicitado' }),
+      valorNuevo: JSON.stringify({ estado: 'cancelado' })
+    });
+  }
+
+  return historial;
+}
+
 // Verifica que el tutor pueda recibir un turno en esa fecha y horario.
 // turnoIdIgnorar: cuando EDITAMOS un turno, ignoramos el propio turno
 //                al chequear superposición (no puede conflictuarse consigo mismo).
@@ -742,6 +831,11 @@ function obtenerHistorial(turnoId, usuario) {
     if (a.fechaHora > b.fechaHora) return  1;
     return 0;
   });
+
+  if (historial.length === 0) {
+    const tutores = db.findAll('tutores');
+    return construirHistorialInferido(turno, usuarios, tutores);
+  }
 
   return historial;
 }

@@ -5,15 +5,15 @@
     "nombre": "Marina López",
     "email": "marina@dds.com",
     "especialidad": "backend",
-    "horarioDisponible": {
-      "inicio": "09:00",
-      "fin": "12:30"
-    },
     "diasDisponibles": [
       "lunes",
       "miercoles",
       "viernes"
     ],
+    "horarioDisponible": {
+      "inicio": "09:00",
+      "fin": "12:30"
+    },
     "activo": true
   },
   {
@@ -22,14 +22,14 @@
     "nombre": "Carlos Gómez",
     "email": "carlos@dds.com",
     "especialidad": "frontend",
-    "horarioDisponible": {
-      "inicio": "10:00",
-      "fin": "17:00"
-    },
     "diasDisponibles": [
       "martes",
       "jueves"
     ],
+    "horarioDisponible": {
+      "inicio": "10:00",
+      "fin": "17:00"
+    },
     "activo": true
   },
   {
@@ -38,15 +38,15 @@
     "nombre": "Ana Martínez",
     "email": "ana@dds.com",
     "especialidad": "testing",
-    "horarioDisponible": {
-      "inicio": "08:30",
-      "fin": "13:00"
-    },
     "diasDisponibles": [
       "lunes",
       "martes",
       "miercoles"
     ],
+    "horarioDisponible": {
+      "inicio": "08:30",
+      "fin": "13:00"
+    },
     "activo": true
   },
   {
@@ -55,14 +55,14 @@
     "nombre": "Diego Fernández",
     "email": "diego@dds.com",
     "especialidad": "seguridad",
-    "horarioDisponible": {
-      "inicio": "14:00",
-      "fin": "18:30"
-    },
     "diasDisponibles": [
       "jueves",
       "viernes"
     ],
+    "horarioDisponible": {
+      "inicio": "14:00",
+      "fin": "18:30"
+    },
     "activo": true
   },
   {
@@ -71,15 +71,15 @@
     "nombre": "Laura Torres",
     "email": "laura@dds.com",
     "especialidad": "backend",
-    "horarioDisponible": {
-      "inicio": "09:30",
-      "fin": "16:30"
-    },
     "diasDisponibles": [
       "miercoles",
       "jueves",
       "viernes"
     ],
+    "horarioDisponible": {
+      "inicio": "09:30",
+      "fin": "16:30"
+    },
     "activo": true
   }
 ]
