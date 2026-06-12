@@ -41,7 +41,9 @@ router.put('/:id', verificarToken, validarBody({
 }), turnosController.editar);
 
 // PATCH /api/turnos/:id/cancelar — cancelar (cualquier autenticado, el service valida)
-router.patch('/:id/cancelar', verificarToken, turnosController.cancelar);
+router.patch('/:id/cancelar', verificarToken, validarBody({
+  permitidos: ['observaciones']
+}), turnosController.cancelar);
 
 // PATCH /api/turnos/:id/confirmar — solo tutor o admin
 router.patch('/:id/confirmar', verificarToken, autorizar('tutor', 'admin'), turnosController.confirmar);

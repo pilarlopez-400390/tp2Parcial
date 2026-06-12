@@ -39,6 +39,7 @@ export default function TurnosList() {
 
   useEffect(() => {
     cargarTurnos()
+
   }, [pagina, estadoAplicado, fechaAplicada, tutorAplicado, especialidadAplicada])
 
   async function cargarTutores() {
@@ -84,6 +85,12 @@ export default function TurnosList() {
     setFiltroFecha('')
     setFiltroTutor('')
     setFiltroEspecialidad('')
+    setFiltroModalidad('')
+    setPagina(1)
+  }
+
+  function cambiarFiltro(setter, value) {
+    setter(value)
     setPagina(1)
     setEstadoAplicado('')
     setFechaAplicada('')
@@ -95,13 +102,33 @@ export default function TurnosList() {
 
   function temasDelTurno(turno) {
     if (Array.isArray(turno.temas) && turno.temas.length > 0) return turno.temas
-    return turno.tema ? [turno.tema] : ['Sin tema']
+    return turno.tema ? [turno.tema] : ['Sin Tema']
+  }
+
+  function formatearEtiqueta(valor, fallback = 'Sin dato') {
+    if (!valor) return fallback
+    const normalizadas = {
+      backend: 'Backend',
+      frontend: 'Frontend',
+      testing: 'Testing',
+      seguridad: 'Seguridad',
+      solicitado: 'Solicitado',
+      confirmado: 'Confirmado',
+      realizado: 'Realizado',
+      cancelado: 'Cancelado',
+      virtual: 'Virtual',
+      presencial: 'Presencial'
+    }
+    const texto = String(valor).trim()
+    return normalizadas[texto.toLowerCase()] || texto.charAt(0).toUpperCase() + texto.slice(1)
   }
 
   return (
     <div style={{ maxWidth: '1080px', margin: '24px auto', padding: '0 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '12px', flexWrap: 'wrap' }}>
-        <h2 style={{ margin: 0, color: '#182230', fontSize: '28px' }}>Mis Turnos</h2>
+        <h2 style={{ margin: 0, color: '#182230', fontSize: '28px' }}>
+          {usuario?.rol === 'admin' ? 'Historial de Turnos' : 'Mis Turnos'}
+        </h2>
         {(usuario?.rol === 'estudiante' || usuario?.rol === 'admin') && (
           <Link
             to="/turnos/nuevo"
@@ -112,10 +139,10 @@ export default function TurnosList() {
         )}
       </div>
 
-      <form onSubmit={handleFiltrar} style={{ background: '#fff', padding: '18px', border: '1px solid #d9e2ec', borderRadius: '8px', marginBottom: '24px', display: 'flex', gap: '12px', alignItems: 'flex-end', flexWrap: 'wrap', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
+      <div style={{ background: '#fff', padding: '18px', border: '1px solid #d9e2ec', borderRadius: '8px', marginBottom: '24px', display: 'flex', gap: '12px', alignItems: 'flex-end', flexWrap: 'wrap', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Estado</label>
-          <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px' }}>
+          <select value={filtroEstado} onChange={e => cambiarFiltro(setFiltroEstado, e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px' }}>
             <option value="">Todos</option>
             <option value="solicitado">Solicitado</option>
             <option value="confirmado">Confirmado</option>
@@ -129,11 +156,10 @@ export default function TurnosList() {
           <input
             type="date"
             value={filtroFecha}
-            onChange={e => setFiltroFecha(e.target.value)}
+            onChange={e => cambiarFiltro(setFiltroFecha, e.target.value)}
             style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px' }}
           />
         </div>
-
         {usuario?.rol !== 'tutor' && (
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Tutor</label>
@@ -146,23 +172,30 @@ export default function TurnosList() {
           </div>
         )}
 
+
         <div>
           <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Especialidad</label>
-          <select value={filtroEspecialidad} onChange={e => setFiltroEspecialidad(e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px', minWidth: '155px' }}>
+          <select value={filtroEspecialidad} onChange={e => cambiarFiltro(setFiltroEspecialidad, e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px', minWidth: '155px' }}>
             <option value="">Todas</option>
             {especialidades.map(especialidad => (
-              <option key={especialidad} value={especialidad}>{especialidad}</option>
+              <option key={especialidad} value={especialidad}>{formatearEtiqueta(especialidad)}</option>
             ))}
           </select>
         </div>
 
-        <button type="submit" style={{ padding: '9px 16px', background: '#245b73', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '800' }}>
-          Filtrar
-        </button>
+        <div>
+          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Modalidad</label>
+          <select value={filtroModalidad} onChange={e => cambiarFiltro(setFiltroModalidad, e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px', minWidth: '145px' }}>
+            <option value="">Todas</option>
+            <option value="virtual">Virtual</option>
+            <option value="presencial">Presencial</option>
+          </select>
+        </div>
+
         <button type="button" onClick={handleLimpiar} style={{ padding: '9px 16px', background: '#667085', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '800' }}>
           Limpiar
         </button>
-      </form>
+      </div>
 
       {error && <div style={{ color: '#9f3a3a', padding: '12px 14px', background: '#f9eaea', border: '1px solid #efc7c7', borderRadius: '6px', marginBottom: '16px', fontWeight: '600' }}>{error}</div>}
       {cargando && <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Cargando...</div>}
@@ -171,14 +204,14 @@ export default function TurnosList() {
         <>
           {turnos.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px', color: '#666', background: '#fff', border: '1px solid #d9e0e7', borderRadius: '8px' }}>
-              No hay turnos que mostrar.
+              No Hay Turnos Que Mostrar.
             </div>
           ) : (
             <div>
               {turnos.map(turno => {
                 const estilo = COLORES_ESTADO[turno.estado] || {}
                 const temasTurno = temasDelTurno(turno)
-                const categoriaTurno = turno.categoria || turno.tutorEspecialidad || 'Sin categoria'
+                const categoriaTurno = formatearEtiqueta(turno.categoria || turno.tutorEspecialidad, 'Sin Categoría')
                 return (
                   <div
                     key={turno.id}
@@ -201,13 +234,13 @@ export default function TurnosList() {
                         {turno.fecha} · {turno.horaInicio} - {turno.horaFin}
                       </div>
                       <div style={{ fontSize: '14px', color: '#475467', marginBottom: '4px' }}>
-                        Tutor: {turno.tutorNombre || `Tutor ${turno.tutorId}`} · Categoria: {categoriaTurno}
+                        Tutor: {turno.tutorNombre || `Tutor ${turno.tutorId}`} · Categoría: {categoriaTurno}
                       </div>
                       <div style={{ fontSize: '14px', color: '#475467', marginBottom: '4px' }}>
                         Temas: {temasTurno.join(', ')}
                       </div>
                       <div style={{ fontSize: '13px', color: '#667085' }}>
-                        Estudiante: {turno.estudianteNombre || `#${turno.estudianteId}`} · Modalidad: {turno.modalidad}
+                        Estudiante: {turno.estudianteNombre || `#${turno.estudianteId}`} · Modalidad: {formatearEtiqueta(turno.modalidad, 'Sin Modalidad')}
                       </div>
                     </div>
 
@@ -221,7 +254,7 @@ export default function TurnosList() {
                         fontSize: '13px',
                         fontWeight: '800'
                       }}>
-                        {turno.estado}
+                        {formatearEtiqueta(turno.estado, 'Sin Estado')}
                       </span>
                       <Link
                         to={`/turnos/${turno.id}`}
@@ -246,7 +279,7 @@ export default function TurnosList() {
                 Anterior
               </button>
               <span style={{ padding: '8px 16px', color: '#666' }}>
-                Pagina {pagina} de {pagination.totalPages} · {pagination.total} turnos en total
+                Página {pagina} de {pagination.totalPages} · {pagination.total} Turnos En Total
               </span>
               <button
                 onClick={() => setPagina(p => Math.min(pagination.totalPages, p + 1))}

@@ -6,10 +6,15 @@
     "fecha": "2026-06-10",
     "horaInicio": "09:00",
     "horaFin": "09:30",
-    "tema": "JWT y middlewares",
+    "categoria": "Backend",
+    "temas": [
+      "JWT",
+      "Middlewares"
+    ],
+    "tema": "JWT, Middlewares",
     "modalidad": "virtual",
-    "estado": "solicitado",
-    "observaciones": null
+    "estado": "cancelado",
+    "observaciones": "No ha sido confirmado"
   },
   {
     "id": 2,
@@ -18,10 +23,14 @@
     "fecha": "2026-06-10",
     "horaInicio": "10:00",
     "horaFin": "10:30",
+    "categoria": "Backend",
+    "temas": [
+      "Express Router"
+    ],
     "tema": "Express Router",
     "modalidad": "presencial",
-    "estado": "solicitado",
-    "observaciones": null
+    "estado": "cancelado",
+    "observaciones": "No ha sido confirmado"
   },
   {
     "id": 3,
@@ -30,10 +39,16 @@
     "fecha": "2026-06-09",
     "horaInicio": "14:00",
     "horaFin": "14:30",
-    "tema": "React Hooks",
+    "categoria": "Frontend",
+    "temas": [
+      "React",
+      "useState",
+      "useEffect"
+    ],
+    "tema": "React, useState, useEffect",
     "modalidad": "virtual",
-    "estado": "solicitado",
-    "observaciones": null
+    "estado": "cancelado",
+    "observaciones": "No ha sido confirmado"
   },
   {
     "id": 4,
@@ -42,9 +57,13 @@
     "fecha": "2026-06-11",
     "horaInicio": "10:00",
     "horaFin": "10:30",
-    "tema": "Vite y configuración",
+    "categoria": "Frontend",
+    "temas": [
+      "Vite"
+    ],
+    "tema": "Vite",
     "modalidad": "virtual",
-    "estado": "confirmado",
+    "estado": "realizado",
     "observaciones": null
   },
   {
@@ -54,9 +73,14 @@
     "fecha": "2026-06-10",
     "horaInicio": "15:00",
     "horaFin": "15:30",
-    "tema": "Jest y Supertest",
+    "categoria": "Testing",
+    "temas": [
+      "Jest",
+      "Supertest"
+    ],
+    "tema": "Jest, Supertest",
     "modalidad": "presencial",
-    "estado": "confirmado",
+    "estado": "realizado",
     "observaciones": null
   },
   {
@@ -66,9 +90,14 @@
     "fecha": "2026-06-11",
     "horaInicio": "09:00",
     "horaFin": "09:30",
-    "tema": "HTTPS y certificados",
+    "categoria": "Seguridad",
+    "temas": [
+      "Protección de datos sensibles",
+      "Buenas prácticas de seguridad"
+    ],
+    "tema": "Protección de datos sensibles, Buenas prácticas de seguridad",
     "modalidad": "virtual",
-    "estado": "confirmado",
+    "estado": "realizado",
     "observaciones": null
   },
   {
@@ -78,7 +107,12 @@
     "fecha": "2026-06-03",
     "horaInicio": "11:00",
     "horaFin": "11:30",
-    "tema": "Node.js y módulos",
+    "categoria": "Backend",
+    "temas": [
+      "Servicios",
+      "API REST"
+    ],
+    "tema": "Servicios, API REST",
     "modalidad": "virtual",
     "estado": "realizado",
     "observaciones": "Repasamos require/exports a fondo"
@@ -90,7 +124,11 @@
     "fecha": "2026-06-04",
     "horaInicio": "10:00",
     "horaFin": "10:30",
-    "tema": "SQLite con Node",
+    "categoria": "Backend",
+    "temas": [
+      "Persistencia (JSON / SQLite)"
+    ],
+    "tema": "Persistencia (JSON / SQLite)",
     "modalidad": "presencial",
     "estado": "realizado",
     "observaciones": "Se practicó SELECT y JOIN"
@@ -102,7 +140,12 @@
     "fecha": "2026-06-02",
     "horaInicio": "14:00",
     "horaFin": "14:30",
-    "tema": "Testing automatizado",
+    "categoria": "Testing",
+    "temas": [
+      "Pruebas de endpoints",
+      "Cobertura de pruebas"
+    ],
+    "tema": "Pruebas de endpoints, Cobertura de pruebas",
     "modalidad": "virtual",
     "estado": "realizado",
     "observaciones": null
@@ -114,7 +157,11 @@
     "fecha": "2026-06-02",
     "horaInicio": "09:00",
     "horaFin": "09:30",
-    "tema": "Axios e interceptores",
+    "categoria": "Frontend",
+    "temas": [
+      "Axios"
+    ],
+    "tema": "Axios",
     "modalidad": "virtual",
     "estado": "cancelado",
     "observaciones": null
@@ -126,7 +173,12 @@
     "fecha": "2026-06-05",
     "horaInicio": "14:00",
     "horaFin": "14:30",
-    "tema": "CORS y seguridad",
+    "categoria": "Seguridad",
+    "temas": [
+      "CORS",
+      "Roles y permisos"
+    ],
+    "tema": "CORS, Roles y permisos",
     "modalidad": "presencial",
     "estado": "cancelado",
     "observaciones": "Tutor no disponible"
@@ -138,9 +190,46 @@
     "fecha": "2026-06-04",
     "horaInicio": "11:00",
     "horaFin": "11:30",
-    "tema": "ORM y Sequelize",
+    "categoria": "Backend",
+    "temas": [
+      "Servicios",
+      "CRUD"
+    ],
+    "tema": "Servicios, CRUD",
     "modalidad": "virtual",
     "estado": "cancelado",
+    "observaciones": null
+  },
+  {
+    "id": 13,
+    "tutorId": 5,
+    "estudianteId": 7,
+    "fecha": "2026-06-17",
+    "horaInicio": "14:00",
+    "horaFin": "16:30",
+    "categoria": "Backend",
+    "temas": [
+      "JWT"
+    ],
+    "tema": "JWT",
+    "modalidad": "presencial",
+    "estado": "solicitado",
+    "observaciones": "Quiero repasar todo"
+  },
+  {
+    "id": 14,
+    "tutorId": 3,
+    "estudianteId": 7,
+    "fecha": "2026-06-17",
+    "horaInicio": "11:00",
+    "horaFin": "13:00",
+    "categoria": "Testing",
+    "temas": [
+      "Jest"
+    ],
+    "tema": "Jest",
+    "modalidad": "virtual",
+    "estado": "solicitado",
     "observaciones": null
   }
 ]

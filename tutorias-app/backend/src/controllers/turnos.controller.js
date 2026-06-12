@@ -89,7 +89,8 @@ async function editar(req, res, next) {
 async function cancelar(req, res, next) {
   try {
     const id = parseInt(req.params.id);
-    const turno = await turnosService.cancelarTurno(id, req.user.id, req.user.rol);
+    const observaciones = req.body?.observaciones;
+    const turno = await turnosService.cancelarTurno(id, req.user.id, req.user.rol, observaciones);
     res.status(200).json(turno);
   } catch (err) {
     next(err);

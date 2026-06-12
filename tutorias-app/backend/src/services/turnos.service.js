@@ -57,6 +57,40 @@ function validarFechaPermitida(fecha) {
   }
 }
 
+function fechaHoraTurno(fecha, hora) {
+  return new Date(`${fecha}T${hora}:00`);
+}
+
+function aplicarTransicionesAutomaticas() {
+  const turnos = db.findAll('turnos');
+  const ahora = new Date();
+
+  for (let i = 0; i < turnos.length; i++) {
+    const turno = turnos[i];
+    const inicio = fechaHoraTurno(turno.fecha, turno.horaInicio);
+
+    if (turno.estado === 'confirmado' && ahora >= inicio) {
+      db.update('turnos', turno.id, { estado: 'realizado' });
+      registrarHistorial(turno.id, 0, 'realizacion',
+        { estado: 'confirmado' },
+        { estado: 'realizado', automatico: true }
+      );
+      continue;
+    }
+
+    if (turno.estado === 'solicitado' && ahora >= inicio) {
+      db.update('turnos', turno.id, {
+        estado: 'cancelado',
+        observaciones: 'No ha sido confirmado'
+      });
+      registrarHistorial(turno.id, 0, 'cancelacion',
+        { estado: 'solicitado' },
+        { estado: 'cancelado', observaciones: 'No ha sido confirmado', automatico: true }
+      );
+    }
+  }
+}
+
 // Verifica si dos franjas horarias se superponen.
 // Las horas son strings 'HH:MM'. Como tienen formato fijo, la comparación
 // de strings funciona igual que comparación numérica (ej: '09:30' < '10:00' → true).
@@ -101,7 +135,7 @@ function normalizarCategoria(categoria, tutor) {
     testing: 'Testing',
     seguridad: 'Seguridad'
   };
-  const valor = categoria || tutor?.especialidad || 'General';
+  const valor = tutor?.especialidad || categoria || 'General';
   const clave = String(valor).trim().toLowerCase();
   return categorias[clave] || String(valor).trim() || 'General';
 }
@@ -158,6 +192,7 @@ function buscarUsuarioPorId(usuarios, usuarioId) {
 }
 
 function usuarioNombrePorId(usuarios, usuarioId) {
+  if (usuarioId === 0) return 'Sistema';
   const usuario = buscarUsuarioPorId(usuarios, usuarioId);
   return usuario ? usuario.nombre : 'Desconocido';
 }
@@ -243,6 +278,7 @@ function construirHistorialInferido(turno, usuarios, tutores) {
 // turnoIdIgnorar: cuando EDITAMOS un turno, ignoramos el propio turno
 //                al chequear superposición (no puede conflictuarse consigo mismo).
 function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnorar, estudianteId) {
+  aplicarTransicionesAutomaticas();
 
   // 1. El tutor debe estar activo
   if (!tutor.activo) {
@@ -299,9 +335,10 @@ function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnor
 
 // ── LISTAR TURNOS ─────────────────────────────────────────────────────────────
 
-// Parámetros de query: fecha, estado, tutorId, especialidad, estudianteId, page, limit, sortBy, order
-function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId,
+// Parámetros de query: fecha, estado, tutorId, especialidad, estudianteId, modalidad, page, limit, sortBy, order
+function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId, modalidad,
                         page = 1, limit = 10, sortBy = 'fecha', order = 'asc' } = {}, usuario) {
+  aplicarTransicionesAutomaticas();
 
   let turnos    = db.findAll('turnos');
   const tutores = db.findAll('tutores');
@@ -328,6 +365,14 @@ function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId,
     const filtrados = [];
     for (let i = 0; i < turnos.length; i++) {
       if (turnos[i].estado === estado) filtrados.push(turnos[i]);
+    }
+    turnos = filtrados;
+  }
+
+  if (modalidad) {
+    const filtrados = [];
+    for (let i = 0; i < turnos.length; i++) {
+      if (turnos[i].modalidad === modalidad) filtrados.push(turnos[i]);
     }
     turnos = filtrados;
   }
@@ -422,6 +467,8 @@ function listarTurnos({ fecha, estado, tutorId, especialidad, estudianteId,
 // ── OBTENER TURNO POR ID ──────────────────────────────────────────────────────
 
 function obtenerTurnoPorId(id, usuario) {
+  aplicarTransicionesAutomaticas();
+
   const turno = db.findById('turnos', id);
 
   if (!turno) {
@@ -536,7 +583,7 @@ function crearTurno({ tutorId, estudianteId, fecha, horaInicio, horaFin, categor
   });
 
   // Registrar en el historial
-  registrarHistorial(nuevoTurno.id, estudianteId, 'creacion', null, {
+  registrarHistorial(nuevoTurno.id, usuario.id, 'creacion', null, {
     estado: 'solicitado', tutorId, fecha, horaInicio, horaFin,
     categoria: datosTema.categoria, temas: datosTema.temas, tema: datosTema.tema,
     modalidad, observaciones: observaciones || null
@@ -548,6 +595,8 @@ function crearTurno({ tutorId, estudianteId, fecha, horaInicio, horaFin, categor
 // ── EDITAR TURNO ──────────────────────────────────────────────────────────────
 
 function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
+  aplicarTransicionesAutomaticas();
+
   const turno = db.findById('turnos', turnoId);
   if (!turno) {
     const err = new Error('Turno no encontrado');
@@ -665,7 +714,9 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
 // Máquina de estados: solicitado ↓ cancelado
 //                    confirmado  ↓ cancelado
 
-function cancelarTurno(turnoId, usuarioId, usuarioRol) {
+function cancelarTurno(turnoId, usuarioId, usuarioRol, observaciones) {
+  aplicarTransicionesAutomaticas();
+
   const turno = db.findById('turnos', turnoId);
   if (!turno) {
     const err = new Error('Turno no encontrado');
@@ -694,10 +745,15 @@ function cancelarTurno(turnoId, usuarioId, usuarioRol) {
   }
 
   const estadoAnterior = turno.estado;
-  db.update('turnos', turnoId, { estado: 'cancelado' });
+  const observacionesFinales = observaciones !== undefined ? observaciones : turno.observaciones;
+  db.update('turnos', turnoId, {
+    estado: 'cancelado',
+    observaciones: observacionesFinales
+  });
 
   registrarHistorial(turnoId, usuarioId, 'cancelacion',
-    { estado: estadoAnterior }, { estado: 'cancelado' }
+    { estado: estadoAnterior },
+    { estado: 'cancelado', observaciones: observacionesFinales }
   );
 
   return obtenerTurnoPorId(turnoId, { id: usuarioId, rol: usuarioRol });
@@ -708,6 +764,8 @@ function cancelarTurno(turnoId, usuarioId, usuarioRol) {
 // Solo el tutor ASIGNADO o un admin pueden confirmar.
 
 function confirmarTurno(turnoId, usuarioId, usuarioRol) {
+  aplicarTransicionesAutomaticas();
+
   const turno = db.findById('turnos', turnoId);
   if (!turno) {
     const err = new Error('Turno no encontrado');
@@ -742,6 +800,8 @@ function confirmarTurno(turnoId, usuarioId, usuarioRol) {
 // Solo el tutor ASIGNADO o un admin pueden marcar como realizado.
 
 function realizarTurno(turnoId, observaciones, usuarioId, usuarioRol) {
+  aplicarTransicionesAutomaticas();
+
   const turno = db.findById('turnos', turnoId);
   if (!turno) {
     const err = new Error('Turno no encontrado');
@@ -751,6 +811,13 @@ function realizarTurno(turnoId, observaciones, usuarioId, usuarioRol) {
 
   if (turno.estado !== 'confirmado') {
     const err = new Error('Solo se pueden marcar como realizados turnos en estado "confirmado"');
+    err.status = 400;
+    throw err;
+  }
+
+  const fechaHoraFin = new Date(`${turno.fecha}T${turno.horaFin}:00`);
+  if (fechaHoraFin > new Date()) {
+    const err = new Error('No se puede marcar como realizado antes del horario de finalización del turno');
     err.status = 400;
     throw err;
   }
@@ -778,6 +845,8 @@ function realizarTurno(turnoId, observaciones, usuarioId, usuarioRol) {
 // ── HISTORIAL ─────────────────────────────────────────────────────────────────
 
 function obtenerHistorial(turnoId, usuario) {
+  aplicarTransicionesAutomaticas();
+
   const turno = db.findById('turnos', turnoId);
   if (!turno) {
     const err = new Error('Turno no encontrado');
@@ -843,6 +912,8 @@ function obtenerHistorial(turnoId, usuario) {
 // ── RESUMEN (solo admin) ──────────────────────────────────────────────────────
 
 function obtenerResumen() {
+  aplicarTransicionesAutomaticas();
+
   const hoy    = new Date().toISOString().split('T')[0];  // 'YYYY-MM-DD'
   const turnos = db.findAll('turnos');
   const tutores = db.findAll('tutores');

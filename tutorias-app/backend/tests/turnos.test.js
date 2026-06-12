@@ -190,6 +190,18 @@ describe('2. Listado de turnos', () => {
     }
   });
 
+  test('Lista turnos filtrados por modalidad', async () => {
+    const res = await request(app)
+      .get('/api/turnos?modalidad=presencial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBeGreaterThan(0);
+    for (let i = 0; i < res.body.data.length; i++) {
+      expect(res.body.data[i].modalidad).toBe('presencial');
+    }
+  });
+
   test('Lista turnos con paginacion y ordenamiento', async () => {
     const res = await request(app)
       .get('/api/turnos?page=2&limit=3&sortBy=horaInicio&order=desc')
@@ -264,6 +276,32 @@ describe('4. Creación de turno válido', () => {
     expect(historial.body[0]).toHaveProperty('turnoId', res.body.id);
     expect(historial.body[0]).toHaveProperty('usuarioId');
     expect(historial.body[0]).toHaveProperty('fechaHora');
+  });
+
+  test('Admin crea turno y el historial registra al admin como creador', async () => {
+    const res = await request(app)
+      .post('/api/turnos')
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({
+        tutorId: 3,
+        estudianteId: 8,
+        fecha: '2026-06-15',
+        horaInicio: '12:00',
+        horaFin: '12:30',
+        temas: ['Jest'],
+        modalidad: 'virtual'
+      });
+
+    expect(res.status).toBe(201);
+
+    const historial = await request(app)
+      .get(`/api/turnos/${res.body.id}/historial`)
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(historial.status).toBe(200);
+    expect(historial.body[0].accion).toBe('creacion');
+    expect(historial.body[0].usuarioId).toBe(1);
+    expect(historial.body[0].usuarioNombre).toBe('Admin Sistema');
   });
 
   test('Estudiante crea turno con categoria, multiples temas y observaciones', async () => {
@@ -355,13 +393,25 @@ describe('6. Creación inválida por superposición', () => {
   });
 
   test('Turno superpuesto para el mismo estudiante devuelve 400', async () => {
+    db.insert('turnos', {
+      tutorId: 1,
+      estudianteId: 7,
+      fecha: '2026-06-19',
+      horaInicio: '10:00',
+      horaFin: '10:30',
+      tema: 'Turno previo del estudiante',
+      modalidad: 'virtual',
+      estado: 'solicitado',
+      observaciones: null
+    });
+
     const res = await request(app)
       .post('/api/turnos')
       .set('Authorization', `Bearer ${tokenAdmin}`)
       .send({
         tutorId: 5,
         estudianteId: 7,
-        fecha: '2026-06-11',
+        fecha: '2026-06-19',
         horaInicio: '10:15',
         horaFin: '10:45',
         tema: 'Test estudiante ocupado',
@@ -527,6 +577,28 @@ describe('8. Acceso con rol insuficiente', () => {
 
     expect(res.status).toBe(400);
     expect(res.body.error).toContain('confirmado');
+  });
+
+  test('No permite marcar realizado antes del horario de finalización', async () => {
+    const turnoFuturo = db.insert('turnos', {
+      tutorId: 1,
+      estudianteId: 7,
+      fecha: '2026-12-30',
+      horaInicio: '10:00',
+      horaFin: '10:30',
+      tema: 'Servicios',
+      modalidad: 'virtual',
+      estado: 'confirmado',
+      observaciones: null
+    });
+
+    const res = await request(app)
+      .patch(`/api/turnos/${turnoFuturo.id}/realizar`)
+      .set('Authorization', `Bearer ${tokenAdmin}`)
+      .send({ observaciones: 'Intento anticipado' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('antes del horario');
   });
 
   test('No permite confirmar un turno ya confirmado', async () => {
@@ -801,13 +873,13 @@ describe('11. Historial de cambios', () => {
     esperarEntradaValida(historial.body[historial.body.length - 1], 'confirmacion');
 
     const realizado = await request(app)
-      .patch('/api/turnos/1/realizar')
+      .patch('/api/turnos/4/realizar')
       .set('Authorization', `Bearer ${tokenAdmin}`)
       .send({ observaciones: 'Historial realizacion' });
 
     expect(realizado.status).toBe(200);
     historial = await request(app)
-      .get('/api/turnos/1/historial')
+      .get('/api/turnos/4/historial')
       .set('Authorization', `Bearer ${tokenAdmin}`);
     esperarEntradaValida(historial.body[historial.body.length - 1], 'realizacion');
 
@@ -838,6 +910,18 @@ describe('11. Historial de cambios', () => {
       .get('/api/turnos/3/historial')
       .set('Authorization', `Bearer ${tokenAdmin}`);
     esperarEntradaValida(historial.body[historial.body.length - 1], 'reasignacion');
+  });
+
+  test('Turno existente sin historial guardado devuelve historial informativo', async () => {
+    const historial = await request(app)
+      .get('/api/turnos/9/historial')
+      .set('Authorization', `Bearer ${tokenAdmin}`);
+
+    expect(historial.status).toBe(200);
+    expect(historial.body).toBeInstanceOf(Array);
+    expect(historial.body.length).toBeGreaterThanOrEqual(3);
+    expect(historial.body.map(e => e.accion)).toEqual(expect.arrayContaining(['creacion', 'confirmacion', 'realizacion']));
+    expect(historial.body[0]).toHaveProperty('usuarioNombre');
   });
 });
 

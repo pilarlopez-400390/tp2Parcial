@@ -81,5 +81,21 @@
       "fin": "16:30"
     },
     "activo": true
+  },
+  {
+    "id": 6,
+    "usuarioId": 10,
+    "nombre": "Pilar Lopez",
+    "email": "pilar@dds.com",
+    "especialidad": "seguridad",
+    "horarioDisponible": {
+      "inicio": "09:00",
+      "fin": "17:00"
+    },
+    "diasDisponibles": [
+      "martes",
+      "jueves"
+    ],
+    "activo": true
   }
 ]

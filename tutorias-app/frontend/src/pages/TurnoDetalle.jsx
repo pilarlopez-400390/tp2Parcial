@@ -56,12 +56,20 @@ export default function TurnoDetalle() {
     setAccionCargando(true)
     try {
       let data
-      if (accion === 'realizar') {
-        data = await turnosService.realizar(parseInt(id), observaciones)
-      } else if (accion === 'confirmar') {
+      if (accion === 'confirmar') {
         data = await turnosService.confirmar(parseInt(id))
       } else if (accion === 'cancelar') {
-        data = await turnosService.cancelar(parseInt(id))
+        const motivo = prompt('Indicá el motivo de cancelación:')
+        if (motivo === null) {
+          setAccionCargando(false)
+          return
+        }
+        if (!motivo.trim()) {
+          setError('Indicá el motivo de cancelación')
+          setAccionCargando(false)
+          return
+        }
+        data = await turnosService.cancelar(parseInt(id), motivo.trim())
       }
       setTurno(data)  // Actualizamos el estado local con el nuevo turno
     } catch (err) {
@@ -74,12 +82,6 @@ export default function TurnoDetalle() {
   // ¿Puede este usuario confirmar este turno?
   function puedeConfirmar() {
     if (turno?.estado !== 'solicitado') return false
-    if (usuario?.rol === 'admin') return true
-    return usuario?.rol === 'tutor' && turno?.tutorUsuarioId === usuario?.id
-  }
-
-  function puedeRealizar() {
-    if (turno?.estado !== 'confirmado') return false
     if (usuario?.rol === 'admin') return true
     return usuario?.rol === 'tutor' && turno?.tutorUsuarioId === usuario?.id
   }
@@ -102,6 +104,24 @@ export default function TurnoDetalle() {
     cancelado: '#f9eaea'
   }
 
+  function formatearEtiqueta(valor, fallback = 'Sin dato') {
+    if (!valor) return fallback
+    const normalizadas = {
+      backend: 'Backend',
+      frontend: 'Frontend',
+      testing: 'Testing',
+      seguridad: 'Seguridad',
+      solicitado: 'Solicitado',
+      confirmado: 'Confirmado',
+      realizado: 'Realizado',
+      cancelado: 'Cancelado',
+      virtual: 'Virtual',
+      presencial: 'Presencial'
+    }
+    const texto = String(valor).trim()
+    return normalizadas[texto.toLowerCase()] || texto.charAt(0).toUpperCase() + texto.slice(1)
+  }
+
   if (cargando) return <div style={{ textAlign: 'center', padding: '60px' }}>Cargando...</div>
   if (error) return <div style={{ textAlign: 'center', padding: '60px', color: '#9f3a3a' }}>{error}</div>
   if (!turno) return null
@@ -109,7 +129,8 @@ export default function TurnoDetalle() {
   const temasTurno = Array.isArray(turno.temas) && turno.temas.length > 0
     ? turno.temas
     : (turno.tema ? [turno.tema] : [])
-  const categoriaTurno = turno.categoria || turno.tutorEspecialidad || 'Sin categoria'
+  const categoriaTurno = formatearEtiqueta(turno.categoria || turno.tutorEspecialidad, 'Sin Categoría')
+  const especialidadTutor = formatearEtiqueta(turno.tutorEspecialidad, 'Sin Especialidad')
 
   return (
     <div style={{ maxWidth: '700px', margin: '24px auto', padding: '0 16px' }}>
@@ -126,7 +147,7 @@ export default function TurnoDetalle() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           <div>
             <strong>Estado</strong>
-            <p style={{ margin: '4px 0', fontWeight: 'bold', textTransform: 'uppercase' }}>{turno.estado}</p>
+            <p style={{ margin: '4px 0', fontWeight: 'bold' }}>{formatearEtiqueta(turno.estado)}</p>
           </div>
           <div>
             <strong>Fecha</strong>
@@ -142,14 +163,14 @@ export default function TurnoDetalle() {
           </div>
           <div>
             <strong>Especialidad del tutor</strong>
-            <p style={{ margin: '4px 0' }}>{turno.tutorEspecialidad || 'Sin especialidad'}</p>
+            <p style={{ margin: '4px 0' }}>{especialidadTutor}</p>
           </div>
           <div>
-            <strong>Categoria</strong>
+            <strong>Categoría</strong>
             <p style={{ margin: '4px 0' }}>{categoriaTurno}</p>
           </div>
           <div style={{ gridColumn: '1 / -1' }}>
-            <strong>Tema/temas seleccionados</strong>
+            <strong>Tema/Temas Seleccionados</strong>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
               {temasTurno.map(tema => (
                 <span key={tema} style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '999px', padding: '5px 10px', fontSize: '13px', fontWeight: '700', color: '#334155' }}>
@@ -160,7 +181,7 @@ export default function TurnoDetalle() {
           </div>
           <div>
             <strong>Modalidad</strong>
-            <p style={{ margin: '4px 0' }}>{turno.modalidad}</p>
+            <p style={{ margin: '4px 0' }}>{formatearEtiqueta(turno.modalidad)}</p>
           </div>
           {turno.observaciones && (
             <div style={{ gridColumn: '1 / -1' }}>
@@ -199,19 +220,9 @@ export default function TurnoDetalle() {
           </button>
         )}
 
-        {puedeRealizar() && (
-          <button
-            onClick={() => ejecutarAccion('realizar')}
-            disabled={accionCargando}
-            style={{ background: '#2f6f58', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
-          >
-            Marcar como realizado
-          </button>
-        )}
-
         {puedeCancelar() && (
           <button
-            onClick={() => { if (confirm('¿Cancelar este turno?')) ejecutarAccion('cancelar') }}
+            onClick={() => ejecutarAccion('cancelar')}
             disabled={accionCargando}
             style={{ background: '#9f3a3a', color: 'white', padding: '10px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
           >
@@ -220,29 +231,13 @@ export default function TurnoDetalle() {
         )}
       </div>
 
-      {/* Campo observaciones para acción "realizar" */}
-      {puedeRealizar() && (
-        <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
-            Observaciones (al marcar como realizado):
-          </label>
-          <textarea
-            value={observaciones}
-            onChange={e => setObservaciones(e.target.value)}
-            rows={3}
-            placeholder="Observaciones sobre la tutoría..."
-            style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
-          />
-        </div>
-      )}
-
       {/* Historial */}
       <div>
         <button
           onClick={mostrarHistorial ? () => setMostrarHistorial(false) : cargarHistorial}
           style={{ background: 'none', border: '1px solid #ddd', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', marginBottom: '12px' }}
         >
-          {mostrarHistorial ? 'Ocultar historial' : 'Ver historial de cambios'}
+          {mostrarHistorial ? 'Ocultar Historial' : 'Ver Historial de Cambios'}
         </button>
 
         {mostrarHistorial && !historialError && historial.length === 0 && (

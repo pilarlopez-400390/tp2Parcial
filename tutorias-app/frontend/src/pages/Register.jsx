@@ -51,7 +51,7 @@ export default function Register() {
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Nombre y apellido</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Nombre y Apellido</label>
           <input
             type="text"
             value={nombre}
@@ -60,7 +60,7 @@ export default function Register() {
             placeholder="Ej: Valentina Perez"
             style={{ width: '100%', padding: '11px 12px', border: '1px solid #d9e2ec', borderRadius: '6px', boxSizing: 'border-box' }}
           />
-          <small style={{ display: 'block', color: '#667085', marginTop: '5px' }}>Debe incluir al menos un nombre y un apellido.</small>
+          <small style={{ display: 'block', color: '#667085', marginTop: '5px' }}>Debe incluir al menos un Nombre y un Apellido.</small>
         </div>
 
         <div style={{ marginBottom: '16px' }}>
@@ -76,7 +76,7 @@ export default function Register() {
 
         <div style={{ marginBottom: '16px' }}>
 
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Contrasena</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '700', color: '#344054' }}>Contraseña</label>
           <input
             type="password"
             value={password}
@@ -97,7 +97,7 @@ export default function Register() {
       </form>
 
       <p style={{ textAlign: 'center', marginTop: '16px' }}>
-        Ya tenés cuenta? <Link to="/login">Iniciar sesión</Link>
+        ¿Ya tenés cuenta? <Link to="/login">Iniciar Sesión</Link>
       </p>
     </div>
   )

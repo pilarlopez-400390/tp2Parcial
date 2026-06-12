@@ -40,8 +40,8 @@ async function editar(id, datos) {
 }
 
 // PATCH /api/turnos/:id/cancelar
-async function cancelar(id) {
-  const response = await api.patch(`/turnos/${id}/cancelar`)
+async function cancelar(id, observaciones) {
+  const response = await api.patch(`/turnos/${id}/cancelar`, { observaciones })
   return response.data
 }
 

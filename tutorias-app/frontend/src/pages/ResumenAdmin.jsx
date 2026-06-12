@@ -49,11 +49,23 @@ export default function ResumenAdmin() {
 
   function temasDelTurno(turno) {
     if (Array.isArray(turno.temas) && turno.temas.length > 0) return turno.temas
-    return turno.tema ? [turno.tema] : ['Sin tema']
+    return turno.tema ? [turno.tema] : ['Sin Tema']
   }
 
   function categoriaDelTurno(turno) {
-    return turno.categoria || turno.tutorEspecialidad || 'Sin categoria'
+    return formatearEtiqueta(turno.categoria || turno.tutorEspecialidad, 'Sin Categoría')
+  }
+
+  function formatearEtiqueta(valor, fallback = 'Sin dato') {
+    if (!valor) return fallback
+    const normalizadas = {
+      backend: 'Backend',
+      frontend: 'Frontend',
+      testing: 'Testing',
+      seguridad: 'Seguridad'
+    }
+    const texto = String(valor).trim()
+    return normalizadas[texto.toLowerCase()] || texto.charAt(0).toUpperCase() + texto.slice(1)
   }
 
   async function cargarDetalle(tipo, tema = '', categoria = '') {
@@ -183,18 +195,18 @@ export default function ResumenAdmin() {
           </section>
 
           <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
-            <h3 style={{ margin: '0 0 14px', color: '#111827' }}>Temas mas solicitados por categoria</h3>
+            <h3 style={{ margin: '0 0 14px', color: '#111827' }}>Temas Más Solicitados por Categoría</h3>
             {temasPorCategoria.length > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {temasPorCategoria.map(grupo => {
-                  const categoria = grupo.categoria || grupo.especialidad || 'Sin categoria'
+                  const categoria = formatearEtiqueta(grupo.categoria || grupo.especialidad, 'Sin Categoría')
                   const maxTemaGrupo = grupo.temas[0]?.cantidad || 1
 
                   return (
                     <div key={categoria} style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '12px', background: '#f8fafc' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginBottom: '10px' }}>
                         <strong style={{ textTransform: 'capitalize' }}>{categoria}</strong>
-                        <span style={{ color: '#667085', fontSize: '13px' }}>{grupo.total} turnos</span>
+                        <span style={{ color: '#667085', fontSize: '13px' }}>{grupo.total} Temas Seleccionados</span>
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

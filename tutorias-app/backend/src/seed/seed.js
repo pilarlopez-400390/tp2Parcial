@@ -84,24 +84,24 @@ function seed() {
   // ════════════════════════════════════════════
 
   // Solicitados (pendientes de confirmar)
-  const t1  = db.insert('turnos', { tutorId: tMarina.id, estudianteId: uValen.id, fecha: '2026-06-10', horaInicio: '09:00', horaFin: '09:30', tema: 'JWT y middlewares',   modalidad: 'virtual',    estado: 'solicitado', observaciones: null });
-  const t2  = db.insert('turnos', { tutorId: tMarina.id, estudianteId: uTomas.id, fecha: '2026-06-10', horaInicio: '10:00', horaFin: '10:30', tema: 'Express Router',      modalidad: 'presencial', estado: 'solicitado', observaciones: null });
-  const t3  = db.insert('turnos', { tutorId: tCarlos.id, estudianteId: uSofia.id, fecha: '2026-06-09', horaInicio: '14:00', horaFin: '14:30', tema: 'React Hooks',         modalidad: 'virtual',    estado: 'solicitado', observaciones: null });
+  const t1  = db.insert('turnos', { tutorId: tMarina.id, estudianteId: uValen.id, fecha: '2026-06-10', horaInicio: '09:00', horaFin: '09:30', categoria: 'Backend', temas: ['JWT', 'Middlewares'], tema: 'JWT, Middlewares', modalidad: 'virtual', estado: 'solicitado', observaciones: null });
+  const t2  = db.insert('turnos', { tutorId: tMarina.id, estudianteId: uTomas.id, fecha: '2026-06-10', horaInicio: '10:00', horaFin: '10:30', categoria: 'Backend', temas: ['Express Router'], tema: 'Express Router', modalidad: 'presencial', estado: 'solicitado', observaciones: null });
+  const t3  = db.insert('turnos', { tutorId: tCarlos.id, estudianteId: uSofia.id, fecha: '2026-06-09', horaInicio: '14:00', horaFin: '14:30', categoria: 'Frontend', temas: ['React', 'useState', 'useEffect'], tema: 'React, useState, useEffect', modalidad: 'virtual', estado: 'solicitado', observaciones: null });
 
   // Confirmados
-  const t4  = db.insert('turnos', { tutorId: tCarlos.id, estudianteId: uValen.id, fecha: '2026-06-11', horaInicio: '10:00', horaFin: '10:30', tema: 'Vite y configuración', modalidad: 'virtual',   estado: 'confirmado', observaciones: null });
-  const t5  = db.insert('turnos', { tutorId: tAna.id,    estudianteId: uTomas.id, fecha: '2026-06-10', horaInicio: '15:00', horaFin: '15:30', tema: 'Jest y Supertest',     modalidad: 'presencial', estado: 'confirmado', observaciones: null });
-  const t6  = db.insert('turnos', { tutorId: tDiego.id,  estudianteId: uSofia.id, fecha: '2026-06-11', horaInicio: '09:00', horaFin: '09:30', tema: 'HTTPS y certificados', modalidad: 'virtual',   estado: 'confirmado', observaciones: null });
+  const t4  = db.insert('turnos', { tutorId: tCarlos.id, estudianteId: uValen.id, fecha: '2026-06-11', horaInicio: '10:00', horaFin: '10:30', categoria: 'Frontend', temas: ['Vite'], tema: 'Vite', modalidad: 'virtual', estado: 'confirmado', observaciones: null });
+  const t5  = db.insert('turnos', { tutorId: tAna.id,    estudianteId: uTomas.id, fecha: '2026-06-10', horaInicio: '15:00', horaFin: '15:30', categoria: 'Testing', temas: ['Jest', 'Supertest'], tema: 'Jest, Supertest', modalidad: 'presencial', estado: 'confirmado', observaciones: null });
+  const t6  = db.insert('turnos', { tutorId: tDiego.id,  estudianteId: uSofia.id, fecha: '2026-06-11', horaInicio: '09:00', horaFin: '09:30', categoria: 'Seguridad', temas: ['Protección de datos sensibles', 'Buenas prácticas de seguridad'], tema: 'Protección de datos sensibles, Buenas prácticas de seguridad', modalidad: 'virtual', estado: 'confirmado', observaciones: null });
 
   // Realizados (pasados)
-  const t7  = db.insert('turnos', { tutorId: tMarina.id, estudianteId: uSofia.id, fecha: '2026-06-03', horaInicio: '11:00', horaFin: '11:30', tema: 'Node.js y módulos',    modalidad: 'virtual',    estado: 'realizado', observaciones: 'Repasamos require/exports a fondo' });
-  const t8  = db.insert('turnos', { tutorId: tLaura.id,  estudianteId: uValen.id, fecha: '2026-06-04', horaInicio: '10:00', horaFin: '10:30', tema: 'SQLite con Node',      modalidad: 'presencial', estado: 'realizado', observaciones: 'Se practicó SELECT y JOIN' });
-  const t9  = db.insert('turnos', { tutorId: tAna.id,    estudianteId: uTomas.id, fecha: '2026-06-02', horaInicio: '14:00', horaFin: '14:30', tema: 'Testing automatizado', modalidad: 'virtual',    estado: 'realizado', observaciones: null });
+  const t7  = db.insert('turnos', { tutorId: tMarina.id, estudianteId: uSofia.id, fecha: '2026-06-03', horaInicio: '11:00', horaFin: '11:30', categoria: 'Backend', temas: ['Servicios', 'API REST'], tema: 'Servicios, API REST', modalidad: 'virtual', estado: 'realizado', observaciones: 'Repasamos require/exports a fondo' });
+  const t8  = db.insert('turnos', { tutorId: tLaura.id,  estudianteId: uValen.id, fecha: '2026-06-04', horaInicio: '10:00', horaFin: '10:30', categoria: 'Backend', temas: ['Persistencia (JSON / SQLite)'], tema: 'Persistencia (JSON / SQLite)', modalidad: 'presencial', estado: 'realizado', observaciones: 'Se practicó SELECT y JOIN' });
+  const t9  = db.insert('turnos', { tutorId: tAna.id,    estudianteId: uTomas.id, fecha: '2026-06-02', horaInicio: '14:00', horaFin: '14:30', categoria: 'Testing', temas: ['Pruebas de endpoints', 'Cobertura de pruebas'], tema: 'Pruebas de endpoints, Cobertura de pruebas', modalidad: 'virtual', estado: 'realizado', observaciones: null });
 
   // Cancelados
-  const t10 = db.insert('turnos', { tutorId: tCarlos.id, estudianteId: uValen.id, fecha: '2026-06-02', horaInicio: '09:00', horaFin: '09:30', tema: 'Axios e interceptores', modalidad: 'virtual',   estado: 'cancelado', observaciones: null });
-  const t11 = db.insert('turnos', { tutorId: tDiego.id,  estudianteId: uTomas.id, fecha: '2026-06-05', horaInicio: '14:00', horaFin: '14:30', tema: 'CORS y seguridad',      modalidad: 'presencial', estado: 'cancelado', observaciones: 'Tutor no disponible' });
-  const t12 = db.insert('turnos', { tutorId: tLaura.id,  estudianteId: uSofia.id, fecha: '2026-06-04', horaInicio: '11:00', horaFin: '11:30', tema: 'ORM y Sequelize',       modalidad: 'virtual',    estado: 'cancelado', observaciones: null });
+  const t10 = db.insert('turnos', { tutorId: tCarlos.id, estudianteId: uValen.id, fecha: '2026-06-02', horaInicio: '09:00', horaFin: '09:30', categoria: 'Frontend', temas: ['Axios'], tema: 'Axios', modalidad: 'virtual', estado: 'cancelado', observaciones: null });
+  const t11 = db.insert('turnos', { tutorId: tDiego.id,  estudianteId: uTomas.id, fecha: '2026-06-05', horaInicio: '14:00', horaFin: '14:30', categoria: 'Seguridad', temas: ['CORS', 'Roles y permisos'], tema: 'CORS, Roles y permisos', modalidad: 'presencial', estado: 'cancelado', observaciones: 'Tutor no disponible' });
+  const t12 = db.insert('turnos', { tutorId: tLaura.id,  estudianteId: uSofia.id, fecha: '2026-06-04', horaInicio: '11:00', horaFin: '11:30', categoria: 'Backend', temas: ['Servicios', 'CRUD'], tema: 'Servicios, CRUD', modalidad: 'virtual', estado: 'cancelado', observaciones: null });
 
   // ════════════════════════════════════════════
   //  HISTORIAL DE ALGUNOS TURNOS

@@ -30,7 +30,7 @@ export default function Login() {
         navigate('/turnos')
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al iniciar sesion')
+      setError(err.response?.data?.error || 'Error al iniciar sesión')
     } finally {
       setCargando(false)
     }
@@ -38,7 +38,7 @@ export default function Login() {
 
   return (
     <div style={{ maxWidth: '420px', margin: '88px auto', padding: '32px', border: '1px solid #d9e2ec', borderRadius: '8px', background: '#fff', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.08)' }}>
-      <h2 style={{ textAlign: 'center', margin: '0 0 26px', color: '#182230', fontSize: '26px', fontWeight: '800' }}>Iniciar sesion</h2>
+      <h2 style={{ textAlign: 'center', margin: '0 0 26px', color: '#182230', fontSize: '26px', fontWeight: '800' }}>Iniciar Sesión</h2>
 
       {error && (
         <div style={{ background: '#f9eaea', border: '1px solid #efc7c7', padding: '12px 14px', borderRadius: '6px', marginBottom: '18px', color: '#9f3a3a', fontWeight: '600' }}>
@@ -81,7 +81,7 @@ export default function Login() {
       </form>
 
       <p style={{ textAlign: 'center', marginTop: '18px', color: '#667085' }}>
-        ¿No tenes cuenta? <Link to="/register">Registrarse</Link>
+        ¿No tenés cuenta? <Link to="/register">Registrarse</Link>
       </p>
     </div>
   )

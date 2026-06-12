@@ -22,7 +22,7 @@ export default function Navbar() {
   return (
     <nav style={{ background: '#183746', padding: '14px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white', boxShadow: '0 1px 0 rgba(255,255,255,0.08)', gap: '18px', flexWrap: 'wrap' }}>
       <Link to="/" style={{ color: 'white', textDecoration: 'none', fontWeight: '800', fontSize: '18px', letterSpacing: '0.01em' }}>
-        Tutorias DDS
+        Tutorías Desarrollo de Software
       </Link>
 
       <div style={{ display: 'flex', gap: '18px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -30,15 +30,15 @@ export default function Navbar() {
           <>
             <Link to="/turnos" style={linkStyle}>Turnos</Link>
 
-            {usuario.rol === 'admin' && (
-              <>
-                <Link to="/resumen" style={linkStyle}>Panel Admin</Link>
-                <Link to="/admin/usuarios" style={linkStyle}>Usuarios</Link>
-              </>
-            )}
-
             {(usuario.rol === 'estudiante' || usuario.rol === 'admin') && (
               <Link to="/turnos/nuevo" style={linkStyle}>Nuevo Turno</Link>
+            )}
+
+            {usuario.rol === 'admin' && (
+              <>
+                <Link to="/admin/usuarios" style={linkStyle}>Usuarios</Link>
+                <Link to="/resumen" style={linkStyle}>Panel Administrativo</Link>
+              </>
             )}
 
             <span style={{ color: '#aec4cf', fontSize: '14px' }}>
@@ -49,7 +49,7 @@ export default function Navbar() {
               onClick={handleLogout}
               style={{ background: '#ffffff', color: '#183746', border: '1px solid rgba(255,255,255,0.22)', padding: '7px 12px', borderRadius: '6px', cursor: 'pointer' }}
             >
-              Cerrar sesion
+              Cerrar Sesión
             </button>
           </>
         ) : (

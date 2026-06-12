@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react'
 import usuariosService from '../services/usuariosService'
 
+const HORARIOS_30_MIN = Array.from({ length: 48 }, (_, i) => {
+  const horas = Math.floor(i / 2)
+  const minutos = i % 2 === 0 ? '00' : '30'
+  return `${String(horas).padStart(2, '0')}:${minutos}`
+})
+
+function capitalizar(valor = '') {
+  return valor ? valor.charAt(0).toUpperCase() + valor.slice(1) : ''
+}
+
 export default function AdminUsuarios() {
   const [vista, setVista] = useState('nuevo') // 'nuevo' | 'lista'
   const [usuarios, setUsuarios] = useState([])
@@ -143,12 +153,12 @@ export default function AdminUsuarios() {
       {/* ── VISTA: REGISTRAR NUEVO USUARIO ── */}
       {vista === 'nuevo' && (
         <div style={{ maxWidth: '540px', padding: '28px', background: '#fff', borderRadius: '8px', border: '1px solid #d9e2ec', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
-          <h3 style={{ marginBottom: '20px' }}>Nuevo usuario</h3>
+          <h3 style={{ marginBottom: '20px' }}>Nuevo Usuario</h3>
           <form onSubmit={handleCrear} style={{ display: 'grid', gap: '12px' }}>
             <input
               value={nuevo.nombre}
               onChange={e => setNuevo(prev => ({ ...prev, nombre: e.target.value }))}
-              placeholder="Nombre y apellido"
+              placeholder="Nombre y Apellido"
               required
               style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
             />
@@ -192,7 +202,7 @@ export default function AdminUsuarios() {
                   <option value="seguridad">Seguridad</option>
                 </select>
 
-                <label style={{ fontWeight: 'bold', marginTop: '4px' }}>Días disponibles</label>
+                <label style={{ fontWeight: 'bold', marginTop: '4px' }}>Días Disponibles</label>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {['lunes', 'martes', 'miercoles', 'jueves', 'viernes'].map(d => (
                     <label key={d} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
@@ -203,17 +213,16 @@ export default function AdminUsuarios() {
                           if (e.target.checked) setNuevo(prev => ({ ...prev, diasDisponibles: [...prev.diasDisponibles, d] }))
                           else setNuevo(prev => ({ ...prev, diasDisponibles: prev.diasDisponibles.filter(x => x !== d) }))
                         }}
-                      /> {d}
+                      /> {capitalizar(d)}
                     </label>
                   ))}
                 </div>
 
-                <label style={{ fontWeight: 'bold', marginTop: '4px' }}>Horario disponible</label>
+                <label style={{ fontWeight: 'bold', marginTop: '4px' }}>Horario Disponible</label>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '13px', marginBottom: '4px', color: '#555' }}>Inicio</label>
-                    <input
-                      type="time"
+                    <select
                       value={nuevo.horarioDisponible.inicio}
                       onChange={e => setNuevo(prev => ({
                         ...prev,
@@ -221,12 +230,15 @@ export default function AdminUsuarios() {
                       }))}
                       required
                       style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
-                    />
+                    >
+                      {HORARIOS_30_MIN.map(hora => (
+                        <option key={hora} value={hora}>{hora}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '13px', marginBottom: '4px', color: '#555' }}>Fin</label>
-                    <input
-                      type="time"
+                    <select
                       value={nuevo.horarioDisponible.fin}
                       onChange={e => setNuevo(prev => ({
                         ...prev,
@@ -234,7 +246,11 @@ export default function AdminUsuarios() {
                       }))}
                       required
                       style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
-                    />
+                    >
+                      {HORARIOS_30_MIN.map(hora => (
+                        <option key={hora} value={hora}>{hora}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </>
@@ -253,7 +269,7 @@ export default function AdminUsuarios() {
       {/* ── VISTA: USUARIOS EXISTENTES ── */}
       {vista === 'lista' && (
         <div style={{ background: '#fff', borderRadius: '8px', border: '1px solid #d9e2ec', padding: '22px', boxShadow: '0 12px 28px rgba(16, 24, 40, 0.06)' }}>
-          <h3 style={{ marginBottom: '16px' }}>Usuarios existentes</h3>
+          <h3 style={{ marginBottom: '16px' }}>Usuarios Existentes</h3>
 
           {/* Tabs de rol */}
           <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
@@ -276,7 +292,7 @@ export default function AdminUsuarios() {
           <div style={{ marginBottom: '16px' }}>
             <input
               type="text"
-              placeholder="Buscar por nombre o email..."
+              placeholder="Buscar por Nombre o Email..."
               value={busqueda}
               onChange={e => setBusqueda(e.target.value)}
               style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
@@ -286,7 +302,7 @@ export default function AdminUsuarios() {
           {loading ? (
             <p style={{ textAlign: 'center', padding: '24px', color: '#888' }}>Cargando...</p>
           ) : usuariosFiltrados.length === 0 ? (
-            <p style={{ textAlign: 'center', padding: '24px', color: '#888' }}>No se encontraron usuarios.</p>
+            <p style={{ textAlign: 'center', padding: '24px', color: '#888' }}>No Se Encontraron Usuarios.</p>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>

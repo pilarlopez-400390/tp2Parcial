@@ -37,73 +37,77 @@ const CATEGORIAS_TEMAS = {
 const EJEMPLOS_OBSERVACIONES = {
   Backend: {
     'Express Router': 'Ej: Me cuesta separar rutas y controladores usando Express Router.',
-    'Rutas y endpoints': 'Ej: Quiero repasar como definir endpoints REST para turnos y tutores.',
-    Controladores: 'Ej: No se bien que logica debe ir en el controlador y cual en el servicio.',
-    Servicios: 'Ej: Necesito ayuda para ordenar la logica de negocio en servicios.',
-    Middlewares: 'Ej: No entiendo como encadenar middlewares de validacion y autenticacion.',
-    JWT: 'Ej: Quiero repasar como generar y verificar el token JWT.',
-    Autenticacion: 'Ej: Tengo dudas sobre el flujo de login y validacion de credenciales.',
-    Autorizacion: 'Ej: Necesito entender como bloquear acciones segun el rol del usuario.',
+    'Rutas y endpoints': 'Ej: Quiero repasar cómo definir endpoints REST para turnos y tutores.',
+    Controladores: 'Ej: No sé bien qué lógica debe ir en el controlador y cuál en el servicio.',
+    Servicios: 'Ej: Necesito ayuda para ordenar la lógica de negocio en servicios.',
+    Middlewares: 'Ej: No entiendo cómo encadenar middlewares de validación y autenticación.',
+    JWT: 'Ej: Quiero repasar cómo generar y verificar el token JWT.',
+    Autenticación: 'Ej: Tengo dudas sobre el flujo de login y validación de credenciales.',
+    Autorización: 'Ej: Necesito entender cómo bloquear acciones según el rol del usuario.',
     Validaciones: 'Ej: Quiero revisar validaciones de fecha, horario y datos obligatorios.',
     'Manejo de errores': 'Ej: Me cuesta centralizar errores y devolver JSON claro.',
-    'Persistencia (JSON / SQLite)': 'Ej: Quiero entender como guardar y leer datos persistentes.',
-    CRUD: 'Ej: Necesito practicar alta, baja, modificacion y consulta de recursos.',
-    'API REST': 'Ej: Quiero revisar buenas practicas para disenar una API REST.',
-    'Axios (consumo de API)': 'Ej: Tengo dudas sobre como consumir el backend desde el front con Axios.',
-    'Filtros y paginacion': 'Ej: Necesito ayuda para resolver filtros, page, limit y ordenamiento.',
+    'Persistencia (JSON / SQLite)': 'Ej: Quiero entender cómo guardar y leer datos persistentes.',
+    CRUD: 'Ej: Necesito practicar alta, baja, modificación y consulta de recursos.',
+    'API REST': 'Ej: Quiero revisar buenas prácticas para diseñar una API REST.',
+    'Axios (consumo de API)': 'Ej: Tengo dudas sobre cómo consumir el backend desde el front con Axios.',
+    'Filtros y paginación': 'Ej: Necesito ayuda para resolver filtros, page, limit y ordenamiento.',
     Otro: 'Ej: Quiero consultar otro tema puntual de backend.'
   },
   Frontend: {
-    React: 'Ej: Quiero repasar como organizar componentes en React.',
+    React: 'Ej: Quiero repasar cómo organizar componentes en React.',
     Componentes: 'Ej: Me cuesta separar componentes reutilizables y pantallas.',
-    'React Router': 'Ej: Tengo dudas sobre rutas protegidas y parametros con useParams.',
+    'React Router': 'Ej: Tengo dudas sobre rutas protegidas y parámetros con useParams.',
     Formularios: 'Ej: Necesito ayuda con formularios controlados y validaciones visibles.',
-    useState: 'Ej: Quiero entender mejor cuando actualizar estado con useState.',
-    useEffect: 'Ej: Me cuesta saber cuando usar useEffect y sus dependencias.',
-    'Context API': 'Ej: Quiero repasar como compartir usuario y token con Context API.',
+    useState: 'Ej: Quiero entender mejor cuándo actualizar estado con useState.',
+    useEffect: 'Ej: Me cuesta saber cuándo usar useEffect y sus dependencias.',
+    'Context API': 'Ej: Quiero repasar cómo compartir usuario y token con Context API.',
     'Manejo de estado': 'Ej: Necesito ordenar el estado de filtros, formularios y cargas.',
     Axios: 'Ej: Tengo dudas sobre llamadas GET, POST, PUT y PATCH desde React.',
-    Validaciones: 'Ej: Quiero mostrar errores de validacion cerca del campo correspondiente.',
+    Validaciones: 'Ej: Quiero mostrar errores de validación cerca del campo correspondiente.',
     'Manejo de errores': 'Ej: Necesito mostrar errores de API de forma clara en la pantalla.',
-    'Diseno de interfaces': 'Ej: Quiero mejorar la distribucion visual del formulario.',
+    'Diseño de interfaces': 'Ej: Quiero mejorar la distribución visual del formulario.',
     Vite: 'Ej: Tengo dudas sobre el proxy de Vite y las variables de entorno.',
-    'Rutas protegidas': 'Ej: Quiero revisar como redirigir al login si no hay sesion.',
+    'Rutas protegidas': 'Ej: Quiero revisar cómo redirigir al login si no hay sesión.',
     Otro: 'Ej: Quiero consultar otro tema puntual de frontend.'
   },
   Testing: {
-    Jest: 'Ej: Quiero entender como armar tests con Jest.',
+    Jest: 'Ej: Quiero entender cómo armar tests con Jest.',
     Supertest: 'Ej: Necesito ayuda para probar endpoints con Supertest.',
     'Pruebas de login': 'Ej: Quiero probar login correcto e incorrecto con status y JSON.',
     'Pruebas de endpoints': 'Ej: Necesito cubrir GET, POST, PUT y PATCH de turnos.',
     'Casos de error': 'Ej: Quiero probar errores 400, 401, 403 y 404.',
-    Validaciones: 'Ej: Necesito tests para horarios invalidos y dias no disponibles.',
+    Validaciones: 'Ej: Necesito tests para horarios inválidos y días no disponibles.',
     'Permisos y roles': 'Ej: Quiero verificar acciones permitidas para estudiante, tutor y admin.',
-    Mocking: 'Ej: Tengo dudas sobre cuando conviene usar mocks en tests.',
+    Mocking: 'Ej: Tengo dudas sobre cuándo conviene usar mocks en tests.',
     'Cobertura de pruebas': 'Ej: Quiero revisar que casos importantes faltan cubrir.',
-    'Depuracion de tests': 'Ej: Tengo un test que falla y no logro encontrar la causa.',
+    'Depuración de tests': 'Ej: Tengo un test que falla y no logro encontrar la causa.',
     Otro: 'Ej: Quiero consultar otro tema puntual de testing.'
   },
   Seguridad: {
-    JWT: 'Ej: Quiero repasar expiracion, firma y verificacion de JWT.',
-    Autenticacion: 'Ej: Tengo dudas sobre como validar identidad en el login.',
-    Autorizacion: 'Ej: Necesito entender como permitir acciones segun permisos.',
-    'Roles y permisos': 'Ej: Quiero revisar que puede hacer estudiante, tutor y admin.',
-    'Hash de contrasenas': 'Ej: Quiero entender por que no se guarda la contrasena en texto plano.',
-    bcrypt: 'Ej: Necesito ayuda con hash y comparacion de passwords usando bcrypt.',
-    'Proteccion de rutas': 'Ej: Quiero proteger rutas del backend y del frontend.',
+    JWT: 'Ej: Quiero repasar expiración, firma y verificación de JWT.',
+    Autenticación: 'Ej: Tengo dudas sobre cómo validar identidad en el login.',
+    Autorización: 'Ej: Necesito entender cómo permitir acciones según permisos.',
+    'Roles y permisos': 'Ej: Quiero revisar qué puede hacer estudiante, tutor y admin.',
+    'Hash de contraseñas': 'Ej: Quiero entender por qué no se guarda la contraseña en texto plano.',
+    bcrypt: 'Ej: Necesito ayuda con hash y comparación de passwords usando bcrypt.',
+    'Protección de rutas': 'Ej: Quiero proteger rutas del backend y del frontend.',
     CORS: 'Ej: Tengo dudas sobre CORS entre Vite y Express.',
-    'Validacion de datos': 'Ej: Quiero evitar datos invalidos antes de llegar al servicio.',
-    'Manejo de sesiones': 'Ej: Necesito entender como mantener la sesion con token.',
-    'Proteccion de datos sensibles': 'Ej: Quiero revisar que datos no deberia devolver la API.',
-    'Buenas practicas de seguridad': 'Ej: Quiero repasar buenas practicas para proteger la app.',
+    'Validación de datos': 'Ej: Quiero evitar datos inválidos antes de llegar al servicio.',
+    'Manejo de sesiones': 'Ej: Necesito entender cómo mantener la sesión con token.',
+    'Protección de datos sensibles': 'Ej: Quiero revisar qué datos no debería devolver la API.',
+    'Buenas prácticas de seguridad': 'Ej: Quiero repasar buenas prácticas para proteger la app.',
     Otro: 'Ej: Quiero consultar otro tema puntual de seguridad.'
   }
 }
 
 function categoriaValida(categoria) {
-  if (!categoria) return 'Backend'
+  if (!categoria) return ''
   const normalizada = Object.keys(CATEGORIAS_TEMAS).find(c => normalizarTexto(c) === normalizarTexto(categoria))
   return normalizada || 'Backend'
+}
+
+function formatearEspecialidad(especialidad) {
+  return categoriaValida(especialidad) || especialidad
 }
 
 function timeToMinutes(t) {
@@ -144,7 +148,7 @@ function validarFechaPermitida(fecha) {
   const hoy = fechaLocalISO()
 
   if (!fecha) return 'Selecciona una fecha'
-  if (Number(fecha.slice(0, 4)) !== anioActual) return `Solo se pueden sacar turnos dentro del anio ${anioActual}`
+  if (Number(fecha.slice(0, 4)) !== anioActual) return `Solo se pueden sacar turnos dentro del año ${anioActual}`
   if (fecha < hoy) return 'No se pueden sacar turnos en fechas anteriores a la fecha actual'
   return ''
 }
@@ -154,6 +158,7 @@ function normalizarTexto(texto = '') {
 }
 
 function placeholderObservaciones(categoria, temas) {
+  if (!categoria) return 'Ej: Escribí una duda puntual para orientar la tutoría.'
   const categoriaActual = categoriaValida(categoria)
   const temaPrincipal = temas[0]
   return EJEMPLOS_OBSERVACIONES[categoriaActual]?.[temaPrincipal]
@@ -163,6 +168,14 @@ function placeholderObservaciones(categoria, temas) {
 function obtenerApellido(nombre = '') {
   const partes = nombre.trim().split(/\s+/)
   return partes[partes.length - 1] || ''
+}
+
+function capitalizar(valor = '') {
+  return valor ? valor.charAt(0).toUpperCase() + valor.slice(1) : ''
+}
+
+function formatearListaDias(dias = []) {
+  return dias.map(capitalizar).join(', ')
 }
 
 function fechaPermitidaParaTutor(fecha, tutor) {
@@ -216,7 +229,7 @@ export default function TurnoForm() {
     fecha: '',
     horaInicio: '',
     horaFin: '',
-    categoria: 'Backend',
+    categoria: '',
     temas: [],
     tema: '',
     modalidad: 'virtual',
@@ -332,12 +345,17 @@ export default function TurnoForm() {
   function seleccionarTutor(tutor) {
     setError('')
     setForm(prev => {
+      const categoriaTutor = categoriaValida(tutor.especialidad)
+      const cambioCategoria = prev.categoria !== categoriaTutor
       const fechaValida = !prev.fecha || (!validarFechaPermitida(prev.fecha) && fechaPermitidaParaTutor(prev.fecha, tutor))
       const horasValidas = horaDentroDeDisponibilidad(tutor, prev.horaInicio, prev.horaFin)
 
       return {
         ...prev,
         tutorId: tutor.id,
+        categoria: categoriaTutor,
+        temas: cambioCategoria ? [] : prev.temas,
+        tema: cambioCategoria ? '' : prev.tema,
         fecha: fechaValida ? prev.fecha : '',
         horaInicio: horasValidas ? prev.horaInicio : '',
         horaFin: horasValidas ? prev.horaFin : ''
@@ -349,15 +367,6 @@ export default function TurnoForm() {
   function handleChange(e) {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
-  }
-
-  function handleCategoriaChange(e) {
-    setForm(prev => ({
-      ...prev,
-      categoria: e.target.value,
-      temas: [],
-      tema: ''
-    }))
   }
 
   function toggleTema(tema) {
@@ -380,7 +389,7 @@ export default function TurnoForm() {
     setError('')
 
     if (!tutorSeleccionado) {
-      setError('Primero selecciona un tutor para ver sus dias disponibles')
+      setError('Primero selecciona un tutor para ver sus días disponibles')
       return
     }
 
@@ -393,7 +402,7 @@ export default function TurnoForm() {
 
     if (!fechaPermitidaParaTutor(value, tutorSeleccionado)) {
       setForm(prev => ({ ...prev, fecha: '', horaInicio: '', horaFin: '' }))
-      setError(`No esta disponible el tutor en ese horario. ${tutorSeleccionado.nombre} no atiende los ${obtenerDiaSemana(value)}. Dias disponibles: ${tutorSeleccionado.diasDisponibles.join(', ')}.`)
+      setError(`No está disponible el tutor en ese horario. ${tutorSeleccionado.nombre} no atiende los ${capitalizar(obtenerDiaSemana(value))}. Días disponibles: ${formatearListaDias(tutorSeleccionado.diasDisponibles)}.`)
       return
     }
 
@@ -428,7 +437,7 @@ export default function TurnoForm() {
     }
 
     if (!form.categoria || form.temas.length === 0) {
-      setError('Selecciona una categoria y al menos un tema')
+      setError('Selecciona un tutor y al menos un tema de su categoría')
       return
     }
 
@@ -439,7 +448,7 @@ export default function TurnoForm() {
     }
 
     if (!fechaPermitidaParaTutor(form.fecha, tutorSeleccionado)) {
-      setError(`No esta disponible el tutor en ese horario. Dias disponibles: ${tutorSeleccionado.diasDisponibles.join(', ')}.`)
+      setError(`No está disponible el tutor en ese horario. Días disponibles: ${formatearListaDias(tutorSeleccionado.diasDisponibles)}.`)
       return
     }
 
@@ -504,13 +513,13 @@ export default function TurnoForm() {
               value={especialidadElegida}
               onChange={e => {
                 setEspecialidadElegida(e.target.value)
-                setForm(prev => ({ ...prev, tutorId: '', fecha: '', horaInicio: '', horaFin: '' }))
+                setForm(prev => ({ ...prev, tutorId: '', categoria: '', temas: [], tema: '', fecha: '', horaInicio: '', horaFin: '' }))
               }}
               style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
             >
-              <option value="">Todas las especialidades</option>
+              <option value="">Todas las Especialidades</option>
               {especialidades.map(esp => (
-                <option key={esp} value={esp}>{esp}</option>
+                <option key={esp} value={esp}>{formatearEspecialidad(esp)}</option>
               ))}
             </select>
 
@@ -518,7 +527,7 @@ export default function TurnoForm() {
               type="search"
               value={busquedaTutor}
               onChange={e => setBusquedaTutor(e.target.value)}
-              placeholder="Buscar por nombre o especialidad"
+              placeholder="Buscar por Nombre o Especialidad"
               style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
             />
           </div>
@@ -546,15 +555,15 @@ export default function TurnoForm() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
                     <strong style={{ color: '#1f2937', fontSize: '16px' }}>{tutor.nombre}</strong>
                     <span style={{ background: '#e9f5ef', color: '#2f6f58', borderRadius: '999px', padding: '3px 8px', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: '700' }}>
-                      {tutor.especialidad}
+                      {categoriaValida(tutor.especialidad)}
                     </span>
                   </div>
                   <p style={{ margin: '8px 0 0', color: '#555', fontSize: '14px' }}>{tutor.email}</p>
                   <p style={{ margin: '10px 0 0', color: '#333', fontSize: '14px' }}>
-                    <strong>Tema que da:</strong> {tutor.especialidad}
+                    <strong>Categoría:</strong> {categoriaValida(tutor.especialidad)}
                   </p>
                   <p style={{ margin: '6px 0 0', color: '#333', fontSize: '14px' }}>
-                    <strong>Dias:</strong> {tutor.diasDisponibles.join(', ')}
+                    <strong>Días:</strong> {formatearListaDias(tutor.diasDisponibles)}
                   </p>
                   <p style={{ margin: '6px 0 0', color: '#333', fontSize: '14px' }}>
                     <strong>Horario:</strong> {horario?.inicio} - {horario?.fin}
@@ -565,7 +574,7 @@ export default function TurnoForm() {
           </div>
 
           {tutoresFiltrados.length === 0 && (
-            <p style={{ color: '#777', margin: '12px 0 0' }}>No hay tutores que coincidan con la busqueda.</p>
+            <p style={{ color: '#777', margin: '12px 0 0' }}>No hay tutores que coincidan con la búsqueda.</p>
           )}
         </section>
 
@@ -585,7 +594,7 @@ export default function TurnoForm() {
                 type="search"
                 value={busquedaEstudiante}
                 onChange={e => setBusquedaEstudiante(e.target.value)}
-                placeholder="Buscar por nombre, apellido o email"
+                placeholder="Buscar por Nombre, Apellido o Email"
                 style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
               />
 
@@ -654,7 +663,7 @@ export default function TurnoForm() {
             </div>
 
             {estudiantesFiltrados.length === 0 && (
-              <p style={{ color: '#777', margin: '12px 0 0' }}>No hay estudiantes que coincidan con la busqueda.</p>
+              <p style={{ color: '#777', margin: '12px 0 0' }}>No hay estudiantes que coincidan con la búsqueda.</p>
             )}
           </section>
         )}
@@ -675,13 +684,13 @@ export default function TurnoForm() {
             />
             {tutorSeleccionado && (
               <small style={{ display: 'block', color: '#666', marginTop: '5px' }}>
-                Permitidos: {tutorSeleccionado.diasDisponibles.join(', ')}. Rango: {fechaMinima} a {fechaMaxima}
+                Permitidos: {formatearListaDias(tutorSeleccionado.diasDisponibles)}. Rango: {fechaMinima} a {fechaMaxima}
               </small>
             )}
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>Hora inicio</label>
+            <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>Hora Inicio</label>
             <select
               name="horaInicio"
               value={form.horaInicio}
@@ -698,7 +707,7 @@ export default function TurnoForm() {
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>Hora fin</label>
+            <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>Hora Fin</label>
             <select
               name="horaFin"
               value={form.horaFin}
@@ -717,18 +726,10 @@ export default function TurnoForm() {
 
         <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 10px 24px rgba(16, 24, 40, 0.05)' }}>
           <div style={{ marginBottom: '14px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>Categoria</label>
-            <select
-              name="categoria"
-              value={form.categoria}
-              onChange={handleCategoriaChange}
-              required
-              style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
-            >
-              {Object.keys(CATEGORIAS_TEMAS).map(categoria => (
-                <option key={categoria} value={categoria}>{categoria}</option>
-              ))}
-            </select>
+            <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>Categoría</label>
+            <div style={{ width: '100%', padding: '10px', border: '1px solid #d9e2ec', borderRadius: '6px', boxSizing: 'border-box', background: tutorSeleccionado ? '#f8fafc' : '#f3f4f6', color: tutorSeleccionado ? '#182230' : '#667085', fontWeight: tutorSeleccionado ? '700' : '500' }}>
+              {tutorSeleccionado ? form.categoria : 'Selecciona un tutor para definir la categoría'}
+            </div>
           </div>
 
           <div>
@@ -764,7 +765,7 @@ export default function TurnoForm() {
 
           <div style={{ marginTop: '14px' }}>
             <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
-              Observaciones o consulta especifica (opcional)
+              Observaciones o Consulta Específica (opcional)
             </label>
             <textarea
               name="observaciones"
@@ -795,7 +796,7 @@ export default function TurnoForm() {
           disabled={cargando}
           style={{ padding: '14px', background: '#245b73', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: '800' }}
         >
-          {cargando ? 'Guardando...' : (esEdicion ? 'Guardar cambios' : 'Solicitar turno')}
+          {cargando ? 'Guardando...' : (esEdicion ? 'Guardar Cambios' : 'Solicitar Turno')}
         </button>
       </form>
     </div>
