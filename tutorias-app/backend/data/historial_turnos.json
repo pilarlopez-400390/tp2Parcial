@@ -10,15 +10,6 @@
   },
   {
     "id": 2,
-    "turnoId": 1,
-    "usuarioId": 0,
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-10T09:00:00-03:00",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
-  },
-  {
-    "id": 3,
     "turnoId": 2,
     "usuarioId": 8,
     "accion": "creacion",
@@ -27,16 +18,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 4,
-    "turnoId": 2,
-    "usuarioId": 0,
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-10T10:00:00-03:00",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
-  },
-  {
-    "id": 5,
+    "id": 3,
     "turnoId": 3,
     "usuarioId": 9,
     "accion": "creacion",
@@ -45,16 +27,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 6,
-    "turnoId": 3,
-    "usuarioId": 0,
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-09T14:00:00-03:00",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
-  },
-  {
-    "id": 7,
+    "id": 4,
     "turnoId": 4,
     "usuarioId": 7,
     "accion": "creacion",
@@ -63,7 +36,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 8,
+    "id": 5,
     "turnoId": 4,
     "usuarioId": 3,
     "accion": "confirmacion",
@@ -72,16 +45,7 @@
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
   {
-    "id": 9,
-    "turnoId": 4,
-    "usuarioId": 0,
-    "accion": "realizacion",
-    "fechaHora": "2026-06-11T10:00:00-03:00",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
-  },
-  {
-    "id": 10,
+    "id": 6,
     "turnoId": 5,
     "usuarioId": 8,
     "accion": "creacion",
@@ -90,7 +54,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 11,
+    "id": 7,
     "turnoId": 5,
     "usuarioId": 4,
     "accion": "confirmacion",
@@ -99,16 +63,7 @@
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
   {
-    "id": 12,
-    "turnoId": 5,
-    "usuarioId": 0,
-    "accion": "realizacion",
-    "fechaHora": "2026-06-10T15:00:00-03:00",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
-  },
-  {
-    "id": 13,
+    "id": 8,
     "turnoId": 6,
     "usuarioId": 9,
     "accion": "creacion",
@@ -117,7 +72,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 14,
+    "id": 9,
     "turnoId": 6,
     "usuarioId": 5,
     "accion": "confirmacion",
@@ -126,16 +81,7 @@
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
   {
-    "id": 15,
-    "turnoId": 6,
-    "usuarioId": 0,
-    "accion": "realizacion",
-    "fechaHora": "2026-06-11T09:00:00-03:00",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
-  },
-  {
-    "id": 16,
+    "id": 10,
     "turnoId": 7,
     "usuarioId": 9,
     "accion": "creacion",
@@ -144,7 +90,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 17,
+    "id": 11,
     "turnoId": 7,
     "usuarioId": 2,
     "accion": "confirmacion",
@@ -153,7 +99,7 @@
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
   {
-    "id": 18,
+    "id": 12,
     "turnoId": 7,
     "usuarioId": 2,
     "accion": "realizacion",
@@ -162,7 +108,7 @@
     "valorNuevo": "{\"estado\":\"realizado\"}"
   },
   {
-    "id": 19,
+    "id": 13,
     "turnoId": 8,
     "usuarioId": 7,
     "accion": "creacion",
@@ -171,7 +117,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 20,
+    "id": 14,
     "turnoId": 8,
     "usuarioId": 6,
     "accion": "confirmacion",
@@ -180,7 +126,7 @@
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
   {
-    "id": 21,
+    "id": 15,
     "turnoId": 8,
     "usuarioId": 6,
     "accion": "realizacion",
@@ -189,7 +135,7 @@
     "valorNuevo": "{\"estado\":\"realizado\"}"
   },
   {
-    "id": 22,
+    "id": 16,
     "turnoId": 9,
     "usuarioId": 8,
     "accion": "creacion",
@@ -198,7 +144,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 23,
+    "id": 17,
     "turnoId": 9,
     "usuarioId": 4,
     "accion": "confirmacion",
@@ -207,7 +153,7 @@
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
   {
-    "id": 24,
+    "id": 18,
     "turnoId": 9,
     "usuarioId": 4,
     "accion": "realizacion",
@@ -216,7 +162,7 @@
     "valorNuevo": "{\"estado\":\"realizado\"}"
   },
   {
-    "id": 25,
+    "id": 19,
     "turnoId": 10,
     "usuarioId": 7,
     "accion": "creacion",
@@ -225,7 +171,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 26,
+    "id": 20,
     "turnoId": 10,
     "usuarioId": 7,
     "accion": "cancelacion",
@@ -234,7 +180,7 @@
     "valorNuevo": "{\"estado\":\"cancelado\"}"
   },
   {
-    "id": 27,
+    "id": 21,
     "turnoId": 11,
     "usuarioId": 8,
     "accion": "creacion",
@@ -243,7 +189,7 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 28,
+    "id": 22,
     "turnoId": 11,
     "usuarioId": 1,
     "accion": "cancelacion",
@@ -252,7 +198,7 @@
     "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"Tutor no disponible\"}"
   },
   {
-    "id": 29,
+    "id": 23,
     "turnoId": 12,
     "usuarioId": 9,
     "accion": "creacion",
@@ -261,12 +207,66 @@
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
   {
-    "id": 30,
+    "id": 24,
     "turnoId": 12,
     "usuarioId": 9,
     "accion": "cancelacion",
     "fechaHora": "2026-06-04T08:50:00-03:00",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"cancelado\"}"
+  },
+  {
+    "id": 25,
+    "turnoId": 1,
+    "usuarioId": 0,
+    "accion": "cancelacion",
+    "fechaHora": "2026-06-10T12:00:00.000Z",
+    "valorAnterior": "{\"estado\":\"solicitado\"}",
+    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
+  },
+  {
+    "id": 26,
+    "turnoId": 2,
+    "usuarioId": 0,
+    "accion": "cancelacion",
+    "fechaHora": "2026-06-10T13:00:00.000Z",
+    "valorAnterior": "{\"estado\":\"solicitado\"}",
+    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
+  },
+  {
+    "id": 27,
+    "turnoId": 3,
+    "usuarioId": 0,
+    "accion": "cancelacion",
+    "fechaHora": "2026-06-09T17:00:00.000Z",
+    "valorAnterior": "{\"estado\":\"solicitado\"}",
+    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
+  },
+  {
+    "id": 28,
+    "turnoId": 4,
+    "usuarioId": 0,
+    "accion": "realizacion",
+    "fechaHora": "2026-06-11T13:00:00.000Z",
+    "valorAnterior": "{\"estado\":\"confirmado\"}",
+    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
+  },
+  {
+    "id": 29,
+    "turnoId": 5,
+    "usuarioId": 0,
+    "accion": "realizacion",
+    "fechaHora": "2026-06-10T18:00:00.000Z",
+    "valorAnterior": "{\"estado\":\"confirmado\"}",
+    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
+  },
+  {
+    "id": 30,
+    "turnoId": 6,
+    "usuarioId": 0,
+    "accion": "realizacion",
+    "fechaHora": "2026-06-11T12:00:00.000Z",
+    "valorAnterior": "{\"estado\":\"confirmado\"}",
+    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
   }
 ]
