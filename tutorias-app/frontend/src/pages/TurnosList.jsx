@@ -30,6 +30,8 @@ export default function TurnosList() {
   const [filtroEspecialidad, setFiltroEspecialidad] = useState('')
   const [filtroModalidad, setFiltroModalidad] = useState('')
   const [filtroEstudiante, setFiltroEstudiante] = useState('')
+  const [ordenarPor, setOrdenarPor] = useState('fecha')
+  const [orden, setOrden] = useState('asc')
   const [estadoAplicado, setEstadoAplicado] = useState('')
   const [fechaModoAplicado, setFechaModoAplicado] = useState('todos')
   const [fechaDesdeAplicada, setFechaDesdeAplicada] = useState('')
@@ -37,6 +39,8 @@ export default function TurnosList() {
   const [especialidadAplicada, setEspecialidadAplicada] = useState('')
   const [modalidadAplicada, setModalidadAplicada] = useState('')
   const [estudianteAplicado, setEstudianteAplicado] = useState('')
+  const [ordenarPorAplicado, setOrdenarPorAplicado] = useState('fecha')
+  const [ordenAplicado, setOrdenAplicado] = useState('asc')
   const [pagina, setPagina] = useState(1)
 
   useEffect(() => {
@@ -46,7 +50,7 @@ export default function TurnosList() {
   useEffect(() => {
     cargarTurnos()
 
-  }, [pagina, estadoAplicado, fechaModoAplicado, fechaDesdeAplicada, tutorAplicado, especialidadAplicada, modalidadAplicada, estudianteAplicado])
+  }, [pagina, estadoAplicado, fechaModoAplicado, fechaDesdeAplicada, tutorAplicado, especialidadAplicada, modalidadAplicada, estudianteAplicado, ordenarPorAplicado, ordenAplicado])
 
   async function cargarTutores() {
     try {
@@ -61,7 +65,7 @@ export default function TurnosList() {
     setCargando(true)
     setError('')
     try {
-      const filtros = { page: pagina, limit: 10 }
+      const filtros = { page: pagina, limit: 10, sortBy: ordenarPorAplicado, order: ordenAplicado }
       if (estadoAplicado) filtros.estado = estadoAplicado
       if (fechaModoAplicado === 'desde' && fechaDesdeAplicada) filtros.fechaDesde = fechaDesdeAplicada
       if (fechaModoAplicado === 'hoy') filtros.fechaHoy = true
@@ -91,6 +95,8 @@ export default function TurnosList() {
     setEspecialidadAplicada(filtroEspecialidad)
     setModalidadAplicada(filtroModalidad)
     setEstudianteAplicado(filtroEstudiante)
+    setOrdenarPorAplicado(ordenarPor)
+    setOrdenAplicado(orden)
   }
 
   function handleLimpiar() {
@@ -101,6 +107,8 @@ export default function TurnosList() {
     setFiltroEspecialidad('')
     setFiltroModalidad('')
     setFiltroEstudiante('')
+    setOrdenarPor('fecha')
+    setOrden('asc')
     setPagina(1)
     setEstadoAplicado('')
     setFechaModoAplicado('todos')
@@ -109,6 +117,8 @@ export default function TurnosList() {
     setEspecialidadAplicada('')
     setModalidadAplicada('')
     setEstudianteAplicado('')
+    setOrdenarPorAplicado('fecha')
+    setOrdenAplicado('asc')
   }
 
   function cambiarFiltro(setter, value) {
@@ -127,6 +137,8 @@ export default function TurnosList() {
     if (setter === setFiltroEspecialidad) setEspecialidadAplicada(value)
     if (setter === setFiltroModalidad) setModalidadAplicada(value)
     if (setter === setFiltroEstudiante) setEstudianteAplicado(value)
+    if (setter === setOrdenarPor) setOrdenarPorAplicado(value)
+    if (setter === setOrden) setOrdenAplicado(value)
   }
 
   const especialidades = [...new Set(tutores.map(t => t.especialidad).filter(Boolean))].sort()
@@ -248,6 +260,26 @@ export default function TurnosList() {
           </select>
         </div>
 
+        <div>
+          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Ordenar Por</label>
+          <select value={ordenarPor} onChange={e => cambiarFiltro(setOrdenarPor, e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px', minWidth: '160px' }}>
+            <option value="fecha">Fecha</option>
+            <option value="apellido">Apellido Del Estudiante</option>
+            <option value="estudiante">Nombre Del Estudiante</option>
+            <option value="tutor">Tutor</option>
+            <option value="categoria">Categoría</option>
+            <option value="estado">Estado</option>
+          </select>
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Orden</label>
+          <select value={orden} onChange={e => cambiarFiltro(setOrden, e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px', minWidth: '125px' }}>
+            <option value="asc">Ascendente</option>
+            <option value="desc">Descendente</option>
+          </select>
+        </div>
+
         <button type="button" onClick={handleLimpiar} style={{ padding: '9px 16px', background: '#667085', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '800' }}>
           Limpiar
         </button>
@@ -297,6 +329,9 @@ export default function TurnosList() {
                       </div>
                       <div style={{ fontSize: '13px', color: '#667085' }}>
                         Estudiante: {turno.estudianteNombre || `#${turno.estudianteId}`} · Modalidad: {formatearEtiqueta(turno.modalidad, 'Sin Modalidad')}
+                      </div>
+                      <div style={{ fontSize: '13px', color: '#667085', marginTop: '4px' }}>
+                        Observaciones: {turno.observaciones || 'Sin Observaciones'}
                       </div>
                     </div>
 

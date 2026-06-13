@@ -5,6 +5,8 @@ const verificarToken = require('../middlewares/auth.middleware')
 const autorizar = require('../middlewares/authorize.middleware')
 
 router.get('/', verificarToken, autorizar('admin', 'tutor'), usuariosController.listar)
+router.get('/me', verificarToken, usuariosController.perfil)
+router.patch('/me', verificarToken, usuariosController.actualizarPerfil)
 router.post('/', verificarToken, autorizar('admin'), usuariosController.crear)
 router.patch('/:id', verificarToken, autorizar('admin'), usuariosController.actualizar)
 router.delete('/:id', verificarToken, autorizar('admin'), usuariosController.eliminar)

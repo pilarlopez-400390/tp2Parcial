@@ -3,9 +3,9 @@
     "id": 1,
     "tutorId": 1,
     "estudianteId": 7,
-    "fecha": "2026-06-10",
+    "fecha": "2026-07-06",
     "horaInicio": "09:00",
-    "horaFin": "09:30",
+    "horaFin": "10:00",
     "categoria": "Backend",
     "temas": [
       "JWT",
@@ -20,9 +20,9 @@
     "id": 2,
     "tutorId": 1,
     "estudianteId": 8,
-    "fecha": "2026-06-10",
+    "fecha": "2026-07-08",
     "horaInicio": "10:00",
-    "horaFin": "10:30",
+    "horaFin": "11:00",
     "categoria": "Backend",
     "temas": [
       "Express Router"
@@ -36,9 +36,9 @@
     "id": 3,
     "tutorId": 2,
     "estudianteId": 9,
-    "fecha": "2026-06-09",
+    "fecha": "2026-07-07",
     "horaInicio": "14:00",
-    "horaFin": "14:30",
+    "horaFin": "15:00",
     "categoria": "Frontend",
     "temas": [
       "React",
@@ -54,9 +54,9 @@
     "id": 4,
     "tutorId": 2,
     "estudianteId": 7,
-    "fecha": "2026-06-11",
+    "fecha": "2026-07-09",
     "horaInicio": "10:00",
-    "horaFin": "10:30",
+    "horaFin": "11:00",
     "categoria": "Frontend",
     "temas": [
       "Vite"
@@ -70,9 +70,9 @@
     "id": 5,
     "tutorId": 3,
     "estudianteId": 8,
-    "fecha": "2026-06-10",
-    "horaInicio": "15:00",
-    "horaFin": "15:30",
+    "fecha": "2026-07-06",
+    "horaInicio": "08:30",
+    "horaFin": "09:30",
     "categoria": "Testing",
     "temas": [
       "Jest",
@@ -87,9 +87,9 @@
     "id": 6,
     "tutorId": 4,
     "estudianteId": 9,
-    "fecha": "2026-06-11",
-    "horaInicio": "09:00",
-    "horaFin": "09:30",
+    "fecha": "2026-07-10",
+    "horaInicio": "14:00",
+    "horaFin": "15:00",
     "categoria": "Seguridad",
     "temas": [
       "Protección de datos sensibles",
@@ -106,7 +106,7 @@
     "estudianteId": 9,
     "fecha": "2026-06-03",
     "horaInicio": "11:00",
-    "horaFin": "11:30",
+    "horaFin": "12:00",
     "categoria": "Backend",
     "temas": [
       "Servicios",
@@ -123,7 +123,7 @@
     "estudianteId": 7,
     "fecha": "2026-06-04",
     "horaInicio": "10:00",
-    "horaFin": "10:30",
+    "horaFin": "11:00",
     "categoria": "Backend",
     "temas": [
       "Persistencia (JSON / SQLite)"
@@ -138,8 +138,8 @@
     "tutorId": 3,
     "estudianteId": 8,
     "fecha": "2026-06-02",
-    "horaInicio": "14:00",
-    "horaFin": "14:30",
+    "horaInicio": "11:30",
+    "horaFin": "12:30",
     "categoria": "Testing",
     "temas": [
       "Pruebas de endpoints",
@@ -156,7 +156,7 @@
     "estudianteId": 7,
     "fecha": "2026-06-02",
     "horaInicio": "09:00",
-    "horaFin": "09:30",
+    "horaFin": "10:00",
     "categoria": "Frontend",
     "temas": [
       "Axios"
@@ -164,7 +164,7 @@
     "tema": "Axios",
     "modalidad": "virtual",
     "estado": "cancelado",
-    "observaciones": null
+    "observaciones": "Cancelado por el estudiante"
   },
   {
     "id": 11,
@@ -172,7 +172,7 @@
     "estudianteId": 8,
     "fecha": "2026-06-05",
     "horaInicio": "14:00",
-    "horaFin": "14:30",
+    "horaFin": "15:00",
     "categoria": "Seguridad",
     "temas": [
       "CORS",
@@ -189,7 +189,7 @@
     "estudianteId": 9,
     "fecha": "2026-06-04",
     "horaInicio": "11:00",
-    "horaFin": "11:30",
+    "horaFin": "12:00",
     "categoria": "Backend",
     "temas": [
       "Servicios",
@@ -198,6 +198,24 @@
     "tema": "Servicios, CRUD",
     "modalidad": "virtual",
     "estado": "cancelado",
-    "observaciones": null
+    "observaciones": "No ha sido confirmado"
+  },
+  {
+    "id": 13,
+    "tutorId": 3,
+    "estudianteId": 7,
+    "fecha": "2026-06-24",
+    "horaInicio": "10:00",
+    "horaFin": "13:00",
+    "categoria": "Testing",
+    "temas": [
+      "Supertest",
+      "Pruebas de endpoints",
+      "Mocking"
+    ],
+    "tema": "Supertest, Pruebas de endpoints, Mocking",
+    "modalidad": "presencial",
+    "estado": "solicitado",
+    "observaciones": "quiero ver todo"
   }
 ]

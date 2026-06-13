@@ -71,6 +71,26 @@ function fechaHoraTurno(fecha, hora) {
   return new Date(anio, mes - 1, dia, horas, minutos, 0, 0);
 }
 
+function minutosDesdeHora(hora) {
+  const [horas, minutos] = String(hora).split(':').map(Number);
+  return horas * 60 + minutos;
+}
+
+function validarDuracionTurno(horaInicio, horaFin) {
+  if (horaInicio >= horaFin) {
+    const err = new Error('La hora de inicio debe ser anterior a la hora de fin');
+    err.status = 400;
+    throw err;
+  }
+
+  const duracion = minutosDesdeHora(horaFin) - minutosDesdeHora(horaInicio);
+  if (duracion < 60) {
+    const err = new Error('La duración mínima del turno es de 60 minutos');
+    err.status = 400;
+    throw err;
+  }
+}
+
 function aplicarTransicionesAutomaticas() {
   const turnos = db.findAll('turnos');
   const ahora = new Date();
@@ -209,6 +229,12 @@ function usuarioNombrePorId(usuarios, usuarioId) {
   return usuario ? usuario.nombre : 'Desconocido';
 }
 
+function usuarioRolPorId(usuarios, usuarioId) {
+  if (usuarioId === 0) return 'sistema';
+  const usuario = buscarUsuarioPorId(usuarios, usuarioId);
+  return usuario ? usuario.rol : 'desconocido';
+}
+
 function obtenerUsuarioTutor(tutores, tutorId) {
   for (let i = 0; i < tutores.length; i++) {
     if (tutores[i].id === tutorId) return tutores[i].usuarioId;
@@ -230,6 +256,7 @@ function construirHistorialInferido(turno, usuarios, tutores) {
     turnoId: turno.id,
     usuarioId: turno.estudianteId,
     usuarioNombre: usuarioNombrePorId(usuarios, turno.estudianteId),
+    usuarioRol: usuarioRolPorId(usuarios, turno.estudianteId),
     accion: 'creacion',
     fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
     valorAnterior: null,
@@ -250,6 +277,7 @@ function construirHistorialInferido(turno, usuarios, tutores) {
       turnoId: turno.id,
       usuarioId: tutorUsuarioId,
       usuarioNombre: usuarioNombrePorId(usuarios, tutorUsuarioId),
+      usuarioRol: usuarioRolPorId(usuarios, tutorUsuarioId),
       accion: 'confirmacion',
       fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
       valorAnterior: JSON.stringify({ estado: 'solicitado' }),
@@ -263,6 +291,7 @@ function construirHistorialInferido(turno, usuarios, tutores) {
       turnoId: turno.id,
       usuarioId: tutorUsuarioId,
       usuarioNombre: usuarioNombrePorId(usuarios, tutorUsuarioId),
+      usuarioRol: usuarioRolPorId(usuarios, tutorUsuarioId),
       accion: 'realizacion',
       fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
       valorAnterior: JSON.stringify({ estado: 'confirmado' }),
@@ -276,6 +305,7 @@ function construirHistorialInferido(turno, usuarios, tutores) {
       turnoId: turno.id,
       usuarioId: turno.estudianteId,
       usuarioNombre: usuarioNombrePorId(usuarios, turno.estudianteId),
+      usuarioRol: usuarioRolPorId(usuarios, turno.estudianteId),
       accion: 'cancelacion',
       fechaHora: fechaHoraInferida(turno.fecha, turno.horaInicio || '00:00'),
       valorAnterior: JSON.stringify({ estado: 'solicitado' }),
@@ -496,13 +526,36 @@ function listarTurnos({ fecha, fechaDesde, fechaHoy, fechaAnteriores, estado, tu
   }
 
   // ── Ordenar ─────────────────────────────────────────────────────────────
-  const camposValidos = ['fecha', 'estado', 'horaInicio', 'tema'];
+  const camposValidos = ['fecha', 'estado', 'horaInicio', 'tema', 'estudiante', 'apellido', 'tutor', 'categoria', 'especialidad'];
   const campo = camposValidos.includes(sortBy) ? sortBy : 'fecha';
   const ascendente = order.toLowerCase() !== 'desc';
 
   turnos.sort(function (a, b) {
-    if (a[campo] < b[campo]) return ascendente ? -1 : 1;
-    if (a[campo] > b[campo]) return ascendente ?  1 : -1;
+    let valorA = a[campo];
+    let valorB = b[campo];
+
+    if (campo === 'estudiante') {
+      valorA = a.estudianteNombre || '';
+      valorB = b.estudianteNombre || '';
+    }
+    if (campo === 'apellido') {
+      valorA = String(a.estudianteNombre || '').trim().split(/\s+/).slice(-1)[0] || '';
+      valorB = String(b.estudianteNombre || '').trim().split(/\s+/).slice(-1)[0] || '';
+    }
+    if (campo === 'tutor') {
+      valorA = a.tutorNombre || '';
+      valorB = b.tutorNombre || '';
+    }
+    if (campo === 'categoria' || campo === 'especialidad') {
+      valorA = a.categoria || a.tutorEspecialidad || '';
+      valorB = b.categoria || b.tutorEspecialidad || '';
+    }
+
+    valorA = String(valorA || '').toLowerCase();
+    valorB = String(valorB || '').toLowerCase();
+
+    if (valorA < valorB) return ascendente ? -1 : 1;
+    if (valorA > valorB) return ascendente ?  1 : -1;
     return 0;
   });
 
@@ -587,12 +640,8 @@ function crearTurno({ tutorId, estudianteId, fecha, horaInicio, horaFin, categor
 
   validarFechaPermitida(fecha);
 
-  // Validación 1: horario coherente (inicio debe ser menor que fin)
-  if (horaInicio >= horaFin) {
-    const err = new Error('La hora de inicio debe ser anterior a la hora de fin');
-    err.status = 400;
-    throw err;
-  }
+  // Validación 1: horario coherente y duración mínima
+  validarDuracionTurno(horaInicio, horaFin);
 
   if (usuario.rol === 'estudiante') {
     estudianteId = usuario.id
@@ -723,12 +772,8 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
 
   validarFechaPermitida(nuevaFecha);
 
-  // Revalidar horario
-  if (nuevoInicio >= nuevoFin) {
-    const err = new Error('La hora de inicio debe ser anterior a la hora de fin');
-    err.status = 400;
-    throw err;
-  }
+  // Revalidar horario y duración mínima
+  validarDuracionTurno(nuevoInicio, nuevoFin);
 
   // Si cambia el tutor, verificar que exista
   const tutorFinal = db.findById('tutores', nuevoTutorId);
@@ -939,20 +984,27 @@ function obtenerHistorial(turnoId, usuario) {
   for (let i = 0; i < todosHistoriales.length; i++) {
     if (todosHistoriales[i].turnoId === turnoId) {
       let usuarioNombre = 'Desconocido';
+      let usuarioRol = 'desconocido';
       const uid = todosHistoriales[i].usuarioId;
 
       // uid puede ser un número (caso normal) o un objeto JWT completo (dato histórico corrupto)
       if (uid && typeof uid === 'object' && uid.nombre) {
         usuarioNombre = uid.nombre;
+        usuarioRol = uid.rol || 'desconocido';
       } else {
+        if (uid === 0) {
+          usuarioNombre = 'Sistema';
+          usuarioRol = 'sistema';
+        }
         for (let j = 0; j < usuarios.length; j++) {
           if (usuarios[j].id === uid) {
             usuarioNombre = usuarios[j].nombre;
+            usuarioRol = usuarios[j].rol;
             break;
           }
         }
       }
-      historial.push({ ...todosHistoriales[i], usuarioNombre });
+      historial.push({ ...todosHistoriales[i], usuarioNombre, usuarioRol });
     }
   }
 

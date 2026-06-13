@@ -6,6 +6,16 @@ async function listar(filtros = {}) {
   return response.data
 }
 
+async function perfil() {
+  const response = await api.get('/usuarios/me')
+  return response.data
+}
+
+async function actualizarPerfil(datos) {
+  const response = await api.patch('/usuarios/me', datos)
+  return response.data
+}
+
 // POST /api/usuarios
 async function crear(datos) {
   const response = await api.post('/usuarios', datos)
@@ -24,4 +34,4 @@ async function eliminar(id) {
   return response.data
 }
 
-export default { listar, crear, actualizar, eliminar }
+export default { listar, perfil, crear, actualizar, actualizarPerfil, eliminar }

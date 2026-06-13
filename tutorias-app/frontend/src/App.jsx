@@ -23,6 +23,7 @@ import TurnoDetalle from './pages/TurnoDetalle'
 import TurnoForm from './pages/TurnoForm'
 import ResumenAdmin from './pages/ResumenAdmin'
 import AdminUsuarios from './pages/AdminUsuarios'
+import Perfil from './pages/Perfil'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -38,7 +39,7 @@ export default function App() {
         <Routes>
 
           {/* Ruta raíz → redirige a /turnos si está logueado, a /login si no */}
-          <Route path="/" element={<Navigate to="/turnos" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
           {/* Rutas públicas (no necesitan login) */}
           <Route path="/login" element={<Login />} />
@@ -98,6 +99,14 @@ export default function App() {
             element={
               <PrivateRoute roles={['admin']}>
                 <AdminUsuarios />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/perfil"
+            element={
+              <PrivateRoute>
+                <Perfil />
               </PrivateRoute>
             }
           />

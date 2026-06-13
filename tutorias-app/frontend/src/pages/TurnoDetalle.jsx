@@ -122,11 +122,16 @@ export default function TurnoDetalle() {
     return normalizadas[texto.toLowerCase()] || texto.charAt(0).toUpperCase() + texto.slice(1)
   }
 
+  function formatearRol(valor) {
+    return formatearEtiqueta(valor, 'Sin Rol')
+  }
+
   function formatearFechaHora(valor) {
     if (!valor) return 'Sin Fecha'
     return new Date(valor).toLocaleString('es-AR', {
       dateStyle: 'short',
-      timeStyle: 'short'
+      timeStyle: 'short',
+      hour12: false
     })
   }
 
@@ -218,6 +223,10 @@ export default function TurnoDetalle() {
             <p style={{ margin: '4px 0' }}>{turno.tutorNombre || `Tutor ${turno.tutorId}`}</p>
           </div>
           <div>
+            <strong>Estudiante</strong>
+            <p style={{ margin: '4px 0' }}>{turno.estudianteNombre || `Estudiante ${turno.estudianteId}`}</p>
+          </div>
+          <div>
             <strong>Especialidad del tutor</strong>
             <p style={{ margin: '4px 0' }}>{especialidadTutor}</p>
           </div>
@@ -239,12 +248,10 @@ export default function TurnoDetalle() {
             <strong>Modalidad</strong>
             <p style={{ margin: '4px 0' }}>{formatearEtiqueta(turno.modalidad)}</p>
           </div>
-          {turno.observaciones && (
-            <div style={{ gridColumn: '1 / -1' }}>
-              <strong>Observaciones</strong>
-              <p style={{ margin: '4px 0' }}>{turno.observaciones}</p>
-            </div>
-          )}
+          <div style={{ gridColumn: '1 / -1' }}>
+            <strong>Observaciones</strong>
+            <p style={{ margin: '4px 0' }}>{turno.observaciones || 'Sin Observaciones'}</p>
+          </div>
         </div>
       </div>
 
@@ -332,7 +339,7 @@ export default function TurnoDetalle() {
                       {etiquetas[entrada.accion] || entrada.accion}
                     </strong>
                     <span style={{ color: '#344054' }}>
-                      Responsable: <strong>{entrada.usuarioNombre || 'Desconocido'}</strong>
+                      Responsable: <strong>{entrada.usuarioNombre || 'Desconocido'}</strong> ({formatearRol(entrada.usuarioRol)})
                     </span>
                   </div>
 
@@ -342,6 +349,11 @@ export default function TurnoDetalle() {
                     </span>
                     {nuevo?.automatico && (
                       <span style={{ color: '#667085', fontSize: '12px' }}>Cambio Automático</span>
+                    )}
+                    {nuevo?.observaciones && (
+                      <span style={{ color: '#667085', fontSize: '12px' }}>
+                        Observación: {nuevo.observaciones}
+                      </span>
                     )}
                   </div>
 
@@ -353,7 +365,7 @@ export default function TurnoDetalle() {
                       <div style={{ marginTop: '10px', background: '#f8fafc', border: '1px solid #e4ebf1', borderRadius: '6px', padding: '12px' }}>
                         <div style={{ marginBottom: '10px', color: '#344054', lineHeight: 1.7 }}>
                           <strong>Información del Turno:</strong>{' '}
-                          Fecha {turno.fecha}, Horario {turno.horaInicio} - {turno.horaFin}, Tutor {turno.tutorNombre || `Tutor ${turno.tutorId}`}, Modalidad {formatearEtiqueta(turno.modalidad)}.
+                          Fecha {turno.fecha}, Horario {turno.horaInicio} - {turno.horaFin}, Tutor {turno.tutorNombre || `Tutor ${turno.tutorId}`}, Estudiante {turno.estudianteNombre || `Estudiante ${turno.estudianteId}`}, Modalidad {formatearEtiqueta(turno.modalidad)}, Observaciones {turno.observaciones || 'Sin Observaciones'}.
                         </div>
 
                         {cambios.length > 0 ? (

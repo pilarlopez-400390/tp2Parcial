@@ -100,6 +100,13 @@ const EJEMPLOS_OBSERVACIONES = {
   }
 }
 
+const EJEMPLOS_OBSERVACIONES_CATEGORIA = {
+  Backend: 'Ej: Quiero repasar una duda de backend y entender cómo aplicarla en el proyecto.',
+  Frontend: 'Ej: Necesito ayuda para resolver una pantalla de React y mejorar la interacción.',
+  Testing: 'Ej: Quiero revisar cómo armar pruebas y cubrir casos importantes.',
+  Seguridad: 'Ej: Tengo dudas sobre autenticación, permisos o protección de rutas.'
+}
+
 function categoriaValida(categoria) {
   if (!categoria) return ''
   const normalizada = Object.keys(CATEGORIAS_TEMAS).find(c => normalizarTexto(c) === normalizarTexto(categoria))
@@ -157,11 +164,10 @@ function normalizarTexto(texto = '') {
   return texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
-function placeholderObservaciones(categoria, temas) {
+function placeholderObservaciones(categoria) {
   if (!categoria) return 'Ej: Escribí una duda puntual para orientar la tutoría.'
   const categoriaActual = categoriaValida(categoria)
-  const temaPrincipal = temas[0]
-  return EJEMPLOS_OBSERVACIONES[categoriaActual]?.[temaPrincipal]
+  return EJEMPLOS_OBSERVACIONES_CATEGORIA[categoriaActual]
     || `Ej: Quiero profundizar sobre ${categoriaActual.toLowerCase()} y resolver una duda puntual.`
 }
 
@@ -188,7 +194,7 @@ function horaDentroDeDisponibilidad(tutor, horaInicio, horaFin) {
   if (!tutor || !horaInicio || !horaFin) return false
   const inicio = tutor.horarioDisponible?.inicio || '08:00'
   const fin = tutor.horarioDisponible?.fin || '23:00'
-  return horaInicio >= inicio && horaFin <= fin && horaInicio < horaFin
+  return horaInicio >= inicio && horaFin <= fin && timeToMinutes(horaFin) - timeToMinutes(horaInicio) >= 60
 }
 
 function generarHorasInicio(tutor) {
@@ -197,7 +203,7 @@ function generarHorasInicio(tutor) {
   const fin = timeToMinutes(tutor.horarioDisponible.fin)
   const opciones = []
 
-  for (let min = inicio; min <= fin - 30; min += 30) {
+  for (let min = inicio; min <= fin - 60; min += 30) {
     opciones.push(minutesToTime(min))
   }
   return opciones
@@ -210,7 +216,7 @@ function generarHorasFin(tutor, horaInicio) {
   const finMaximo = Math.min(inicio + 180, finTutor)
   const opciones = []
 
-  for (let min = inicio + 30; min <= finMaximo; min += 30) {
+  for (let min = inicio + 60; min <= finMaximo; min += 30) {
     opciones.push(minutesToTime(min))
   }
   return opciones
@@ -454,7 +460,7 @@ export default function TurnoForm() {
 
     if (!horaDentroDeDisponibilidad(tutorSeleccionado, form.horaInicio, form.horaFin)) {
       const horario = tutorSeleccionado.horarioDisponible
-      setError(`El horario debe estar entre ${horario.inicio} y ${horario.fin}`)
+      setError(`El horario debe estar entre ${horario.inicio} y ${horario.fin}, con una duración mínima de 60 minutos`)
       return
     }
 
@@ -485,7 +491,7 @@ export default function TurnoForm() {
   const fechaMinima = fechaLocalISO()
   const fechaMaxima = finAnioActualISO()
   const temasCategoria = CATEGORIAS_TEMAS[form.categoria] || []
-  const ejemploObservaciones = placeholderObservaciones(form.categoria, form.temas)
+  const ejemploObservaciones = placeholderObservaciones(form.categoria)
 
   if (cargandoInicial) return <div style={{ textAlign: 'center', padding: '60px' }}>Cargando...</div>
 
@@ -582,11 +588,21 @@ export default function TurnoForm() {
           <section style={{ border: '1px solid #d9e2ec', borderRadius: '8px', padding: '18px', background: '#fff', boxShadow: '0 10px 24px rgba(16, 24, 40, 0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '10px' }}>
               <label style={{ fontWeight: 'bold' }}>Estudiante</label>
-              {estudianteSeleccionado && (
-                <span style={{ color: '#245b73', fontSize: '14px', fontWeight: '700' }}>
-                  Seleccionado: {estudianteSeleccionado.nombre}
-                </span>
-              )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                {estudianteSeleccionado && (
+                  <span style={{ color: '#245b73', fontSize: '14px', fontWeight: '700' }}>
+                    Seleccionado: {estudianteSeleccionado.nombre}
+                  </span>
+                )}
+                <span style={{ color: '#667085', fontSize: '14px', fontWeight: '700' }}>¿No ves el estudiante?</span>
+                <button
+                  type="button"
+                  onClick={() => navigate('/admin/usuarios')}
+                  style={{ background: '#245b73', color: '#fff', border: '1px solid #1d4a5d', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: '800' }}
+                >
+                  Crear Estudiante
+                </button>
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '10px', marginBottom: '14px', alignItems: 'stretch' }}>
@@ -637,7 +653,10 @@ export default function TurnoForm() {
                   <button
                     key={estudiante.id}
                     type="button"
-                    onClick={() => setForm(prev => ({ ...prev, estudianteId: estudiante.id }))}
+                    onClick={() => setForm(prev => ({
+                      ...prev,
+                      estudianteId: String(prev.estudianteId) === String(estudiante.id) ? '' : estudiante.id
+                    }))}
                     style={{
                       textAlign: 'left',
                       border: seleccionado ? '2px solid #245b73' : '1px solid #d9e2ec',

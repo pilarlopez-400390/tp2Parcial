@@ -4,7 +4,7 @@
     "turnoId": 1,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-09T16:15:00-03:00",
+    "fechaHora": "2026-06-20T16:15:00-03:00",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -13,7 +13,7 @@
     "turnoId": 2,
     "usuarioId": 8,
     "accion": "creacion",
-    "fechaHora": "2026-06-09T17:40:00-03:00",
+    "fechaHora": "2026-06-21T17:40:00-03:00",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -22,7 +22,7 @@
     "turnoId": 3,
     "usuarioId": 9,
     "accion": "creacion",
-    "fechaHora": "2026-06-08T18:10:00-03:00",
+    "fechaHora": "2026-06-22T18:10:00-03:00",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -31,7 +31,7 @@
     "turnoId": 4,
     "usuarioId": 7,
     "accion": "creacion",
-    "fechaHora": "2026-06-09T09:20:00-03:00",
+    "fechaHora": "2026-06-23T09:20:00-03:00",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -40,7 +40,7 @@
     "turnoId": 4,
     "usuarioId": 3,
     "accion": "confirmacion",
-    "fechaHora": "2026-06-10T11:35:00-03:00",
+    "fechaHora": "2026-06-24T11:35:00-03:00",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
@@ -49,7 +49,7 @@
     "turnoId": 5,
     "usuarioId": 8,
     "accion": "creacion",
-    "fechaHora": "2026-06-09T12:05:00-03:00",
+    "fechaHora": "2026-06-24T12:05:00-03:00",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -58,7 +58,7 @@
     "turnoId": 5,
     "usuarioId": 4,
     "accion": "confirmacion",
-    "fechaHora": "2026-06-10T08:45:00-03:00",
+    "fechaHora": "2026-06-25T08:45:00-03:00",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
@@ -67,7 +67,7 @@
     "turnoId": 6,
     "usuarioId": 9,
     "accion": "creacion",
-    "fechaHora": "2026-06-10T15:25:00-03:00",
+    "fechaHora": "2026-06-25T15:25:00-03:00",
     "valorAnterior": null,
     "valorNuevo": "{\"estado\":\"solicitado\"}"
   },
@@ -76,7 +76,7 @@
     "turnoId": 6,
     "usuarioId": 5,
     "accion": "confirmacion",
-    "fechaHora": "2026-06-10T17:50:00-03:00",
+    "fechaHora": "2026-06-26T17:50:00-03:00",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
     "valorNuevo": "{\"estado\":\"confirmado\"}"
   },
@@ -157,7 +157,7 @@
     "turnoId": 9,
     "usuarioId": 4,
     "accion": "realizacion",
-    "fechaHora": "2026-06-02T14:00:00-03:00",
+    "fechaHora": "2026-06-02T11:30:00-03:00",
     "valorAnterior": "{\"estado\":\"confirmado\"}",
     "valorNuevo": "{\"estado\":\"realizado\"}"
   },
@@ -177,7 +177,7 @@
     "accion": "cancelacion",
     "fechaHora": "2026-06-01T19:05:00-03:00",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\"}"
+    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"Cancelado por el estudiante\"}"
   },
   {
     "id": 21,
@@ -213,60 +213,15 @@
     "accion": "cancelacion",
     "fechaHora": "2026-06-04T08:50:00-03:00",
     "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\"}"
+    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\"}"
   },
   {
     "id": 25,
-    "turnoId": 1,
-    "usuarioId": 0,
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-10T12:00:00.000Z",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
-  },
-  {
-    "id": 26,
-    "turnoId": 2,
-    "usuarioId": 0,
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-10T13:00:00.000Z",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
-  },
-  {
-    "id": 27,
-    "turnoId": 3,
-    "usuarioId": 0,
-    "accion": "cancelacion",
-    "fechaHora": "2026-06-09T17:00:00.000Z",
-    "valorAnterior": "{\"estado\":\"solicitado\"}",
-    "valorNuevo": "{\"estado\":\"cancelado\",\"observaciones\":\"No ha sido confirmado\",\"automatico\":true}"
-  },
-  {
-    "id": 28,
-    "turnoId": 4,
-    "usuarioId": 0,
-    "accion": "realizacion",
-    "fechaHora": "2026-06-11T13:00:00.000Z",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
-  },
-  {
-    "id": 29,
-    "turnoId": 5,
-    "usuarioId": 0,
-    "accion": "realizacion",
-    "fechaHora": "2026-06-10T18:00:00.000Z",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
-  },
-  {
-    "id": 30,
-    "turnoId": 6,
-    "usuarioId": 0,
-    "accion": "realizacion",
-    "fechaHora": "2026-06-11T12:00:00.000Z",
-    "valorAnterior": "{\"estado\":\"confirmado\"}",
-    "valorNuevo": "{\"estado\":\"realizado\",\"automatico\":true}"
+    "turnoId": 13,
+    "usuarioId": 1,
+    "accion": "creacion",
+    "fechaHora": "2026-06-13T01:48:11.327Z",
+    "valorAnterior": null,
+    "valorNuevo": "{\"estado\":\"solicitado\",\"tutorId\":3,\"fecha\":\"2026-06-24\",\"horaInicio\":\"10:00\",\"horaFin\":\"13:00\",\"categoria\":\"Testing\",\"temas\":[\"Supertest\",\"Pruebas de endpoints\",\"Mocking\"],\"tema\":\"Supertest, Pruebas de endpoints, Mocking\",\"modalidad\":\"presencial\",\"observaciones\":\"quiero ver todo\"}"
   }
 ]

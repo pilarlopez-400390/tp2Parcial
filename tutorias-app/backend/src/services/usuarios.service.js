@@ -24,11 +24,16 @@ function validarEmailUnico(email) {
 }
 
 function sanitizarUsuario(usuario) {
+  const partesNombre = String(usuario.nombre || '').trim().split(/\s+/)
+  const apellidoInferido = partesNombre.length > 1 ? partesNombre.slice(1).join(' ') : ''
   return {
     id: usuario.id,
     nombre: usuario.nombre,
+    apellido: usuario.apellido || apellidoInferido,
     email: usuario.email,
     rol: usuario.rol,
+    genero: usuario.genero || '',
+    telefono: usuario.telefono || '',
     activo: usuario.activo
   }
 }
@@ -210,10 +215,61 @@ function actualizarUsuario(id, updates) {
   return sanitizarUsuario(usuarioActualizado)
 }
 
+function actualizarPerfil(id, updates) {
+  const usuario = db.findById('usuarios', id)
+  if (!usuario) {
+    const err = new Error('Usuario no encontrado')
+    err.status = 404
+    throw err
+  }
+
+  const nombreBase = updates.nombre !== undefined ? String(updates.nombre).trim() : ''
+  const apellidoBase = updates.apellido !== undefined ? String(updates.apellido).trim() : ''
+  const cambios = {}
+
+  if (updates.nombre !== undefined || updates.apellido !== undefined) {
+    const nombreFinal = [nombreBase, apellidoBase].filter(Boolean).join(' ').replace(/\s+/g, ' ')
+    if (nombreFinal.split(' ').length < 2) {
+      const err = new Error('Ingresa nombre y apellido')
+      err.status = 400
+      throw err
+    }
+    cambios.nombre = nombreFinal
+    cambios.apellido = apellidoBase
+  }
+
+  if (updates.email && updates.email !== usuario.email) {
+    validarEmailUnico(updates.email)
+    cambios.email = updates.email
+  }
+
+  if (updates.genero !== undefined) cambios.genero = String(updates.genero).trim()
+  if (updates.telefono !== undefined) cambios.telefono = String(updates.telefono).trim()
+  if (updates.password) cambios.passwordHash = bcrypt.hashSync(updates.password, 10)
+
+  const usuarioActualizado = db.update('usuarios', id, cambios)
+
+  if (usuario.rol === 'tutor') {
+    const tutores = db.findAll('tutores')
+    for (let i = 0; i < tutores.length; i++) {
+      if (tutores[i].usuarioId === id) {
+        const cambiosTutor = {}
+        if (cambios.nombre) cambiosTutor.nombre = cambios.nombre
+        if (cambios.email) cambiosTutor.email = cambios.email
+        if (Object.keys(cambiosTutor).length > 0) db.update('tutores', tutores[i].id, cambiosTutor)
+        break
+      }
+    }
+  }
+
+  return sanitizarUsuario(usuarioActualizado)
+}
+
 module.exports = {
   listarUsuarios,
   obtenerUsuarioPorId,
   crearUsuario,
   actualizarUsuario,
+  actualizarPerfil,
   eliminarUsuario
 }
